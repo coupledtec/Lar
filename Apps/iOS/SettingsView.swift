@@ -17,7 +17,7 @@ struct SettingsView: View {
     @State private var stSecret = ""
     @State private var stRefresh = ""
     @State private var useOAuth = false
-    @State private var signingIn = false
+    @State private var signIn: SmartThingsSignInRequest?
     @State private var stError: String?
     @State private var tvHost = ""
     @State private var notifyLaundry = Notifier.laundryEnabled
@@ -129,7 +129,7 @@ struct SettingsView: View {
                     Button(savedOAuth != nil && stClientID.trimmed.isEmpty ? "Entrar de novo no SmartThings" : "Entrar no SmartThings") {
                         signInToSmartThings()
                     }
-                    .disabled(signInCredentials == nil || signingIn)
+                    .disabled(signInCredentials == nil)
                 } else {
                     Button("Salvar") {
                         save {
@@ -153,6 +153,7 @@ struct SettingsView: View {
         } footer: {
             Text("Use uma integração OAuth própria para o iPhone (outra para o Mac e outra para a TV): o refresh token muda a cada renovação, e dois aparelhos com a mesma integração se desconectam um ao outro.")
         }
+        .sheet(item: $signIn) { signInView($0) }
     }
 
     /// The integration to sign in with: the one typed, or the one saved.
@@ -168,19 +169,23 @@ struct SettingsView: View {
 
     private func signInToSmartThings() {
         guard let (clientID, secret) = signInCredentials else { return }
-        signingIn = true
         stError = nil
-        Task {
-            defer { signingIn = false }
-            do {
-                let refresh = try await SmartThingsSignIn.run(clientID: clientID, secret: secret)
+        signIn = SmartThingsSignInRequest(clientID: clientID, secret: secret)
+    }
+
+    private func signInView(_ request: SmartThingsSignInRequest) -> some View {
+        SmartThingsSignInView(clientID: request.clientID, secret: request.secret) { result in
+            signIn = nil
+            switch result {
+            case .success(let refresh):
                 save {
-                    settings.smartThings = .oauth(clientID: clientID, secret: secret, refreshToken: refresh)
+                    settings.smartThings = .oauth(clientID: request.clientID, secret: request.secret, refreshToken: refresh)
                     stClientID = ""; stSecret = ""
                 }
-            } catch is CancellationError {
-            } catch {
+            case .failure(let error):
                 stError = (error as? ProviderError)?.message ?? error.localizedDescription
+            case nil:
+                break
             }
         }
     }

@@ -24,7 +24,6 @@ struct SettingsView: View {
     @State private var stSecret = ""
     @State private var stRefresh = ""
     @State private var showOAuth = false
-    @State private var signingIn = false
     @State private var stError: String?
     @State private var tvHost = ""
     @State private var limits = TemperatureLimits.standard
@@ -138,19 +137,19 @@ struct SettingsView: View {
 
     private func signInToSmartThings() {
         guard let (clientID, secret) = signInCredentials else { return }
-        signingIn = true
         stError = nil
-        Task {
-            defer { signingIn = false }
-            do {
-                let refresh = try await SmartThingsSignIn.run(clientID: clientID, secret: secret)
+        let request = SmartThingsSignInRequest(clientID: clientID, secret: secret)
+        SignInWindow.show(request) { result in
+            switch result {
+            case .success(let refresh):
                 save {
-                    settings.smartThings = .oauth(clientID: clientID, secret: secret, refreshToken: refresh)
+                    settings.smartThings = .oauth(clientID: request.clientID, secret: request.secret, refreshToken: refresh)
                     stClientID = ""; stSecret = ""
                 }
-            } catch is CancellationError {
-            } catch {
+            case .failure(let error):
                 stError = (error as? ProviderError)?.message ?? error.localizedDescription
+            case nil:
+                break
             }
         }
     }
@@ -175,7 +174,7 @@ struct SettingsView: View {
                         Button(savedOAuth != nil && stClientID.trimmed.isEmpty ? "Entrar de novo" : "Entrar no SmartThings") {
                             signInToSmartThings()
                         }
-                        .disabled(signInCredentials == nil || signingIn)
+                        .disabled(signInCredentials == nil)
                     } else {
                         Button("Salvar") {
                             save {

@@ -6,7 +6,7 @@ import Testing
     @Test func authorizeAsksForACodeBackInTheApp() throws {
         let url = SmartThingsSignIn.authorizeURL(clientID: "client", state: "s1")
         let items = try #require(URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems)
-        #expect(items.first { $0.name == "redirect_uri" }?.value == "lar://oauth")
+        #expect(items.first { $0.name == "redirect_uri" }?.value == "https://httpbin.org/get")
         #expect(items.first { $0.name == "response_type" }?.value == "code")
         #expect(items.first { $0.name == "client_id" }?.value == "client")
     }

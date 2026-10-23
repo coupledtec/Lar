@@ -1,17 +1,16 @@
 #if !os(watchOS)
-import AuthenticationServices
 import Foundation
-#if os(macOS)
-import AppKit
-#else
-import UIKit
-#endif
+import SwiftUI
+import WebKit
 
-/// Signing in to SmartThings with an OAuth integration: the account's own page in a browser sheet, back to the app
-/// at `lar://oauth`, and the code traded for the first refresh token. Each app (Mac, iPhone, the TV) needs its own
-/// integration: the refresh token turns over at every renewal, so two apps sharing one log each other out.
+/// Signing in to SmartThings with an OAuth integration: the account's own page in a web view, its answer caught on
+/// the way to the integration's redirect (the page never loads), and the code traded for the first refresh token.
+/// Each app (Mac, iPhone, the TV) needs its own integration: the refresh token turns over at every renewal, so two
+/// apps sharing one log each other out.
 public enum SmartThingsSignIn {
-    public static let redirect = "lar://oauth"
+    /// The redirect registered with the integrations. SmartThings doesn't send the browser to an app's own scheme,
+    /// so it's a web address that's never actually opened.
+    public static let redirect = "https://httpbin.org/get"
     static let scopes = "r:locations:* r:devices:* x:devices:*"
     static let authorize = URL(string: "https://api.smartthings.com/oauth/authorize")!
 
@@ -34,29 +33,7 @@ public enum SmartThingsSignIn {
         return items.first(where: { $0.name == "code" })?.value
     }
 
-    /// Signs in and returns the refresh token to save with the integration's ID and secret.
-    @MainActor
-    public static func run(clientID: String, secret: String) async throws -> String {
-        let state = UUID().uuidString
-        let callback: URL = try await withCheckedThrowingContinuation { continuation in
-            let session = ASWebAuthenticationSession(url: authorizeURL(clientID: clientID, state: state),
-                                                     callbackURLScheme: "lar") { url, error in
-                if let url {
-                    continuation.resume(returning: url)
-                } else if (error as? ASWebAuthenticationSessionError)?.code == .canceledLogin {
-                    continuation.resume(throwing: CancellationError())
-                } else {
-                    continuation.resume(throwing: ProviderError.api(error?.localizedDescription ?? "SmartThings: sem resposta"))
-                }
-            }
-            session.presentationContextProvider = Anchor.shared
-            session.start()
-        }
-        guard let code = code(in: callback, state: state) else { throw ProviderError.api("SmartThings não autorizou") }
-        return try await exchange(code: code, clientID: clientID, secret: secret)
-    }
-
-    static func exchange(code: String, clientID: String, secret: String,
+    public static func exchange(code: String, clientID: String, secret: String,
                          transport: HTTPTransport = { try await URLSession.shared.data(for: $0) }) async throws -> String {
         var lastError = ProviderError.api("SmartThings: sem resposta")
         for host in SmartThingsClient.authHosts {
@@ -92,19 +69,136 @@ public enum SmartThingsSignIn {
         throw lastError
     }
 
-    private final class Anchor: NSObject, ASWebAuthenticationPresentationContextProviding {
-        static let shared = Anchor()
+}
 
-        func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-            MainActor.assumeIsolated {
-                #if os(macOS)
-                NSApp.keyWindow ?? NSApp.windows.first { $0.isVisible } ?? ASPresentationAnchor()
-                #else
-                UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
-                    .flatMap(\.windows).first { $0.isKeyWindow } ?? ASPresentationAnchor()
-                #endif
+/// A sign-in to show: with which integration.
+public struct SmartThingsSignInRequest: Identifiable {
+    public let id = UUID()
+    public let clientID: String
+    public let secret: String
+
+    public init(clientID: String, secret: String) {
+        self.clientID = clientID
+        self.secret = secret
+    }
+}
+
+/// The sign-in page; ends with the refresh token, an error, or nil when closed.
+public struct SmartThingsSignInView: View {
+    let clientID: String
+    let secret: String
+    let onFinish: (Result<String, Error>?) -> Void
+    @State private var state = UUID().uuidString
+    @State private var exchanging = false
+
+    public init(clientID: String, secret: String, onFinish: @escaping (Result<String, Error>?) -> Void) {
+        self.clientID = clientID
+        self.secret = secret
+        self.onFinish = onFinish
+    }
+
+    public var body: some View {
+        VStack(spacing: 0) {
+            HStack {
+                Text("Entrar no SmartThings").font(.headline)
+                Spacer()
+                if exchanging { ProgressView().controlSize(.small) }
+                Button("Cancelar") { onFinish(nil) }
             }
+            .padding(12)
+            Divider()
+            SignInWebView(url: SmartThingsSignIn.authorizeURL(clientID: clientID, state: state)) { callback in
+                guard !exchanging else { return }
+                guard let code = SmartThingsSignIn.code(in: callback, state: state) else {
+                    onFinish(.failure(ProviderError.api("SmartThings não autorizou")))
+                    return
+                }
+                exchanging = true
+                Task {
+                    do {
+                        onFinish(.success(try await SmartThingsSignIn.exchange(code: code, clientID: clientID, secret: secret)))
+                    } catch {
+                        onFinish(.failure(error))
+                    }
+                }
+            }
+        }
+        #if os(macOS)
+        .frame(width: 460, height: 640)
+        #endif
+    }
+}
+
+/// A web view that hands over the first link going to the redirect instead of opening it.
+@MainActor
+private struct SignInWebView {
+    let url: URL
+    let onCallback: (URL) -> Void
+
+    func makeWebView(_ coordinator: Coordinator) -> WKWebView {
+        let configuration = WKWebViewConfiguration()
+        configuration.websiteDataStore = .nonPersistent()
+        configuration.applicationNameForUserAgent = "Version/18.0 Safari/605.1.15"
+        let view = WKWebView(frame: .zero, configuration: configuration)
+        view.navigationDelegate = coordinator
+        view.load(URLRequest(url: url))
+        return view
+    }
+
+    func makeCoordinator() -> Coordinator { Coordinator(onCallback: onCallback) }
+
+    @MainActor final class Coordinator: NSObject, WKNavigationDelegate {
+        let onCallback: (URL) -> Void
+        private var done = false
+
+        init(onCallback: @escaping (URL) -> Void) {
+            self.onCallback = onCallback
+        }
+
+        static func isCallback(_ url: URL?) -> Bool {
+            guard let url else { return false }
+            return url.absoluteString.hasPrefix(SmartThingsSignIn.redirect) || url.scheme == "lar"
+        }
+
+        private func finish(_ url: URL) {
+            guard !done else { return }
+            done = true
+            onCallback(url)
+        }
+
+        func webView(_ webView: WKWebView, decidePolicyFor action: WKNavigationAction,
+                     decisionHandler: @escaping @MainActor (WKNavigationActionPolicy) -> Void) {
+            if let url = action.request.url, Self.isCallback(url) {
+                decisionHandler(.cancel)
+                finish(url)
+            } else {
+                decisionHandler(.allow)
+            }
+        }
+
+        func webView(_ webView: WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
+            if let url = webView.url, Self.isCallback(url) {
+                webView.stopLoading()
+                finish(url)
+            }
+        }
+
+        func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+            let failing = (error as NSError).userInfo[NSURLErrorFailingURLErrorKey] as? URL
+            if let url = failing ?? webView.url, Self.isCallback(url) { finish(url) }
         }
     }
 }
+
+#if os(macOS)
+extension SignInWebView: NSViewRepresentable {
+    func makeNSView(context: Context) -> WKWebView { makeWebView(context.coordinator) }
+    func updateNSView(_ view: WKWebView, context: Context) {}
+}
+#else
+extension SignInWebView: UIViewRepresentable {
+    func makeUIView(context: Context) -> WKWebView { makeWebView(context.coordinator) }
+    func updateUIView(_ view: WKWebView, context: Context) {}
+}
+#endif
 #endif
