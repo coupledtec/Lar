@@ -52,7 +52,7 @@ struct WatchHomeView: View {
                         WatchACView(model: model, device: device)
                     } else if device.hasLiveVideo {
                         CameraLiveView(home: home, deviceID: id)
-                    } else if device.kind == .tv {
+                    } else if device.hasRemote {
                         WatchTVView(home: home, deviceID: id)
                     } else {
                         WatchLightView(home: home, deviceID: id)

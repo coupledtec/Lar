@@ -348,11 +348,16 @@ public final class HomeStore {
     /// The TV's remote: keys and apps go straight out (they change nothing the list keeps).
     public var tv: (any TVRemoteProvider)? { providers[.androidTV] as? any TVRemoteProvider }
 
+    /// The remote of the device's own account (Android TVs, or a Samsung TV or soundbar through SmartThings).
+    private func remote(for device: HomeDevice) -> (any TVRemoteProvider)? {
+        providers[device.provider] as? any TVRemoteProvider
+    }
+
     /// Pairing happens only where the TVs are reached directly (not from the watch).
     private var directTV: AndroidTVProvider? { providers[.androidTV] as? AndroidTVProvider }
 
     public func press(_ key: AndroidTVProvider.Key, on deviceID: String) {
-        guard let tv, let device = device(id: deviceID) else { return }
+        guard let device = device(id: deviceID), let tv = remote(for: device) else { return }
         Task {
             do {
                 try await tv.press(key, on: device)
@@ -364,7 +369,7 @@ public final class HomeStore {
 
     /// Types into the TV's focused field.
     public func typeOnTV(_ text: String, on deviceID: String) {
-        guard let tv, let device = device(id: deviceID) else { return }
+        guard let device = device(id: deviceID), let tv = remote(for: device) else { return }
         Task {
             do {
                 try await tv.type(text, on: device)
@@ -375,12 +380,12 @@ public final class HomeStore {
     }
 
     public func tvApps(on deviceID: String) async -> [AndroidTVProvider.App] {
-        guard let tv, let device = device(id: deviceID) else { return [] }
+        guard let device = device(id: deviceID), let tv = remote(for: device) else { return [] }
         return (try? await tv.apps(on: device)) ?? []
     }
 
     public func openApp(_ package: String, on deviceID: String) {
-        guard let tv, let device = device(id: deviceID) else { return }
+        guard let device = device(id: deviceID), let tv = remote(for: device) else { return }
         Task {
             do {
                 try await tv.openApp(package, on: device)

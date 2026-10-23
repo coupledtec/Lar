@@ -55,7 +55,7 @@ struct HomeListView: View {
                 } else if let device = home.device(id: id) {
                     if device.kind == .airConditioner {
                         ACControlView(model: model, device: device)
-                    } else if device.kind == .tv {
+                    } else if device.hasRemote {
                         TVControlView(home: home, deviceID: id)
                     } else if device.hasLiveVideo {
                         CameraLiveView(home: home, deviceID: id)

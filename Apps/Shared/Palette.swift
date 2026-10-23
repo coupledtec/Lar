@@ -41,7 +41,7 @@ enum Palette {
     /// Opens a screen: LG air conditioners, and lights that dim or change color.
     static func opens(_ device: HomeDevice) -> Bool {
         guard device.isOnline else { return false }
-        return (device.kind == .airConditioner && device.provider == .lg) || (device.kind == .tv && device.provider == .androidTV)
+        return (device.kind == .airConditioner && device.provider == .lg) || device.hasRemote
             || device.canDim || device.hasColor || device.hasLiveVideo
     }
 }

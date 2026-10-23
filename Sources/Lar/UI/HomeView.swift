@@ -204,12 +204,12 @@ struct HomeView: View {
         // An offline device has nothing to show: its screen would only be placeholders.
         guard device.isOnline else { return false }
         // The full remote is ADB's (Android TV); a Samsung TV from SmartThings only switches.
-        return (device.kind == .tv && device.provider == .androidTV) || (device.kind == .airConditioner && device.provider == .lg) || device.canDim || device.hasColor || device.hasLiveVideo
+        return device.hasRemote || (device.kind == .airConditioner && device.provider == .lg) || device.canDim || device.hasColor || device.hasLiveVideo
     }
 
     private func open(_ device: HomeDevice) {
         guard device.isOnline else { return }
-        if device.kind == .tv, device.provider == .androidTV {
+        if device.hasRemote {
             go(.tv(id: device.id))
         } else if device.kind == .airConditioner, device.provider == .lg {
             go(.airConditioner(rawID: device.rawID))

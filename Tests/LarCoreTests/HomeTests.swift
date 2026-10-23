@@ -380,3 +380,46 @@ actor FakeProvider: DeviceProvider {
         #expect(!AccountsImport.importIfPresent(in: folder, into: settings))
     }
 }
+
+@Suite struct SamsungRemoteTests {
+    static func tv(_ flags: [String], _ extra: [String: String] = [:]) -> HomeDevice {
+        var device = HomeDevice(provider: .smartThings, rawID: "t", name: "TV", kind: .tv, isOn: true)
+        for flag in flags { device.controls[flag] = "1" }
+        device.controls.merge(extra) { _, new in new }
+        return device
+    }
+
+    @Test func keysByCapability() throws {
+        let full = Self.tv(["st.keys", "st.volume", "st.mute", "st.channel", "st.playback", "st.inputs"],
+                           ["inputs": "dtv,HDMI3", "input": "dtv", "playback": "playing", "volume": "0"])
+        #expect(try SmartThingsClient.command(for: .up, device: full)["arguments"] == ["UP", "PRESS_AND_RELEASED"])
+        #expect(try SmartThingsClient.command(for: .volumeUp, device: full)["command"] == "volumeUp")
+        #expect(try SmartThingsClient.command(for: .mute, device: full)["command"] == "unmute")
+        #expect(try SmartThingsClient.command(for: .playPause, device: full)["command"] == "pause")
+        #expect(try SmartThingsClient.command(for: .inputs, device: full)["arguments"] == ["HDMI3"])
+        #expect(try SmartThingsClient.command(for: .channelDown, device: full)["command"] == "channelDown")
+        #expect(full.hasRemote && full.hasDirectionalPad && full.hasChannels && !full.canType)
+
+        var soundbar = Self.tv(["st.volume", "st.audioInput"])
+        soundbar.kind = .speaker
+        #expect(soundbar.hasRemote && !soundbar.hasDirectionalPad && !soundbar.hasChannels)
+        #expect(try SmartThingsClient.command(for: .inputs, device: soundbar)["command"] == "setNextInputSource")
+        #expect(throws: ProviderError.unsupported) { try SmartThingsClient.command(for: .up, device: soundbar) }
+    }
+
+    @Test func readsVolumeAndInput() throws {
+        let json: JSONValue = ["deviceId": "t", "label": "TV", "ocf": ["ocfDeviceType": "oic.d.tv"],
+                               "components": [["id": "main", "capabilities": [["id": "switch"], ["id": "audioVolume"], ["id": "audioMute"],
+                                                                               ["id": "samsungvd.mediaInputSource"], ["id": "samsungvd.remoteControl"]]]]]
+        let device = try #require(SmartThingsClient.device(from: json))
+        let status: JSONValue = [
+            "switch": ["switch": ["value": "on"]], "audioVolume": ["volume": ["value": 12]], "audioMute": ["mute": ["value": "unmuted"]],
+            "samsungvd.mediaInputSource": ["supportedInputSourcesMap": ["value": [["id": "dtv", "name": "TV"], ["id": "HDMI3", "name": "Soundbar"]]],
+                                           "inputSource": ["value": "HDMI3"]],
+        ]
+        let read = SmartThingsClient.applyStatus(status, to: device)
+        #expect(read.controls["volume"] == "12")
+        #expect(read.controls["inputs"] == "dtv,HDMI3")
+        #expect(read.detail == "Soundbar")
+    }
+}

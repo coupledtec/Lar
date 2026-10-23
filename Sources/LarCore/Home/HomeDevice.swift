@@ -77,6 +77,15 @@ public struct HomeDevice: Sendable, Equatable, Identifiable, Codable {
     public var hasColor: Bool { color != nil && isOnline }
     public var hasLiveVideo: Bool { kind == .camera && provider == .tuya && isOnline }
 
+    /// A remote screen: an Android TV, or a Samsung TV or soundbar with SmartThings' remote capabilities.
+    public var hasRemote: Bool {
+        (kind == .tv || kind == .speaker) && (provider == .androidTV || controls["st.volume"] != nil || controls["st.keys"] != nil)
+    }
+    public var hasDirectionalPad: Bool { provider == .androidTV || controls["st.keys"] != nil }
+    public var hasChannels: Bool { provider == .androidTV || controls["st.channel"] != nil }
+    /// Typing into the TV's search: Android TVs only.
+    public var canType: Bool { provider == .androidTV }
+
     /// The state expected once `command` is applied.
     public func applying(_ command: HomeCommand) -> HomeDevice {
         var copy = self

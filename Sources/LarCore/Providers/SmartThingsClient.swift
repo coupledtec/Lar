@@ -2,7 +2,7 @@ import Foundation
 
 /// SmartThings through its REST API, with either a personal access token (those made after Dec 2024 last 24 h, so
 /// only good for trying it out) or an OAuth integration whose refresh token turns over at every use.
-public actor SmartThingsClient: DeviceProvider {
+public actor SmartThingsClient: TVRemoteProvider {
     public nonisolated let provider = Provider.smartThings
 
     public enum Credentials: Sendable, Equatable {
@@ -96,6 +96,8 @@ public actor SmartThingsClient: DeviceProvider {
         )
         if capabilities.contains("switchLevel") { device.controls["level"] = "1" }
         if capabilities.contains("colorControl") { device.controls["color"] = "1" }
+        // A Samsung TV's or soundbar's remote: what each one has.
+        for (capability, flag) in Self.remoteCapabilities where capabilities.contains(capability) { device.controls[flag] = "1" }
         return device
     }
 
@@ -117,6 +119,23 @@ public actor SmartThingsClient: DeviceProvider {
         }
         if let temperature = status["temperatureMeasurement"]?["temperature"]?["value"]?.double {
             parts.append("\(Int(temperature.rounded()))°")
+        }
+        if device.controls["st.volume"] != nil, let volume = status["audioVolume"]?["volume"]?["value"]?.double {
+            let muted = status["audioMute"]?["mute"]?["value"]?.string == "muted"
+            device.controls["volume"] = muted ? "0" : String(Int(volume))
+            device.controls["maxVolume"] = "100"
+        }
+        if let playback = status["mediaPlayback"]?["playbackStatus"]?["value"]?.string { device.controls["playback"] = playback }
+        if let inputs = status["samsungvd.mediaInputSource"]?["supportedInputSourcesMap"]?["value"]?.array {
+            device.controls["inputs"] = inputs.compactMap { $0["id"]?.string }.joined(separator: ",")
+            let current = status["samsungvd.mediaInputSource"]?["inputSource"]?["value"]?.string
+            device.controls["input"] = current ?? ""
+            if device.isOn == true, let name = inputs.first(where: { $0["id"]?.string == current })?["name"]?.string,
+               current != "dtv" {
+                parts.append(name)
+            } else if device.isOn == true, let channel = status["tvChannel"]?["tvChannelName"]?["value"]?.string, !channel.isEmpty {
+                parts.append(channel)
+            }
         }
         if status["healthCheck"]?["DeviceWatch-DeviceStatus"]?["value"]?.string == "offline" { device.isOnline = false }
         device.detail = parts.joined(separator: " · ")
@@ -148,6 +167,76 @@ public actor SmartThingsClient: DeviceProvider {
             let value: JSONValue = ["hue": .number((color.hue / 3.6).rounded()), "saturation": .number((color.saturation * 100).rounded())]
             return ["component": "main", "capability": "colorControl", "command": "setColor", "arguments": [value]]
         }
+    }
+
+    // MARK: Remote (Samsung TVs and soundbars)
+
+    static let remoteCapabilities: [(String, String)] = [
+        ("samsungvd.remoteControl", "st.keys"), ("custom.launchapp", "st.apps"), ("tvChannel", "st.channel"),
+        ("audioVolume", "st.volume"), ("audioMute", "st.mute"), ("mediaPlayback", "st.playback"),
+        ("samsungvd.mediaInputSource", "st.inputs"), ("samsungvd.audioInputSource", "st.audioInput"),
+    ]
+
+    /// Tizen's ids for the big apps (custom.launchapp opens by id).
+    static let tizenApps: [(id: String, name: String)] = [
+        ("3201907018807", "Netflix"), ("111299001912", "YouTube"), ("3201910019365", "Prime Video"),
+        ("3201901017640", "Disney+"), ("3201807016597", "Apple TV"), ("3201606009684", "Spotify"),
+    ]
+
+    public func press(_ key: AndroidTVProvider.Key, on device: HomeDevice) async throws {
+        try await sendCommand(Self.command(for: key, device: device), to: device)
+    }
+
+    /// One remote key as a SmartThings command, by what the device has.
+    static func command(for key: AndroidTVProvider.Key, device: HomeDevice) throws -> JSONValue {
+        func has(_ flag: String) -> Bool { device.controls[flag] != nil }
+        func main(_ capability: String, _ command: String, _ arguments: [JSONValue] = []) -> JSONValue {
+            arguments.isEmpty ? ["component": "main", "capability": .string(capability), "command": .string(command)]
+                : ["component": "main", "capability": .string(capability), "command": .string(command), "arguments": .array(arguments)]
+        }
+        switch key {
+        case .volumeUp where has("st.volume"): return main("audioVolume", "volumeUp")
+        case .volumeDown where has("st.volume"): return main("audioVolume", "volumeDown")
+        case .mute where has("st.mute"): return main("audioMute", device.controls["volume"] == "0" ? "unmute" : "mute")
+        case .channelUp where has("st.channel"): return main("tvChannel", "channelUp")
+        case .channelDown where has("st.channel"): return main("tvChannel", "channelDown")
+        case .playPause where has("st.playback"): return main("mediaPlayback", device.controls["playback"] == "playing" ? "pause" : "play")
+        case .inputs where has("st.inputs"):
+            // The next input in the TV's list.
+            let inputs = (device.controls["inputs"] ?? "").split(separator: ",").map(String.init)
+            guard !inputs.isEmpty else { throw ProviderError.unsupported }
+            let index = inputs.firstIndex(of: device.controls["input"] ?? "") ?? -1
+            return main("samsungvd.mediaInputSource", "setInputSource", [.string(inputs[(index + 1) % inputs.count])])
+        case .inputs where has("st.audioInput"): return main("samsungvd.audioInputSource", "setNextInputSource")
+        case .up, .down, .left, .right, .select, .back, .home:
+            guard has("st.keys") else { throw ProviderError.unsupported }
+            let names: [AndroidTVProvider.Key: String] = [.up: "UP", .down: "DOWN", .left: "LEFT", .right: "RIGHT",
+                                                           .select: "OK", .back: "BACK", .home: "HOME"]
+            return main("samsungvd.remoteControl", "send", [.string(names[key]!), "PRESS_AND_RELEASED"])
+        default: throw ProviderError.unsupported
+        }
+    }
+
+    public func apps(on device: HomeDevice) async throws -> [AndroidTVProvider.App] {
+        guard device.controls["st.apps"] != nil else { return [] }
+        return Self.tizenApps.map { AndroidTVProvider.App(package: $0.id, name: $0.name) }
+    }
+
+    public func openApp(_ package: String, on device: HomeDevice) async throws {
+        guard device.controls["st.apps"] != nil else { throw ProviderError.unsupported }
+        let name = Self.tizenApps.first { $0.id == package }?.name ?? ""
+        try await sendCommand(["component": "main", "capability": "custom.launchapp", "command": "launchApp",
+                               "arguments": [.string(package), .string(name)]], to: device)
+    }
+
+    /// SmartThings has no text input for TVs.
+    public func type(_ text: String, on device: HomeDevice) async throws {
+        throw ProviderError.unsupported
+    }
+
+    private func sendCommand(_ command: JSONValue, to device: HomeDevice) async throws {
+        _ = try await request("POST", Self.api.appendingPathComponent("devices/\(device.rawID)/commands"),
+                              body: ["commands": .array([command])])
     }
 
     /// A valid access token (about 24 h), for a device that may use it but must never renew it (the watch): only

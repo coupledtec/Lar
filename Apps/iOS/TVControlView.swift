@@ -27,7 +27,7 @@ struct TVControlView: View {
                     }
                     Section { remote }
                         .disabled(!isOn)
-                    Section {
+                    if device.canType { Section {
                         HStack {
                             TextField("Digitar na TV", text: $text)
                                 .submitLabel(.send)
@@ -38,7 +38,7 @@ struct TVControlView: View {
                     } footer: {
                         Text("Abra a busca ou um campo de texto na TV e digite aqui.")
                     }
-                    .disabled(!isOn)
+                    .disabled(!isOn) }
                     if !apps.isEmpty {
                         Section("Apps") { appGrid }
                             .disabled(!isOn)
@@ -80,7 +80,7 @@ struct TVControlView: View {
 
     private var remote: some View {
         VStack(spacing: 22) {
-            dPad
+            if device?.hasDirectionalPad != false { dPad }
             HStack(spacing: 18) {
                 round("arrow.uturn.backward", "Voltar", .back)
                 round("house", "Início", .home)
@@ -93,12 +93,14 @@ struct TVControlView: View {
                 volumeButton("speaker.plus.fill", "Aumentar volume", .volumeUp)
             }
             .background(Capsule().fill(Color.secondary.opacity(0.15)))
-            HStack(spacing: 0) {
-                volumeButton("chevron.down", "Canal anterior", .channelDown)
-                Text("CH").font(.footnote.weight(.semibold)).frame(width: 40)
-                volumeButton("chevron.up", "Próximo canal", .channelUp)
+            if device?.hasChannels != false {
+                HStack(spacing: 0) {
+                    volumeButton("chevron.down", "Canal anterior", .channelDown)
+                    Text("CH").font(.footnote.weight(.semibold)).frame(width: 40)
+                    volumeButton("chevron.up", "Próximo canal", .channelUp)
+                }
+                .background(Capsule().fill(Color.secondary.opacity(0.15)))
             }
-            .background(Capsule().fill(Color.secondary.opacity(0.15)))
             if let level = device?.controls["volume"], let max = device?.controls["maxVolume"] {
                 Text(level == "0" ? "Sem som" : "Volume \(level) de \(max)")
                     .font(.footnote)

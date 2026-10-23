@@ -24,9 +24,11 @@ struct TVDetailView: View {
                 Divider()
             }
             HStack(alignment: .center, spacing: 18) {
-                dPad
-                    .disabled(!isOn)
-                    .opacity(isOn ? 1 : Theme.disabledOpacity)
+                if device?.hasDirectionalPad != false {
+                    dPad
+                        .disabled(!isOn)
+                        .opacity(isOn ? 1 : Theme.disabledOpacity)
+                }
                 VStack(spacing: 10) {
                     HStack(spacing: 10) {
                         powerButton
@@ -39,7 +41,7 @@ struct TVDetailView: View {
                         round("rectangle.on.rectangle", "Entradas", .inputs)
                     }
                     volume
-                    channel
+                    if device?.hasChannels != false { channel }
                     if let level = device?.controls["volume"], let max = device?.controls["maxVolume"] {
                         Text(level == "0" ? "Sem som" : "Volume \(level) de \(max)")
                             .font(.system(size: 10))
@@ -48,7 +50,7 @@ struct TVDetailView: View {
                 }
             }
             .frame(maxWidth: .infinity)
-            HStack(spacing: 6) {
+            if device?.canType != false { HStack(spacing: 6) {
                 TextField("Digitar na TV (busca aberta)", text: $text)
                     .textFieldStyle(.roundedBorder)
                     .font(.system(size: 12))
@@ -57,7 +59,7 @@ struct TVDetailView: View {
                     .disabled(text.isEmpty)
             }
             .disabled(!isOn)
-            .opacity(isOn ? 1 : Theme.disabledOpacity)
+            .opacity(isOn ? 1 : Theme.disabledOpacity) }
             if !apps.isEmpty {
                 Divider()
                 appGrid

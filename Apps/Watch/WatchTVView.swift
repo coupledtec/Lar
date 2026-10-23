@@ -31,7 +31,7 @@ struct WatchTVView: View {
                         .multilineTextAlignment(.center)
                 }
                 Group {
-                    dPad
+                    if device?.hasDirectionalPad != false { dPad }
                     HStack {
                         key("arrow.uturn.backward", "Voltar", .back)
                         key("house", "Início", .home)
@@ -47,18 +47,22 @@ struct WatchTVView: View {
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                     }
-                    HStack {
-                        key("chevron.down", "Canal anterior", .channelDown)
-                        Text("CH").font(.footnote)
-                        key("chevron.up", "Próximo canal", .channelUp)
-                    }
-                    // Dictation or the keyboard, into the TV's search.
-                    TextField("Digitar na TV", text: $text)
-                        .onSubmit {
-                            guard !text.isEmpty else { return }
-                            home.typeOnTV(text, on: deviceID)
-                            text = ""
+                    if device?.hasChannels != false {
+                        HStack {
+                            key("chevron.down", "Canal anterior", .channelDown)
+                            Text("CH").font(.footnote)
+                            key("chevron.up", "Próximo canal", .channelUp)
                         }
+                    }
+                    if device?.canType != false {
+                        // Dictation or the keyboard, into the TV's search.
+                        TextField("Digitar na TV", text: $text)
+                            .onSubmit {
+                                guard !text.isEmpty else { return }
+                                home.typeOnTV(text, on: deviceID)
+                                text = ""
+                            }
+                    }
                     ForEach(apps.prefix(8)) { app in
                         Button(app.name) { home.openApp(app.package, on: deviceID) }
                     }
