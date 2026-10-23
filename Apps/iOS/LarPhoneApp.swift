@@ -32,6 +32,7 @@ struct LarPhoneApp: App {
         }
         Notifier.start()
         PresenceMonitor.shared.start(model: Self.model)
+        if SmartThingsImport.run(Self.model) { Self.link.sendAccounts() }
     }
 
     var body: some Scene {
