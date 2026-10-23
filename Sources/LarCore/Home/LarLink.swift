@@ -1,11 +1,13 @@
 import Foundation
 
 /// The app's links, for Shortcuts ("Open URL") and anything else that opens one:
-/// `lar://cena/Dormir`, `lar://ligar/TV da Sala`, `lar://desligar/Luz da sala`, `lar://alternar/Abajur`.
+/// `lar://cena/Dormir`, `lar://ligar/TV da Sala`, `lar://desligar/Luz da sala`, `lar://alternar/Abajur`,
+/// `lar://temperatura/Ar do quarto/23`.
 /// Names are matched ignoring case and accents.
 public enum LarLink: Equatable, Sendable {
     case scene(String)
     case power(device: String, on: Bool?)
+    case temperature(device: String, value: Double)
 
     public static let scheme = "lar"
 
@@ -18,6 +20,10 @@ public enum LarLink: Equatable, Sendable {
         case "ligar", "on": self = .power(device: name, on: true)
         case "desligar", "off": self = .power(device: name, on: false)
         case "alternar", "toggle": self = .power(device: name, on: nil)
+        case "temperatura", "temperature":
+            // The last path part is the temperature: "Ar do quarto/23".
+            guard let slash = name.lastIndex(of: "/"), let value = Double(name[name.index(after: slash)...]) else { return nil }
+            self = .temperature(device: String(name[..<slash]), value: value)
         default: return nil
         }
     }
@@ -32,6 +38,9 @@ public enum LarLink: Equatable, Sendable {
         case .power(let device, let on):
             components.host = on.map { $0 ? "ligar" : "desligar" } ?? "alternar"
             components.path = "/" + device
+        case .temperature(let device, let value):
+            components.host = "temperatura"
+            components.path = "/\(device)/\(HomeText.number(value))"
         }
         return components.url
     }
@@ -58,6 +67,14 @@ extension HomeStore {
                 return "Aparelho “\(name)” não encontrado"
             }
             perform(.power(on ?? !current), on: device.id)
+            return nil
+        case .temperature(let name, let value):
+            guard let device = devices.first(where: { LarLink.same($0.name, name) }), device.acceptsTemperature else {
+                showNotice("Ar-condicionado “\(name)” não encontrado")
+                return "Ar-condicionado “\(name)” não encontrado"
+            }
+            if device.isOn != true { perform(.power(true), on: device.id) }
+            perform(.temperature(min(max(value, 16), 30)), on: device.id)
             return nil
         }
     }

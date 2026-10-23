@@ -13,6 +13,7 @@ struct LarWidgetBundle: WidgetBundle {
     var body: some Widget {
         ScenesWidget()
         FavoritesWidget()
+        AirConditionerWidget()
         SceneControl()
         DeviceControl()
         LaundryLiveActivity()
@@ -201,6 +202,66 @@ struct DeviceButton: View {
         }
         .buttonStyle(.plain)
         .disabled(!device.canSwitch)
+    }
+}
+
+// MARK: Air conditioner
+
+struct AirConditionerWidget: Widget {
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: "com.coupled.lar.ac", provider: HomeProvider()) { entry in
+            AirConditionerView(entry: entry)
+                .containerBackground(.fill.tertiary, for: .widget)
+        }
+        .configurationDisplayName("Ar-condicionado")
+        .description("Temperatura do ambiente, a ajustada, ligar e − / +.")
+        .supportedFamilies([.systemSmall, .accessoryRectangular])
+    }
+}
+
+struct AirConditionerView: View {
+    var entry: HomeEntry
+    @Environment(\.widgetFamily) private var family
+
+    /// A favorite air conditioner first, else the first one.
+    private var unit: HomeDevice? {
+        let units = entry.devices.filter(\.acceptsTemperature)
+        return units.first { entry.favorites.contains($0.id) } ?? units.first
+    }
+
+    var body: some View {
+        if let unit {
+            let isOn = unit.isOn == true && unit.isOnline
+            let entity = DeviceEntity(unit)
+            VStack(alignment: .leading, spacing: family == .accessoryRectangular ? 1 : 6) {
+                HStack {
+                    Text(unit.name).font(.caption).lineLimit(1)
+                    Spacer()
+                    Button(intent: ToggleDeviceIntent(device: entity)) {
+                        Image(systemName: "power")
+                            .foregroundStyle(isOn ? Color.white : Color.primary)
+                            .padding(5)
+                            .background(Circle().fill(isOn ? Color.accentColor : Color.secondary.opacity(0.2)))
+                    }
+                    .buttonStyle(.plain)
+                }
+                Text(unit.roomTemperature.map(HomeText.degrees) ?? "–")
+                    .font(.system(size: family == .accessoryRectangular ? 20 : 34, weight: .medium, design: .rounded))
+                Text(isOn ? "ajustado em \(unit.targetTemperature.map(HomeText.degrees) ?? "–")" : "Desligado")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                if family != .accessoryRectangular {
+                    HStack {
+                        Button(intent: AdjustACIntent(device: entity, delta: -1)) { Image(systemName: "minus").frame(maxWidth: .infinity) }
+                        Button(intent: AdjustACIntent(device: entity, delta: 1)) { Image(systemName: "plus").frame(maxWidth: .infinity) }
+                    }
+                    .buttonStyle(.bordered)
+                    .disabled(!isOn)
+                }
+            }
+        } else {
+            Text("Nenhum ar-condicionado LG.").font(.footnote).foregroundStyle(.secondary)
+        }
     }
 }
 

@@ -211,6 +211,8 @@ public actor TuyaClient: DeviceProvider, LiveVideoProvider {
                 ["code": "work_mode", "value": "colour"],
                 colorCommand(code: code, color: color, value: device.brightness ?? 1, scale: scale(controls)),
             ]
+        case .temperature:
+            throw ProviderError.unsupported
         }
     }
 

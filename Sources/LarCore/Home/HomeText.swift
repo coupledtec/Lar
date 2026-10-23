@@ -30,6 +30,10 @@ public enum HomeText {
     }
 
     public static func degrees(_ value: Double) -> String { "\(Int(value.rounded()))°" }
+    /// A number as stored in a device's controls: "23" or "23.5".
+    public static func number(_ value: Double) -> String {
+        value == value.rounded() ? String(Int(value)) : String(value)
+    }
 }
 
 extension String {

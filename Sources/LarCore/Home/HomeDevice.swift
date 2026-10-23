@@ -75,6 +75,11 @@ public struct HomeDevice: Sendable, Equatable, Identifiable, Codable {
     }
     public var canDim: Bool { brightness != nil && isOnline }
     public var hasColor: Bool { color != nil && isOnline }
+    /// An air conditioner whose target temperature the list can set (LG's).
+    public var acceptsTemperature: Bool { kind == .airConditioner && controls["targetTemperature"] != nil }
+    public var targetTemperature: Double? { controls["targetTemperature"].flatMap(Double.init) }
+    public var roomTemperature: Double? { controls["roomTemperatureValue"].flatMap(Double.init) }
+
     public var hasLiveVideo: Bool { kind == .camera && provider == .tuya && isOnline }
 
     /// A remote screen: an Android TV, or a Samsung TV or soundbar with SmartThings' remote capabilities.
@@ -98,6 +103,8 @@ public struct HomeDevice: Sendable, Equatable, Identifiable, Codable {
         case .color(let color):
             copy.color = color
             if copy.isOn == false { copy.isOn = true }
+        case .temperature(let value):
+            copy.controls["targetTemperature"] = HomeText.number(value)
         }
         return copy
     }
@@ -105,7 +112,7 @@ public struct HomeDevice: Sendable, Equatable, Identifiable, Codable {
 
 /// The piece of a device's state a command changes. Commands for the same field replace each other.
 public enum HomeField: Hashable, Sendable {
-    case power, brightness, color
+    case power, brightness, color, temperature
 }
 
 public enum HomeCommand: Sendable, Equatable, Hashable, Codable {
@@ -113,12 +120,15 @@ public enum HomeCommand: Sendable, Equatable, Hashable, Codable {
     /// 0–1.
     case brightness(Double)
     case color(LightColor)
+    /// An air conditioner's target, in °C.
+    case temperature(Double)
 
     public var field: HomeField {
         switch self {
         case .power: .power
         case .brightness: .brightness
         case .color: .color
+        case .temperature: .temperature
         }
     }
 }

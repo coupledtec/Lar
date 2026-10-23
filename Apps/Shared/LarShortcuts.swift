@@ -15,6 +15,11 @@ struct LarShortcuts: AppShortcutsProvider {
             shortTitle: "Ligar", systemImageName: "power"
         )
         AppShortcut(
+            intent: SetACTemperatureIntent(),
+            phrases: ["Ajustar \(\.$device) no \(.applicationName)", "Temperatura do \(\.$device) no \(.applicationName)"],
+            shortTitle: "Temperatura do ar", systemImageName: "thermometer.medium"
+        )
+        AppShortcut(
             intent: TurnOffIntent(),
             phrases: ["Desligar \(\.$device) no \(.applicationName)", "Desligue \(\.$device) no \(.applicationName)"],
             shortTitle: "Desligar", systemImageName: "poweroff"

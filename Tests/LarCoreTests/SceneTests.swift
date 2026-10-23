@@ -93,6 +93,9 @@ import Testing
         #expect(LarLink(try #require(URL(string: "lar://alternar/Abajur"))) == .power(device: "Abajur", on: nil))
         #expect(LarLink(try #require(URL(string: "lar://cena/"))) == nil)
         #expect(LarLink(try #require(URL(string: "http://cena/Dormir"))) == nil)
+        #expect(LarLink(try #require(URL(string: "lar://temperatura/Ar%20do%20quarto/23.5"))) == .temperature(device: "Ar do quarto", value: 23.5))
+        #expect(LarLink(try #require(URL(string: "lar://temperatura/Ar"))) == nil)
+        #expect(LarLink(try #require(LarLink.url(.temperature(device: "Ar", value: 22)))) == .temperature(device: "Ar", value: 22))
         let made = try #require(LarLink.url(.scene("Sala de jantar")))
         #expect(LarLink(made) == .scene("Sala de jantar"))
     }
@@ -105,5 +108,36 @@ import Testing
         #expect(home.open(.power(device: "luz da SALA", on: nil), scenes: []) == nil)
         #expect(home.device(id: SceneTests.light.id)?.isOn == true)
         #expect(home.open(.scene("Nada"), scenes: [scene]) == "Cena “Nada” não encontrada")
+    }
+}
+
+@MainActor
+@Suite struct SceneTemperatureTests {
+    static let ac: HomeDevice = {
+        var device = HomeDevice(provider: .lg, rawID: "ac", name: "Ar", kind: .airConditioner, isOn: false)
+        device.controls["targetTemperature"] = "22"
+        return device
+    }()
+
+    @Test func sceneSetsTheTargetAfterSwitchingOn() {
+        var draft = SceneDraft()
+        draft.name = "Dormir"
+        draft.choices[Self.ac.id] = true
+        draft.temperatures[Self.ac.id] = 24
+        let scene = draft.build(with: [Self.ac])
+        #expect(scene.actions.map(\.command) == [.power(true), .temperature(24)])
+        #expect(scene.temperature(of: Self.ac.id) == 24)
+
+        var edit = SceneDraft(editing: scene)
+        #expect(edit.temperatures[Self.ac.id] == 24)
+        edit.temperatures[Self.ac.id] = 25
+        #expect(edit.build(with: [Self.ac]).actions.map(\.command) == [.power(true), .temperature(25)])
+        edit.choices[Self.ac.id] = false
+        #expect(edit.build(with: [Self.ac]).actions.map(\.command) == [.power(false)])
+
+        let home = HomeStore(previewDevices: [Self.ac])
+        home.run(scene)
+        #expect(home.device(id: Self.ac.id)?.targetTemperature == 24)
+        #expect(home.device(id: Self.ac.id)?.isOn == true)
     }
 }

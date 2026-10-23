@@ -169,6 +169,59 @@ struct TurnOffIntent: AppIntent {
     }
 }
 
+// MARK: Air conditioner
+
+/// Sets an air conditioner's target, switching it on first when it's off.
+@MainActor
+func setTemperature(_ entity: DeviceEntity, to target: Double) async throws -> String {
+    let model = try await IntentContext.ready()
+    guard let device = model.home.device(id: entity.id), device.acceptsTemperature else {
+        throw IntentError.message("\(entity.name) não aceita temperatura.")
+    }
+    let value = min(max(target, 16), 30)
+    if device.isOn != true { model.home.perform(.power(true), on: device.id) }
+    model.home.perform(.temperature(value), on: device.id)
+    await model.home.waitUntilSent()
+    return "\(device.name) em \(HomeText.degrees(value))."
+}
+
+struct SetACTemperatureIntent: AppIntent {
+    static let title: LocalizedStringResource = "Ajustar temperatura do ar"
+    static let description = IntentDescription("Liga o ar-condicionado, se preciso, e ajusta a temperatura.")
+
+    @Parameter(title: "Ar-condicionado") var device: DeviceEntity
+    @Parameter(title: "Temperatura", inclusiveRange: (16, 30)) var temperature: Int
+
+    @MainActor
+    func perform() async throws -> some IntentResult & ProvidesDialog {
+        .result(dialog: "\(try await setTemperature(device, to: Double(temperature)))")
+    }
+}
+
+/// The widget's − and + on an air conditioner.
+struct AdjustACIntent: AppIntent {
+    static let title: LocalizedStringResource = "Mudar temperatura do ar"
+    static let isDiscoverable = false
+
+    @Parameter(title: "Ar-condicionado") var device: DeviceEntity
+    @Parameter(title: "Graus") var delta: Int
+
+    init() {}
+
+    init(device: DeviceEntity, delta: Int) {
+        self.device = device
+        self.delta = delta
+    }
+
+    @MainActor
+    func perform() async throws -> some IntentResult {
+        let model = try await IntentContext.ready()
+        let current = model.home.device(id: device.id)?.targetTemperature ?? 23
+        _ = try await setTemperature(device, to: current + Double(delta))
+        return .result()
+    }
+}
+
 /// A widget's or Control Center's tap on a device: switches it to the other state.
 struct ToggleDeviceIntent: AppIntent {
     static let title: LocalizedStringResource = "Alternar aparelho"

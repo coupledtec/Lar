@@ -79,6 +79,8 @@ public struct LGProvider: DeviceProvider {
                 device.controls["roomTemperature"] = HomeText.degrees(room)
             }
             if status.isOn, let target = status.targetTemperature { parts.append("ajustado em \(HomeText.degrees(target))") }
+            if let target = status.targetTemperature { device.controls["targetTemperature"] = HomeText.number(target) }
+            if let room = status.currentTemperature { device.controls["roomTemperatureValue"] = HomeText.number(room) }
         } else if parts.isEmpty, let room = status.currentTemperature {
             parts.append(HomeText.degrees(room))
         }
@@ -87,6 +89,17 @@ public struct LGProvider: DeviceProvider {
     }
 
     public func send(_ command: HomeCommand, to device: HomeDevice) async throws {
+        if case .temperature(let value) = command {
+            guard device.kind == .airConditioner else { throw ProviderError.unsupported }
+            do {
+                // LG units take 16–30 °C in half degrees.
+                let target = (min(max(value, 16), 30) * 2).rounded() / 2
+                try await client.control(deviceID: device.rawID, payload: ACCommand.targetTemperature(target).payload)
+            } catch let error as ThinQError {
+                throw Self.providerError(error)
+            }
+            return
+        }
         guard case .power(let on) = command, let key = device.controls["operation"] else {
             throw ProviderError.unsupported
         }

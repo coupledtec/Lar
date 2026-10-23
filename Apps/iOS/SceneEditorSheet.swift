@@ -49,6 +49,17 @@ struct SceneEditorSheet: View {
                             }
                             .pickerStyle(.segmented)
                             .labelsHidden()
+                            if draft.choices[row.id] == true, row.device?.acceptsTemperature == true {
+                                Toggle("Definir temperatura", isOn: Binding(
+                                    get: { draft.temperatures[row.id] != nil },
+                                    set: { draft.temperatures[row.id] = $0 ? (row.device?.targetTemperature ?? 23) : nil }
+                                ))
+                                if let value = draft.temperatures[row.id] {
+                                    Stepper("\(HomeText.degrees(value))C", value: Binding(
+                                        get: { value }, set: { draft.temperatures[row.id] = min(max($0, 16), 30) }
+                                    ), step: 1)
+                                }
+                            }
                         }
                     }
                 } header: {

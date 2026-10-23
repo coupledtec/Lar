@@ -166,6 +166,10 @@ public actor SmartThingsClient: TVRemoteProvider {
             guard device.controls["color"] != nil else { throw ProviderError.unsupported }
             let value: JSONValue = ["hue": .number((color.hue / 3.6).rounded()), "saturation": .number((color.saturation * 100).rounded())]
             return ["component": "main", "capability": "colorControl", "command": "setColor", "arguments": [value]]
+        case .temperature(let value):
+            guard device.kind == .airConditioner else { throw ProviderError.unsupported }
+            return ["component": "main", "capability": "thermostatCoolingSetpoint", "command": "setCoolingSetpoint",
+                    "arguments": [.number(value)]]
         }
     }
 

@@ -48,6 +48,14 @@ public struct HomeScene: Codable, Sendable, Identifiable, Equatable, Hashable {
         devices.filter { $0.isOn != nil && $0.kind != .camera }
     }
 
+    /// The air conditioner's target the scene sets, if any.
+    public func temperature(of deviceID: String) -> Double? {
+        for action in actions where action.deviceID == deviceID {
+            if case .temperature(let value) = action.command { return value }
+        }
+        return nil
+    }
+
     /// Whether the scene turns the device on (true), off (false), or doesn't touch it (nil).
     public func power(of deviceID: String) -> Bool? {
         for action in actions where action.deviceID == deviceID {
@@ -115,17 +123,24 @@ public struct SceneDraft: Equatable, Sendable {
     public var symbol: String
     /// true: turn on, false: turn off; absent: the scene leaves the device alone.
     public var choices: [String: Bool]
+    /// Air conditioners turned on by the scene: the target to set (absent: left as it is).
+    public var temperatures: [String: Double]
     public let original: HomeScene?
 
     public init(editing scene: HomeScene? = nil) {
         original = scene
         name = scene?.name ?? ""
         symbol = scene?.symbol ?? "sparkles"
-        var choices: [String: Bool] = [:]
+        var choices: [String: Bool] = [:], temperatures: [String: Double] = [:]
         for action in scene?.actions ?? [] {
-            if case .power(let on) = action.command { choices[action.deviceID] = on }
+            switch action.command {
+            case .power(let on): choices[action.deviceID] = on
+            case .temperature(let value): temperatures[action.deviceID] = value
+            default: break
+            }
         }
         self.choices = choices
+        self.temperatures = temperatures
     }
 
     /// Every device as it is now.
@@ -151,13 +166,21 @@ public struct SceneDraft: Equatable, Sendable {
     public func build(with devices: [HomeDevice]) -> HomeScene {
         var actions: [HomeScene.Action] = []
         for (id, on) in choices.sorted(by: { $0.key < $1.key }) {
-            let saved = original?.actions.filter { $0.deviceID == id } ?? []
+            let saved = (original?.actions.filter { $0.deviceID == id } ?? []).filter {
+                if case .temperature = $0.command { return false } else { return true }
+            }
+            var name = saved.first?.deviceName
             if original?.power(of: id) == on, !saved.isEmpty {
                 actions += saved
             } else if let device = devices.first(where: { $0.id == id }) {
                 actions += HomeScene.actions(for: device, on: on)
-            } else if let name = saved.first?.deviceName {
+                name = device.name
+            } else if let name {
                 actions.append(.init(deviceID: id, deviceName: name, command: .power(on)))
+            }
+            // The target goes after switching on (a unit that's off ignores it).
+            if on, let target = temperatures[id], let name {
+                actions.append(.init(deviceID: id, deviceName: name, command: .temperature(target)))
             }
         }
         return HomeScene(id: original?.id ?? UUID(), name: name.trimmingCharacters(in: .whitespaces), symbol: symbol, actions: actions)
