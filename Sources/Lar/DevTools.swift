@@ -34,6 +34,7 @@ enum DevTools {
         model.scenes.save(HomeScene(name: "Cinema", symbol: "film", actions: HomeScene.actions(for: sampleDevices[0], on: true)))
         write(HomeView(model: model, fixedDate: date), "list", to: directory)
         write(HomeView(model: model, fixedDate: date, initialRoute: .scene(id: model.scenes.scenes.first?.id)), "scene", to: directory)
+        write(HomeView(model: model, fixedDate: date, initialRoute: .dialer), "dialer", to: directory)
         write(HomeView(model: model, fixedDate: date, initialRoute: .light(id: "tuya:l1")), "light", to: directory)
         write(HomeView(model: model, fixedDate: date, initialRoute: .settings), "settings", to: directory)
         write(HomeView(model: model, fixedDate: date, initialRoute: .tv(id: "androidTV:SERIAL1")), "tv", to: directory)

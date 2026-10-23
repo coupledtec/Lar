@@ -10,6 +10,7 @@ struct HomeListView: View {
     var phone: PhoneStore
 
     @State private var showingSettings = false
+    @State private var showingDialer = false
     /// The scene being made (nil id) or changed.
     @State private var editingScene: SceneEditing?
     @State private var editingDevice: DeviceEditing?
@@ -44,14 +45,12 @@ struct HomeListView: View {
                     } label: { Image(systemName: "gearshape") }
                         .accessibilityLabel("Ajustes")
                 }
-                if phone.isConfigured {
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button { Task { await phone.dial() } } label: {
-                            Image(systemName: "bell.and.waves.left.and.right")
-                                .foregroundStyle(phone.registration == .registered ? Color.accentColor : .orange)
-                        }
-                        .accessibilityLabel("Ligar para o porteiro")
+                ToolbarItem(placement: .topBarLeading) {
+                    Button { showingDialer = true } label: {
+                        Image(systemName: "phone")
+                            .foregroundStyle(!phone.isConfigured || phone.registration == .registered ? Color.accentColor : .orange)
                     }
+                    .accessibilityLabel("Telefone")
                 }
                 if home.devices.filter(\.hasLiveVideo).count > 1 {
                     ToolbarItem(placement: .topBarLeading) {
@@ -87,6 +86,18 @@ struct HomeListView: View {
             .fullScreenCover(item: Binding(get: { phone.call }, set: { _ in })) { call in
                 CallView(phone: phone, call: call)
                     .task(id: call.state == .incoming) { await ring(while: call) }
+            }
+            .sheet(isPresented: $showingDialer) {
+                NavigationStack {
+                    DialerView(phone: phone, onSettings: {
+                        showingDialer = false
+                        Task { if await SettingsLock.unlock() { showingSettings = true } }
+                    }, onCall: { showingDialer = false })
+                    .navigationTitle("Telefone")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Fechar") { showingDialer = false } } }
+                }
+                .presentationDetents([.large])
             }
             .sheet(isPresented: $showingSettings) {
                 SettingsView(model: model, link: link, phone: phone)

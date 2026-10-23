@@ -19,6 +19,7 @@ struct HomeView: View {
         /// A device's name, room, favorite and visibility.
         case device(id: String)
         case diagnostics
+        case dialer
     }
 
     @State private var route: Route?
@@ -45,6 +46,16 @@ struct HomeView: View {
             case .tv(let id):
                 TVDetailView(home: home, deviceID: id) { go(.list) }
                     .transition(.move(edge: .trailing).combined(with: .opacity))
+            case .dialer:
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack(spacing: 10) {
+                        BackButton { go(.list) }
+                        Text("Telefone").font(.system(size: 13, weight: .semibold))
+                    }
+                    Divider()
+                    DialerView(phone: model.phone, onSettings: { go(.settings) }, onCall: { CallWindow.show(model.phone) })
+                }
+                .transition(.move(edge: .trailing).combined(with: .opacity))
             case .diagnostics:
                 DiagnosticsView(model: model) { go(.settings) }
                     .transition(.move(edge: .trailing).combined(with: .opacity))
@@ -114,18 +125,16 @@ struct HomeView: View {
             if home.isRefreshing {
                 ProgressView().controlSize(.mini)
             }
-            if model.phone.isConfigured {
-                Button { model.callDoor() } label: {
-                    Image(systemName: "bell.and.waves.left.and.right")
-                        .font(.system(size: 13))
-                        .frame(width: 24, height: 24)
-                        .contentShape(Rectangle())
-                        .foregroundStyle(model.phone.registration == .registered ? Color.primary : Theme.warning)
-                }
-                .buttonStyle(.plain)
-                .help(model.phone.registration == .registered ? "Ligar para o porteiro" : "Porteiro: sem registro no servidor")
-                .accessibilityLabel("Ligar para o porteiro")
+            Button { go(.dialer) } label: {
+                Image(systemName: "phone")
+                    .font(.system(size: 13))
+                    .frame(width: 24, height: 24)
+                    .contentShape(Rectangle())
+                    .foregroundStyle(!model.phone.isConfigured || model.phone.registration == .registered ? Color.primary : Theme.warning)
             }
+            .buttonStyle(.plain)
+            .help("Telefone e porteiro")
+            .accessibilityLabel("Telefone")
             if home.devices.filter(\.hasLiveVideo).count > 1 {
                 Button { CameraWindow.showAll(home: home) } label: {
                     Image(systemName: "rectangle.grid.2x2")
