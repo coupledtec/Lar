@@ -160,7 +160,7 @@ private struct SignInWebView {
 
         static func isCallback(_ url: URL?) -> Bool {
             guard let url else { return false }
-            return url.absoluteString.hasPrefix(SmartThingsSignIn.redirect) || url.scheme == "lar"
+            return url.host() == URL(string: SmartThingsSignIn.redirect)?.host() || url.scheme == "lar"
         }
 
         private func finish(_ url: URL) {
@@ -186,6 +186,19 @@ private struct SignInWebView {
                 webView.stopLoading()
                 finish(url)
             }
+        }
+
+        // SmartThings sends the browser on with a server redirect, which doesn't always ask the policy again: the
+        // address is checked again as the page starts and as it ends (the redirect's page is never needed).
+        func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+            if let url = webView.url, Self.isCallback(url) {
+                webView.stopLoading()
+                finish(url)
+            }
+        }
+
+        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            if let url = webView.url, Self.isCallback(url) { finish(url) }
         }
 
         func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
