@@ -16,15 +16,30 @@ public enum Keychain {
     }()
 
     public static func read(_ account: String) -> String? {
-        readData(account).flatMap { String(data: $0, encoding: .utf8) }
+        #if os(macOS)
+        return Vault.read(account)
+        #else
+        return readData(account).flatMap { String(data: $0, encoding: .utf8) }
+        #endif
     }
 
     @discardableResult
     public static func write(_ value: String, account: String, label: String = "Lar – LG ThinQ token") -> Bool {
-        writeData(Data(value.utf8), account: account, label: label)
+        #if os(macOS)
+        return Vault.write(value, account: account)
+        #else
+        return writeData(Data(value.utf8), account: account, label: label)
+        #endif
     }
 
     public static func delete(_ account: String, service: String = service) {
+        #if os(macOS)
+        if service == Self.service { return Vault.delete(account) }
+        #endif
+        deleteItem(account, service: service)
+    }
+
+    static func deleteItem(_ account: String, service: String = service) {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,

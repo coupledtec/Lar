@@ -23,7 +23,11 @@ if [[ ! -f Resources/AppIcon.icns ]]; then
   scripts/make-icon.sh
 fi
 cp Resources/AppIcon.icns "$APP/Contents/Resources/AppIcon.icns"
-codesign --force --sign - --timestamp=none "$APP"
+# A stable signature keeps the keychain's "Always Allow" across builds (an ad hoc one changes every time, and macOS
+# asks again). LAR_SIGN_IDENTITY picks one; otherwise the first Apple Development / Developer ID certificate here.
+IDENTITY="${LAR_SIGN_IDENTITY:-$(security find-identity -v -p codesigning 2>/dev/null \
+  | awk '/"(Apple Development|Developer ID Application):/ { print $2; exit }')}"
+codesign --force --sign "${IDENTITY:--}" --timestamp=none "$APP"
 echo "Built $APP"
 
 if [[ "${1:-}" == "--install" ]]; then

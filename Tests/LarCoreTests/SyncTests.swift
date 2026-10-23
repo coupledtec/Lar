@@ -7,6 +7,8 @@ import Testing
 @MainActor
 @Suite(.serialized) struct SyncTests {
     init() {
+        Vault.account = "test-vault"
+        Vault.reset()
         SyncServer.keyAccount = "test-sync-key"
         SyncClient.keyAccount = "test-sync-key-mac"
         Keychain.delete(SyncServer.keyAccount)
@@ -16,6 +18,8 @@ import Testing
     func cleanUp() {
         Keychain.delete(SyncServer.keyAccount)
         Keychain.delete(SyncClient.keyAccount)
+        Keychain.deleteItem("test-vault")
+        Vault.reset()
     }
 
     static func endpoint(_ port: UInt16?) throws -> NWEndpoint {
