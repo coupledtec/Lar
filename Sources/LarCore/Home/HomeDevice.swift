@@ -20,7 +20,7 @@ public enum DeviceKind: String, Sendable, CaseIterable, Codable {
 }
 
 /// A color as the apps show it: hue 0–360, saturation 0–1.
-public struct LightColor: Sendable, Equatable, Codable {
+public struct LightColor: Sendable, Equatable, Hashable, Codable {
     public var hue: Double
     public var saturation: Double
 
@@ -31,7 +31,7 @@ public struct LightColor: Sendable, Equatable, Codable {
 }
 
 /// Any device from any account, flattened to what the list shows and what can be changed.
-public struct HomeDevice: Sendable, Equatable, Identifiable {
+public struct HomeDevice: Sendable, Equatable, Identifiable, Codable {
     /// Unique across accounts: "<provider>:<rawID>".
     public var id: String { "\(provider.rawValue):\(rawID)" }
     public var provider: Provider
@@ -68,8 +68,11 @@ public struct HomeDevice: Sendable, Equatable, Identifiable {
         self.controls = controls
     }
 
-    /// A TV off the network can still be tried: it may wake by Wake-on-LAN.
-    public var canSwitch: Bool { isOn != nil && (isOnline || (kind == .tv && controls["mac"] != nil)) }
+    /// A TV off the network can still be tried: it may wake by Wake-on-LAN, or answer the Google TV remote from a
+    /// light standby.
+    public var canSwitch: Bool {
+        isOn != nil && (isOnline || (kind == .tv && (controls["mac"] != nil || controls["link"] == "remote")))
+    }
     public var canDim: Bool { brightness != nil && isOnline }
     public var hasColor: Bool { color != nil && isOnline }
     public var hasLiveVideo: Bool { kind == .camera && provider == .tuya && isOnline }
@@ -96,7 +99,7 @@ public enum HomeField: Hashable, Sendable {
     case power, brightness, color
 }
 
-public enum HomeCommand: Sendable, Equatable {
+public enum HomeCommand: Sendable, Equatable, Hashable, Codable {
     case power(Bool)
     /// 0–1.
     case brightness(Double)
@@ -133,6 +136,14 @@ public protocol DeviceProvider: Sendable {
     var provider: Provider { get }
     func devices() async throws -> [HomeDevice]
     func send(_ command: HomeCommand, to device: HomeDevice) async throws
+}
+
+/// A TV's remote: keys and apps (the TVs themselves, or the iPhone's TVs seen from the watch).
+public protocol TVRemoteProvider: DeviceProvider {
+    func press(_ key: AndroidTVProvider.Key, on device: HomeDevice) async throws
+    func apps(on device: HomeDevice) async throws -> [AndroidTVProvider.App]
+    func openApp(_ package: String, on device: HomeDevice) async throws
+    func type(_ text: String, on device: HomeDevice) async throws
 }
 
 /// A camera's live video, as an HLS link that expires within minutes.

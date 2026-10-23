@@ -78,6 +78,27 @@ public enum TVDiscovery {
         return host
     }
 
+    /// Whether something accepts a plain TCP connection on the port within a moment.
+    public static func answers(host: String, port: UInt16, timeout: Duration = .seconds(2)) async -> Bool {
+        guard let port = NWEndpoint.Port(rawValue: port) else { return false }
+        let connection = NWConnection(host: NWEndpoint.Host(host), port: port, using: .tcp)
+        defer { connection.cancel() }
+        let once = Once()
+        return await withCheckedContinuation { continuation in
+            connection.stateUpdateHandler = { state in
+                switch state {
+                case .ready: once.run { continuation.resume(returning: true) }
+                case .failed, .waiting, .cancelled: once.run { continuation.resume(returning: false) }
+                default: break
+                }
+            }
+            connection.start(queue: .global(qos: .utility))
+            DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(Int(timeout.components.seconds * 1000))) {
+                once.run { continuation.resume(returning: false) }
+            }
+        }
+    }
+
     static func text(_ host: NWEndpoint.Host) -> String? {
         switch host {
         // Without the interface ("192.168.1.50%en0" → "192.168.1.50").

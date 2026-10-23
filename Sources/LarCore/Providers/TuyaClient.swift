@@ -49,12 +49,13 @@ public actor TuyaClient: DeviceProvider, LiveVideoProvider {
             // The query in alphabetical order: it's part of what gets signed.
             let query = (lastRow.isEmpty ? "" : "last_row_key=\(lastRow)&") + "size=100"
             let result = try await call("GET", "/v1.0/iot-01/associated-users/devices?\(query)")
-            for json in result["devices"]?.array ?? [] {
-                var device = Self.device(from: json)
-                if device.kind == .light, device.isOnline, let spec = try? await spec(for: device.rawID) {
-                    device = Self.applySpec(spec, to: device, json: json)
+            // The lights' specifications, all at once.
+            out += try await (result["devices"]?.array ?? []).concurrentMap { json in
+                let device = Self.device(from: json)
+                if device.kind == .light, device.isOnline, let spec = try? await self.spec(for: device.rawID) {
+                    return Self.applySpec(spec, to: device, json: json)
                 }
-                out.append(device)
+                return device
             }
             lastRow = result["last_row_key"]?.string ?? ""
             if result["has_more"]?.bool != true || lastRow.isEmpty { break }

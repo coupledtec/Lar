@@ -11,6 +11,8 @@ struct SettingsView: View {
     var onBack: () -> Void
 
     @State private var lgToken = ""
+    @State private var notifyLaundry = Notifier.laundryEnabled
+    @State private var lockSettings = SettingsLock.isEnabled
     @State private var tuyaID = ""
     @State private var tuyaSecret = ""
     @State private var tuyaRegion = "us"
@@ -40,6 +42,7 @@ struct SettingsView: View {
                     tuyaSection
                     smartThingsSection
                     tvSection
+                    listSection
                     if settings.token != nil { temperatureSection }
                     generalSection
                 }
@@ -156,7 +159,7 @@ struct SettingsView: View {
 
     private var tvSection: some View {
         section("TVs Android", provider: .androidTV) {
-            hint("O Lar encontra sozinho as TVs Android e Google TV da rede de casa, mesmo quando o IP muda. Cada TV precisa da depuração USB ligada; na primeira vez ela pergunta “Permitir depuração USB?”: marque “Sempre permitir”.")
+            hint("O Lar encontra sozinho as TVs Android e Google TV da rede de casa, mesmo quando o IP muda. Para controlar uma TV, abra-a na lista e toque em “Parear”: ela mostra um código para digitar aqui, uma vez só. Com a depuração USB ligada na TV, o Lar também usa o ADB (lista todos os apps) e pede “Permitir depuração USB?” na primeira vez.")
             Toggle("Encontrar TVs automaticamente", isOn: Binding(
                 get: { settings.tvDiscovery },
                 set: { on in save { settings.tvDiscovery = on } }
@@ -178,6 +181,61 @@ struct SettingsView: View {
                 }
                 Spacer()
                 if settings.tvHost != nil { removeButton { settings.tvHost = nil } }
+            }
+        }
+    }
+
+    // MARK: List
+
+    private var listSection: some View {
+        section("Lista") {
+            Toggle("Pedir Touch ID ou senha para abrir os Ajustes", isOn: Binding(
+                get: { lockSettings }, set: { lockSettings = $0; SettingsLock.isEnabled = $0 }
+            ))
+            .toggleStyle(.switch)
+            .controlSize(.small)
+            .font(.system(size: 12))
+            Toggle("Temperatura do ar na barra de menus", isOn: Binding(
+                get: { model.showsTemperatureInMenuBar }, set: { model.showsTemperatureInMenuBar = $0 }
+            ))
+            .toggleStyle(.switch)
+            .controlSize(.small)
+            .font(.system(size: 12))
+            Toggle("Abrir o Lar com \(HotKey.display) em qualquer app", isOn: Binding(
+                get: { model.usesHotKey }, set: { model.usesHotKey = $0 }
+            ))
+            .toggleStyle(.switch)
+            .controlSize(.small)
+            .font(.system(size: 12))
+            HStack {
+                Text("Agrupar por").font(.system(size: 12))
+                Spacer()
+                Picker("Agrupar por", selection: Binding(get: { model.home.grouping }, set: { model.home.grouping = $0 })) {
+                    ForEach(DeviceGrouping.allCases, id: \.self) { Text($0.title).tag($0) }
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+                .frame(width: 150)
+            }
+            hint("Botão direito num aparelho: favoritos (ficam no topo), nome, cômodo ou ocultar.")
+            Toggle("Avisar quando a lavadora terminar", isOn: Binding(
+                get: { notifyLaundry },
+                set: { on in
+                    notifyLaundry = on
+                    Notifier.laundryEnabled = on
+                    if on { Notifier.start() }
+                }
+            ))
+            .toggleStyle(.switch)
+            .controlSize(.small)
+            .font(.system(size: 12))
+            ForEach(model.home.hiddenDevices) { device in
+                HStack {
+                    Text(device.name).font(.system(size: 12))
+                    Spacer()
+                    Button("Mostrar") { model.home.customize(device.id) { $0.isHidden = false } }
+                        .font(.system(size: 11))
+                }
             }
         }
     }

@@ -10,6 +10,7 @@ final class StatusItemController: NSObject, NSPopoverDelegate {
     private let model: AppModel
     private var store: HomeStore { model.home }
     private var observers: [NSObjectProtocol] = []
+    private lazy var hotKey = HotKey { [weak self] in self?.togglePopover() }
 
     init(model: AppModel) {
         self.model = model
@@ -86,7 +87,12 @@ final class StatusItemController: NSObject, NSPopoverDelegate {
         let image = NSImage(systemSymbolName: count > 0 ? "house.fill" : "house", accessibilityDescription: "Lar")
         image?.isTemplate = true
         button.image = image?.withSymbolConfiguration(.init(pointSize: 14, weight: .regular))
-        button.title = ""
+        // The first air conditioner's room temperature, when asked for in Settings.
+        let temperature = model.showsTemperatureInMenuBar
+            ? store.devices.first(where: { $0.kind == .airConditioner && $0.isOnline })?.controls["roomTemperature"]
+            : nil
+        button.title = temperature.map { " \($0)" } ?? ""
+        model.usesHotKey ? hotKey.register() : hotKey.unregister()
         button.toolTip = switch count {
         case 0: "Lar · tudo desligado"
         case 1: "Lar · 1 aparelho ligado"

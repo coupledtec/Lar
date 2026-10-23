@@ -20,6 +20,26 @@ controle remoto da TV.
 - **TVs Android / Google TV:** ligar e desligar, ver o que está passando e um controle remoto completo (direcional,
   voltar, início, play/pause, volume, entradas e os apps da TV). As setas e o Enter do teclado do Mac também
   funcionam.
+- **Cenas:** um toque liga e desliga vários aparelhos de uma vez ("Dormir", "Cinema"). Crie no "+" de Cenas,
+  escolhendo para cada aparelho Ligar, Desligar ou não mexer (ou "Usar o estado atual"). Clique com o botão direito
+  (no iPhone, toque e segure) para editar.
+- **Atalhos e Siri:** no iPhone e no relógio, "E aí Siri, executar Dormir no Lar", "Ligar TV da Sala no Lar". No app
+  Atalhos aparecem as ações "Executar cena", "Ligar aparelho" e "Desligar aparelho". No Mac e no iPhone, a ação
+  "Abrir URL" também funciona com `lar://cena/Dormir`, `lar://ligar/TV da Sala`, `lar://desligar/…` e
+  `lar://alternar/…`.
+- **Organizar a lista:** favoritos no topo, nome próprio no Lar, cômodos (agrupe por tipo ou por cômodo em
+  Ajustes → Lista) e aparelhos ocultos. Botão direito no Mac; no iPhone, toque e segure. O relógio e o CarPlay
+  seguem a organização do iPhone.
+- **Avisos:** notificação quando a lavadora ou a secadora LG termina o ciclo (no Mac e no iPhone; o relógio
+  repete a do iPhone). Dá para desligar em Ajustes → Lista.
+- **Mais na TV:** canal +/−, nível do volume e digitar texto na busca aberta da TV.
+- **Widgets (iPhone):** "Cenas" e "Favoritos" na tela inicial e na de bloqueio, com botões que funcionam ali mesmo;
+  na Central de Controle, os controles "Cena do Lar" e "Aparelho do Lar" (também no Botão de Ação). No relógio,
+  complicações com quantos aparelhos estão ligados e as cenas.
+- **Atividade ao Vivo:** o ciclo da lavadora LG com a contagem regressiva na tela de bloqueio e na Dynamic Island.
+- **Câmeras juntas:** todas ao vivo numa janela (Mac) ou numa tela (iPhone), pelo botão de grade.
+- **Mac:** ⌃⌥L abre o Lar de qualquer app, e a temperatura do ar pode aparecer ao lado da casinha (Ajustes → Lista).
+- **Ajustes protegidos:** Face ID (iPhone) ou Touch ID/senha (Mac) para abrir os Ajustes, onde ficam as chaves.
 - **Sem servidor no meio:** o Lar conversa direto com a nuvem de cada marca e, no caso das TVs, direto com a TV pela
   rede de casa.
 
@@ -125,8 +145,16 @@ aparece como "Desligado" e pode ser ligado pelo Lar.
 
 ### TVs Android / Google TV
 
-As TVs são **encontradas sozinhas** na rede de casa, mesmo quando o roteador muda o IP delas. Cada TV precisa da
-**depuração USB** ligada:
+As TVs são **encontradas sozinhas** na rede de casa, mesmo quando o roteador muda o IP delas. Há dois jeitos de o
+Lar controlar uma TV.
+
+**Pareando com o código (o mais simples, e o do iPhone).** É o mesmo controle do app Google TV; não precisa mexer nas
+configurações da TV. Com a TV ligada, abra-a na lista do Lar e clique em **Parear com a TV** (no Mac, quando a TV
+também aceita o ADB, o botão se chama **Parear sem depuração**). A TV mostra um código de 6 letras e números: digite
+no Lar e confirme. É uma vez por TV e por aparelho (Mac e iPhone pareiam cada um o seu). Pareada, a TV liga e
+desliga, recebe as teclas do controle e abre os apps mais comuns (Netflix, YouTube, Prime Video…).
+
+**Pela depuração USB (só no Mac).** Além do controle, lista todos os apps instalados na TV:
 
 1. Na TV: Configurações → **Sistema → Sobre** (ou Preferências do dispositivo → Sobre) → clique **7 vezes em
    "Build"** até aparecer "Você é um desenvolvedor".

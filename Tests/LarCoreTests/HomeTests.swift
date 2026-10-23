@@ -344,3 +344,39 @@ actor FakeProvider: DeviceProvider {
         Issue.record("timed out")
     }
 }
+
+@MainActor
+@Suite struct WatchPayloadTests {
+    @Test func roundTripAndApplyNeverCarriesTheRefreshToken() throws {
+        let phone = InMemorySettings(token: "lg-token")
+        phone.tuya = TuyaClient.Credentials(clientID: "id", secret: "sec", region: "us")
+        phone.smartThings = .oauth(clientID: "c", secret: "s", refreshToken: "REFRESH")
+        let payload = WatchPayload.from(phone, smartThingsAccessToken: "ACCESS", now: Date(timeIntervalSince1970: 0))
+        let data = try payload.encoded()
+        #expect(!String(decoding: data, as: UTF8.self).contains("REFRESH"))
+        let watch = InMemorySettings()
+        try WatchPayload.decoded(data).apply(to: watch)
+        #expect(watch.token == "lg-token")
+        #expect(watch.tuya?.secret == "sec")
+        #expect(watch.smartThings == .personalToken("ACCESS"))
+    }
+}
+
+@MainActor
+@Suite struct AccountsImportTests {
+    @Test func importsAndDeletesTheFile() throws {
+        let folder = FileManager.default.temporaryDirectory.appendingPathComponent("lar-import-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: folder) }
+        let accounts = AccountsImport(lgToken: "lg", tuya: .init(clientID: "id", secret: "sec", region: "us"),
+                                      smartThings: .init(clientID: "c", secret: "s", refreshToken: "r"), temperatureLimits: nil)
+        try JSONEncoder().encode(accounts).write(to: folder.appendingPathComponent(AccountsImport.fileName))
+        let settings = InMemorySettings()
+        #expect(AccountsImport.importIfPresent(in: folder, into: settings))
+        #expect(settings.token == "lg")
+        #expect(settings.tuya?.secret == "sec")
+        #expect(settings.smartThings == .oauth(clientID: "c", secret: "s", refreshToken: "r"))
+        #expect(!FileManager.default.fileExists(atPath: folder.appendingPathComponent(AccountsImport.fileName).path))
+        #expect(!AccountsImport.importIfPresent(in: folder, into: settings))
+    }
+}

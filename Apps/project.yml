@@ -1,0 +1,160 @@
+# The iPhone and Apple Watch apps. Generate the Xcode project with `xcodegen` in this folder (LarApps.xcodeproj is not
+# kept in git). The Mac app is built by SwiftPM at the repository root.
+name: LarApps
+options:
+  bundleIdPrefix: com.coupled
+  deploymentTarget:
+    iOS: "18.0"
+    watchOS: "11.0"
+  createIntermediateGroups: true
+  # Siri's phrases are in Portuguese.
+  developmentLanguage: pt-BR
+packages:
+  Lar:
+    path: ..
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    CODE_SIGN_STYLE: Automatic
+    # Your Apple ID's team (Xcode → Settings → Accounts): set here or with DEVELOPMENT_TEAM=… on the command line.
+    DEVELOPMENT_TEAM: ""
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+targets:
+  LarPhone:
+    type: application
+    platform: iOS
+    sources:
+      - path: iOS
+      - path: Shared
+      # The Mac's air conditioner illustration, the same files on both.
+      - path: ../Sources/Lar/UI/Components/ACUnitView.swift
+      - path: ../Sources/Lar/UI/Components/AirflowView.swift
+    dependencies:
+      - package: Lar
+        product: LarCore
+      - target: LarWatch
+      - target: LarWidgets
+    info:
+      path: iOS/Info.plist
+      properties:
+        CFBundleDisplayName: Lar
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: true
+          UISceneConfigurations:
+            CPTemplateApplicationSceneSessionRoleApplication:
+              - UISceneConfigurationName: CarPlay
+                UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).CarPlaySceneDelegate
+        ITSAppUsesNonExemptEncryption: false
+        NSLocalNetworkUsageDescription: O Lar procura e controla as TVs Android e Google TV da sua rede.
+        NSBonjourServices: [_androidtvremote2._tcp]
+        UIBackgroundModes: [fetch]
+        NSSupportsLiveActivities: true
+        NSFaceIDUsageDescription: O Lar pede o Face ID para abrir os Ajustes, onde ficam as chaves das contas.
+        # Shared with the widgets: accounts, scenes, favorites, TVs (see Keychain.sharedGroup).
+        LarKeychainGroup: $(AppIdentifierPrefix)com.coupled.lar.shared
+        BGTaskSchedulerPermittedIdentifiers: [com.coupled.lar.refresh]
+        # lar://cena/Dormir, lar://ligar/TV da Sala… (Shortcuts' "Open URL"), like the Mac.
+        CFBundleURLTypes:
+          - CFBundleURLName: com.coupled.lar
+            CFBundleURLSchemes: [lar]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.coupled.lar.ios
+        PRODUCT_NAME: Lar
+        TARGETED_DEVICE_FAMILY: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        INFOPLIST_KEY_CFBundleDisplayName: Lar
+        # CarPlay needs Apple's Driving Task approval, which only a paid team's profile can carry: the entitlement
+        # goes in simulator builds only, so device builds still sign with a free team.
+        "CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]": iOS/CarPlay.entitlements
+        "CODE_SIGN_ENTITLEMENTS[sdk=iphoneos*]": iOS/Lar.entitlements
+  LarWatch:
+    type: application
+    platform: watchOS
+    sources:
+      - path: Watch
+      - path: Shared
+    dependencies:
+      - package: Lar
+        product: LarCore
+      - target: LarWatchWidgets
+    info:
+      path: Watch/Info.plist
+      properties:
+        CFBundleDisplayName: Lar
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        WKApplication: true
+        WKCompanionAppBundleIdentifier: com.coupled.lar.ios
+        WKRunsIndependentlyOfCompanionApp: false
+        LarKeychainGroup: $(AppIdentifierPrefix)com.coupled.lar.shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.coupled.lar.ios.watchkitapp
+        CODE_SIGN_ENTITLEMENTS: Watch/LarWatch.entitlements
+        PRODUCT_NAME: Lar
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        TARGETED_DEVICE_FAMILY: "4"
+  # The iPhone's widgets, Control Center controls and the laundry Live Activity.
+  LarWidgets:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: Widgets
+      - path: Shared/LarIntents.swift
+      - path: Shared/LarModel.swift
+      - path: Shared/Palette.swift
+      - path: Shared/WidgetSupport.swift
+    dependencies:
+      - package: Lar
+        product: LarCore
+    info:
+      path: Widgets/Info.plist
+      properties:
+        CFBundleDisplayName: Lar
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LarKeychainGroup: $(AppIdentifierPrefix)com.coupled.lar.shared
+        NSLocalNetworkUsageDescription: O Lar controla as TVs Android e Google TV da sua rede.
+        NSBonjourServices: [_androidtvremote2._tcp]
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.coupled.lar.ios.widgets
+        PRODUCT_NAME: LarWidgets
+        CODE_SIGN_ENTITLEMENTS: Widgets/LarWidgets.entitlements
+        TARGETED_DEVICE_FAMILY: "1"
+        SKIP_INSTALL: YES
+  # The watch face complications.
+  LarWatchWidgets:
+    type: app-extension
+    platform: watchOS
+    sources:
+      - path: WatchWidgets
+      - path: Shared/WidgetSupport.swift
+    dependencies:
+      - package: Lar
+        product: LarCore
+    info:
+      path: WatchWidgets/Info.plist
+      properties:
+        CFBundleDisplayName: Lar
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LarKeychainGroup: $(AppIdentifierPrefix)com.coupled.lar.shared
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.coupled.lar.ios.watchkitapp.widgets
+        PRODUCT_NAME: LarWatchWidgets
+        CODE_SIGN_ENTITLEMENTS: WatchWidgets/LarWatchWidgets.entitlements
+        TARGETED_DEVICE_FAMILY: "4"
+        SKIP_INSTALL: YES

@@ -25,6 +25,20 @@ public final class HomeStore {
     /// A short-lived error to show, e.g. a command the device rejected.
     public private(set) var transientMessage: String?
     @ObservationIgnored private var overrides: [String: [HomeField: Override]] = [:]
+    /// The owner's names, favorites, rooms and hidden devices, by device id.
+    public var customizations: [String: DeviceCustomization] = [:] {
+        didSet { if oldValue != customizations { onListPreferencesChange?(customizations, grouping) } }
+    }
+    /// How the list is grouped below the favorites.
+    public var grouping: DeviceGrouping = .kind {
+        didSet { if oldValue != grouping { onListPreferencesChange?(customizations, grouping) } }
+    }
+    /// Saves the two above when they change.
+    /// Notifications to post after a refresh (a washer that finished). Only the Mac and the iPhone set it.
+    @ObservationIgnored public var onAlerts: (([HomeAlert]) -> Void)?
+    /// After every read of the accounts (the iPhone saves the widgets' copy and updates the Live Activities).
+    @ObservationIgnored public var onRefreshed: (() -> Void)?
+    @ObservationIgnored public var onListPreferencesChange: (([String: DeviceCustomization], DeviceGrouping) -> Void)?
 
     /// Polls faster while the popover is open.
     public var isPopoverVisible = false {
@@ -103,6 +117,7 @@ public final class HomeStore {
         let date = now()
         return serverDevices.map { device in
             var device = device
+            if let name = customizations[device.id]?.name { device.name = name }
             for override in (overrides[device.id] ?? [:]).values where override.expires > date {
                 device = device.applying(override.command)
             }
@@ -135,6 +150,13 @@ public final class HomeStore {
         }
         serverDevices.removeAll { providers[$0.provider] == nil }
         failures = [:]
+    }
+
+    /// Rebuilds the clients only when the accounts with keys differ from the ones in use: keys unreadable when the
+    /// app was woken in the background (iPhone locked) are picked up once it's opened.
+    public func reloadAccountsIfChanged() {
+        let configured = Set(makeProviders().map(\.provider))
+        if configured != Set(providers.keys) { reloadAccounts() }
     }
 
     public func start() {
@@ -173,6 +195,7 @@ public final class HomeStore {
         guard !isPreview, !isRefreshing, !providers.isEmpty else { return }
         isRefreshing = true
         defer { isRefreshing = false }
+        let previous = serverDevices
         let current = Array(providers.values)
         let results = await withTaskGroup(of: AccountRead.self) { group in
             for provider in current {
@@ -216,6 +239,11 @@ public final class HomeStore {
         var seen = Set<String>()
         serverDevices = serverDevices.filter { seen.insert($0.id).inserted }
         pruneOverrides()
+        if !previous.isEmpty, let onAlerts {
+            let alerts = alerts(after: previous)
+            if !alerts.isEmpty { onAlerts(alerts) }
+        }
+        onRefreshed?()
         let ids = serverDevices.map(\.id)
         Self.log.debug("refresh: \(ids.count, privacy: .public) devices, \(Set(ids).count, privacy: .public) unique")
     }
@@ -242,6 +270,9 @@ public final class HomeStore {
             overrides[id] = kept.isEmpty ? nil : kept
         }
     }
+
+    /// Reads the accounts again shortly, to confirm a change made elsewhere (e.g. the watch switching a TV).
+    public func refreshSoon() { scheduleRefresh(after: Self.refreshAfterSend) }
 
     private func scheduleRefresh(after delay: Duration) {
         guard !isPreview else { return }
@@ -276,6 +307,9 @@ public final class HomeStore {
         perform(.power(!on), on: deviceID)
     }
 
+    /// Whether commands are still waiting or going out.
+    public var isSending: Bool { worker != nil || !queue.isEmpty }
+
     private func startWorker() {
         guard worker == nil else { return }
         worker = Task { [weak self] in
@@ -306,16 +340,34 @@ public final class HomeStore {
         }
     }
 
+    /// One account's client (the iPhone reads SmartThings' access token from it, for the watch).
+    public func provider(_ kind: Provider) -> (any DeviceProvider)? { providers[kind] }
+
     // MARK: TV
 
     /// The TV's remote: keys and apps go straight out (they change nothing the list keeps).
-    public var tv: AndroidTVProvider? { providers[.androidTV] as? AndroidTVProvider }
+    public var tv: (any TVRemoteProvider)? { providers[.androidTV] as? any TVRemoteProvider }
+
+    /// Pairing happens only where the TVs are reached directly (not from the watch).
+    private var directTV: AndroidTVProvider? { providers[.androidTV] as? AndroidTVProvider }
 
     public func press(_ key: AndroidTVProvider.Key, on deviceID: String) {
         guard let tv, let device = device(id: deviceID) else { return }
         Task {
             do {
                 try await tv.press(key, on: device)
+            } catch {
+                showMessage("TV: \((error as? ProviderError)?.message ?? error.localizedDescription)")
+            }
+        }
+    }
+
+    /// Types into the TV's focused field.
+    public func typeOnTV(_ text: String, on deviceID: String) {
+        guard let tv, let device = device(id: deviceID) else { return }
+        Task {
+            do {
+                try await tv.type(text, on: device)
             } catch {
                 showMessage("TV: \((error as? ProviderError)?.message ?? error.localizedDescription)")
             }
@@ -339,6 +391,34 @@ public final class HomeStore {
         }
     }
 
+    /// Makes the TV show its pairing code; the error's message when it can't.
+    public func startTVPairing(_ deviceID: String) async -> String? {
+        guard let tv = directTV, let device = device(id: deviceID) else { return ProviderError.unsupported.message }
+        do {
+            try await tv.startPairing(device)
+            return nil
+        } catch {
+            return (error as? ProviderError)?.message ?? error.localizedDescription
+        }
+    }
+
+    /// Sends the code shown on the TV; on success the TV is read again, now through the remote protocol.
+    public func finishTVPairing(_ deviceID: String, code: String) async -> String? {
+        guard let tv = directTV, let device = device(id: deviceID) else { return ProviderError.unsupported.message }
+        do {
+            try await tv.finishPairing(device, code: code)
+            await refresh()
+            return nil
+        } catch {
+            return (error as? ProviderError)?.message ?? error.localizedDescription
+        }
+    }
+
+    public func cancelTVPairing(_ deviceID: String) {
+        guard let tv = directTV, let device = device(id: deviceID) else { return }
+        Task { await tv.cancelPairing(device) }
+    }
+
     // MARK: Cameras
 
     /// A fresh live video link for a camera (they expire within minutes).
@@ -348,6 +428,9 @@ public final class HomeStore {
         else { throw ProviderError.unsupported }
         return try await provider.liveStreamURL(for: device)
     }
+
+    /// A short message under the list (a scene with devices out of reach).
+    public func showNotice(_ message: String) { showMessage(message) }
 
     private func showMessage(_ message: String) {
         transientMessage = message

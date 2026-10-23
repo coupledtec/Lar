@@ -33,6 +33,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let controller = StatusItemController(model: model)
         self.model = model
         self.controller = controller
+        Notifier.start()
+        store.onAlerts = { Notifier.post($0) }
         store.start()
 
         // Don't poll while the Mac sleeps; catch up right after waking.
@@ -54,6 +56,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             Task {
                 try? await Task.sleep(for: .milliseconds(600))
                 controller.showPopover()
+            }
+        }
+    }
+
+    /// `lar://cena/Dormir`, `lar://ligar/TV da Sala`… (Shortcuts' "Open URL"). Right after launch, the devices are
+    /// read first.
+    func application(_ application: NSApplication, open urls: [URL]) {
+        guard let model else { return }
+        for url in urls {
+            guard let link = LarLink(url) else { continue }
+            Task {
+                if model.home.devices.isEmpty { await model.home.refresh() }
+                model.home.open(link, scenes: model.scenes.scenes)
             }
         }
     }

@@ -23,13 +23,17 @@ public actor SmartThingsClient: DeviceProvider {
     private let now: @Sendable () -> Date
     /// The old refresh token stops working as soon as a new one is issued, so it must be saved right away.
     private let saveRefreshToken: @Sendable (String) -> Void
+    /// The refresh token as saved now: another process (a widget) may have renewed it since this client read it.
+    private let loadRefreshToken: @Sendable () -> String?
     private var accessToken: String?
     private var accessExpires = Date.distantPast
 
     public init(
         credentials: Credentials, transport: @escaping HTTPTransport = defaultTransport,
-        now: @escaping @Sendable () -> Date = Date.init, saveRefreshToken: @escaping @Sendable (String) -> Void = { _ in }
+        now: @escaping @Sendable () -> Date = Date.init, saveRefreshToken: @escaping @Sendable (String) -> Void = { _ in },
+        loadRefreshToken: @escaping @Sendable () -> String? = { nil }
     ) {
+        self.loadRefreshToken = loadRefreshToken
         self.credentials = credentials
         self.transport = transport
         self.now = now
@@ -47,23 +51,23 @@ public actor SmartThingsClient: DeviceProvider {
             items += page["items"]?.array ?? []
             next = page["_links"]?["next"]?["href"]?.string.flatMap(URL.init(string:))
         }
-        var out: [HomeDevice] = []
-        for item in items {
-            guard var device = Self.device(from: item) else { continue }
+        // Every device at once, and each one's status and health together.
+        return try await items.compactMap(Self.device(from:)).concurrentMap { device in
+            var device = device
+            let path = "devices/\(device.rawID)"
             do {
-                let status = try await get(Self.api.appendingPathComponent("devices/\(device.rawID)/components/main/status"))
-                device = Self.applyStatus(status, to: device)
+                async let status = self.get(Self.api.appendingPathComponent("\(path)/components/main/status"))
                 // Switched off isn't offline: whether the device is reachable is its health, read on its own.
-                let health = try? await get(Self.api.appendingPathComponent("devices/\(device.rawID)/health"))
-                if Self.isOffline(health: health) { device.isOnline = false }
+                async let health = try? self.get(Self.api.appendingPathComponent("\(path)/health"))
+                device = Self.applyStatus(try await status, to: device)
+                if Self.isOffline(health: await health) { device.isOnline = false }
             } catch let error as ProviderError where error == .unauthorized {
                 throw error
             } catch {
                 device.isOnline = false
             }
-            out.append(device)
+            return device
         }
-        return out
     }
 
     /// The main component's capabilities decide the kind; devices with nothing to show or change are skipped.
@@ -146,6 +150,12 @@ public actor SmartThingsClient: DeviceProvider {
         }
     }
 
+    /// A valid access token (about 24 h), for a device that may use it but must never renew it (the watch): only
+    /// the owner of the refresh token renews, so two devices don't invalidate each other's token.
+    public func currentAccessToken() async throws -> String {
+        try await token()
+    }
+
     // MARK: HTTP
 
     private func get(_ url: URL) async throws -> JSONValue {
@@ -185,8 +195,9 @@ public actor SmartThingsClient: DeviceProvider {
         switch credentials {
         case .personalToken(let token):
             return token
-        case .oauth(let clientID, let secret, let refreshToken):
+        case .oauth(let clientID, let secret, let saved):
             if let accessToken, now() < accessExpires { return accessToken }
+            let refreshToken = loadRefreshToken() ?? saved
             var lastError = ProviderError.api("SmartThings: sem resposta")
             for host in Self.authHosts {
                 do {

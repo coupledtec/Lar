@@ -1,3 +1,4 @@
+import LarCore
 import SwiftUI
 
 /// Thin track filled in the mode color up to a round thumb, with a tick at every whole degree.

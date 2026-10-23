@@ -17,8 +17,9 @@ public struct LGProvider: DeviceProvider {
         } catch let error as ThinQError {
             throw Self.providerError(error)
         }
-        var out: [HomeDevice] = []
-        for item in listed {
+        let client = client
+        // Every device's state at once.
+        return try await listed.concurrentMap { item in
             var device = HomeDevice(
                 provider: .lg, rawID: item.deviceId, name: item.displayName, kind: Self.kind(item.deviceInfo.deviceType)
             )
@@ -29,9 +30,8 @@ public struct LGProvider: DeviceProvider {
             } catch {
                 device.isOnline = false
             }
-            out.append(device)
+            return device
         }
-        return out
     }
 
     static func kind(_ type: String) -> DeviceKind {
@@ -62,16 +62,22 @@ public struct LGProvider: DeviceProvider {
         }
         var parts: [String] = []
         if let run = state["runState"]?["currentState"]?.string, device.kind != .airConditioner {
+            device.controls["runState"] = run
             parts.append(HomeText.cycle(run))
             let timer = state["timer"]
-            if let left = HomeText.timeLeft(hours: Int(timer?["remainHour"]?.double ?? 0),
-                                            minutes: Int(timer?["remainMinute"]?.double ?? 0)) {
+            let hours = Int(timer?["remainHour"]?.double ?? 0), minutes = Int(timer?["remainMinute"]?.double ?? 0)
+            if let left = HomeText.timeLeft(hours: hours, minutes: minutes) {
                 parts.append(left)
+                // For the Live Activity's countdown.
+                device.controls["remainMinutes"] = String(hours * 60 + minutes)
             }
         }
         let status = ACStatus(json: state)
         if device.kind == .airConditioner {
-            if let room = status.currentTemperature { parts.append("Ambiente \(HomeText.degrees(room))") }
+            if let room = status.currentTemperature {
+                parts.append("Ambiente \(HomeText.degrees(room))")
+                device.controls["roomTemperature"] = HomeText.degrees(room)
+            }
             if status.isOn, let target = status.targetTemperature { parts.append("ajustado em \(HomeText.degrees(target))") }
         } else if parts.isEmpty, let room = status.currentTemperature {
             parts.append(HomeText.degrees(room))

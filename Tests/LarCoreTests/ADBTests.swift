@@ -130,6 +130,43 @@ import Testing
         #expect(devices.first?.isOnline == false)
     }
 
+    /// ADB refused but the Google TV remote port answers: the TV is on, offered for pairing, with no switch yet.
+    @Test func tvWithoutADBIsOfferedForPairing() async throws {
+        let provider = AndroidTVProvider(discover: { [TVDiscovery.Found(name: "TV da Sala", host: "127.0.0.1")] },
+                                         makeKey: { try ADBKey.generate() }, probe: { _, port in port == 6466 })
+        let device = try #require(try await provider.devices().first)
+        #expect(device.isOnline)
+        #expect(device.isOn == nil)
+        #expect(!device.canSwitch)
+        #expect(device.controls["pairable"] == "1")
+        #expect(device.controls["pairingKey"] == "TV da Sala")
+    }
+
+    /// A paired TV that doesn't answer (in standby it leaves the network) is off, and switching it on can be tried.
+    @Test func silentPairedTVCanStillBeSwitchedOn() async throws {
+        let provider = AndroidTVProvider(discover: { [TVDiscovery.Found(name: "TV da Sala", host: "127.0.0.1")] },
+                                         useADB: false, paired: ["TV da Sala"],
+                                         makeIdentity: { throw TVRemoteError.connection("sem resposta") },
+                                         probe: { _, _ in false })
+        let device = try #require(try await provider.devices().first)
+        #expect(!device.isOnline)
+        #expect(device.isOn == false)
+        #expect(device.canSwitch)
+        #expect(device.detail == "Desligada ou fora da rede")
+    }
+
+    /// Without ADB (the iPhone), a TV that's advertised but silent is off, not pairable.
+    @Test func silentTVWithoutADBIsOffline() async throws {
+        let provider = AndroidTVProvider(discover: { [TVDiscovery.Found(name: "TV da Sala", host: "127.0.0.1")] },
+                                         useADB: false, probe: { _, _ in false })
+        let device = try #require(try await provider.devices().first)
+        #expect(!device.isOnline)
+        #expect(device.controls["pairable"] == nil)
+        let answering = AndroidTVProvider(discover: { [TVDiscovery.Found(name: "TV da Sala", host: "127.0.0.1")] },
+                                          useADB: false, probe: { _, _ in true })
+        #expect(try await answering.devices().first?.controls["pairable"] == "1")
+    }
+
     /// A discovered TV that doesn't answer still shows, offline, with the reason.
     @Test func unreachableDiscoveredTVSaysWhy() async throws {
         let provider = AndroidTVProvider(discover: { [TVDiscovery.Found(name: "TV da Sala", host: "127.0.0.1")] },

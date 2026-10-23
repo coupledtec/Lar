@@ -34,6 +34,32 @@ enum CameraWindow {
         NSApp.activate()
     }
 
+    /// Every camera live in one window, in a grid (two per row).
+    static func showAll(home: HomeStore) {
+        let id = "all-cameras"
+        if let window = open[id]?.window {
+            window.makeKeyAndOrderFront(nil)
+            NSApp.activate()
+            return
+        }
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 960, height: 560),
+            styleMask: [.titled, .closable, .resizable, .miniaturizable],
+            backing: .buffered, defer: false
+        )
+        window.title = "Câmeras"
+        window.isReleasedWhenClosed = false
+        window.appearance = NSAppearance(named: .darkAqua)
+        window.contentView = NSHostingView(rootView: CameraGrid(home: home))
+        window.center()
+        window.setFrameAutosaveName("Camera-grid")
+        let closer = Closer(id: id)
+        window.delegate = closer
+        open[id] = (window, closer)
+        window.makeKeyAndOrderFront(nil)
+        NSApp.activate()
+    }
+
     fileprivate static func closed(_ id: String) {
         open[id] = nil
     }
@@ -48,6 +74,29 @@ private final class Closer: NSObject, NSWindowDelegate {
     func windowWillClose(_ notification: Notification) {
         (notification.object as? NSWindow)?.contentView = nil
         CameraWindow.closed(id)
+    }
+}
+
+/// The cameras that are online, two per row, each with its name.
+private struct CameraGrid: View {
+    var home: HomeStore
+
+    var body: some View {
+        let cameras = home.devices.filter(\.hasLiveVideo)
+        ScrollView {
+            LazyVGrid(columns: [GridItem(.flexible(), spacing: 8), GridItem(.flexible(), spacing: 8)], spacing: 8) {
+                ForEach(cameras) { camera in
+                    VStack(alignment: .leading, spacing: 4) {
+                        CameraView(deviceID: camera.id, home: home)
+                            .aspectRatio(16 / 9, contentMode: .fit)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                        Text(camera.name).font(.system(size: 12)).foregroundStyle(.white.opacity(0.8))
+                    }
+                }
+            }
+            .padding(10)
+        }
+        .background(Color.black)
     }
 }
 

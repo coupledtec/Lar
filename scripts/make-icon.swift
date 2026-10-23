@@ -1,9 +1,11 @@
 // Renders the 1024×1024 app icon: a dark squircle with a house whose window glows warm, like a lit lamp.
-// Usage: swift scripts/make-icon.swift <output.png>
+// Usage: swift scripts/make-icon.swift <output.png> [--full-bleed]
+// --full-bleed: the whole square, no rounded corners or margin (iPhone and Watch round the icon themselves).
 import AppKit
 import SwiftUI
 
 struct Icon: View {
+    var fullBleed = false
     private let amber = Color(red: 1.0, green: 0.78, blue: 0.30)
 
     var body: some View {
@@ -31,16 +33,17 @@ struct Icon: View {
                 .offset(y: 168)
         }
         .frame(width: 1024, height: 1024)
-        .clipShape(RoundedRectangle(cornerRadius: 230, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: fullBleed ? 0 : 230, style: .continuous))
         // macOS icons leave a margin around the squircle.
-        .scaleEffect(824 / 1024)
+        .scaleEffect(fullBleed ? 1 : 824 / 1024)
         .frame(width: 1024, height: 1024)
     }
 }
 
-let output = CommandLine.arguments.dropFirst().first ?? "icon.png"
+let output = CommandLine.arguments.dropFirst().first { !$0.hasPrefix("--") } ?? "icon.png"
+let fullBleed = CommandLine.arguments.contains("--full-bleed")
 MainActor.assumeIsolated {
-    let renderer = ImageRenderer(content: Icon())
+    let renderer = ImageRenderer(content: Icon(fullBleed: fullBleed))
     renderer.scale = 1
     guard let image = renderer.cgImage,
           let png = NSBitmapImageRep(cgImage: image).representation(using: .png, properties: [:])

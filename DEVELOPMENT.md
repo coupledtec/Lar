@@ -53,6 +53,16 @@ Dois alvos com separação rígida:
     `TVDiscovery` (Bonjour `_androidtvremote2._tcp` a cada atualização, resolvendo o IPv4 atual),
     `AndroidTVProvider` (todas as TVs; identificadas pelo `ro.serialno`, lembradas em `knownTVs`; energia com
     KEYCODE_POWER só quando acordada e KEYCODE_WAKEUP, mais `WakeOnLAN`), `WakeOnLAN`.
+    Protocolo do controle do Google TV ("Android TV Remote v2", sem depuração; o único caminho no iPhone):
+    `TVRemoteProtocol` (protobuf mínimo com prefixo varint; campos de polo.proto e remotemessage.proto como na
+    biblioteca androidtvremote2; segredo do pareamento = SHA-256 dos módulos e expoentes das duas chaves + os 2
+    últimos bytes do código, o 1º byte confere o código), `TVRemoteIdentity` (RSA 2048 + certificado X.509 v1
+    autoassinado montado em DER, no Porta-chaves, achado de novo pelo nome "Lar - controle da TV"; o TLS só aceita
+    certificado de cliente como identidade do Porta-chaves), `TVRemoteLink` (TLS que aceita o certificado da TV e
+    guarda a chave dela), `TVRemoteClient` (porta 6466; conexão aberta, responde configure/set_active/ping, lê
+    ligada/app/volume) e `TVRemotePairing` (porta 6467, em duas etapas: a TV mostra o código, o usuário digita).
+    No provedor, TV pareada (`pairedTVs`, pelo nome anunciado) usa o protocolo; senão ADB quando `useADB` (Mac);
+    sem ADB, a TV que responde na 6466 aparece ligada, sem interruptor e com `controls["pairable"]`.
   - `Store/HomeStore.swift`: fonte da verdade da lista. Contas lidas em paralelo; uma conta que falha mantém os
     aparelhos até `failuresBeforeOffline`. Mudanças otimistas por aparelho e campo; um comando por vez, o mais novo
     substitui o não enviado do mesmo aparelho e campo. Tempos são constantes estáticas do store.
@@ -60,7 +70,7 @@ Dois alvos com separação rígida:
     comportamento. O app só cria um enquanto a tela de um ar está aberta (`AppModel.openAirConditioner`).
   - `Store/AppSettings.swift`: Porta-chaves (serviço = bundle id; contas `thinq-pat`, `tuya-client-id`,
     `tuya-secret`, `st-token`, `st-client-id`, `st-client-secret`, `st-refresh-token`) e UserDefaults (região da Tuya,
-    TVs: `tvDiscovery`, `tvHost`, `knownTVs`).
+    TVs: `tvDiscovery`, `tvHost`, `knownTVs`, `pairedTVs`).
 - **Lar** (app): `AppModel` (ajustes → provedores → stores), `StatusItemController` (casinha, preenchida quando algo
   está ligado), `UI/HomeView` (rotas: lista, ajustes, ar, luz, TV), `ACDetailView`, `LightDetailView`,
   `TVDetailView`, `CameraWindow` (AVPlayer, uma janela por câmera), `SettingsView`.
@@ -74,6 +84,38 @@ Dois alvos com separação rígida:
   renovação invalida o anterior. Cada app precisa da própria integração OAuth.
 - **Porta-chaves e builds locais:** a assinatura ad hoc muda a cada build, e o macOS pode pedir de novo permissão
   para o app ler as chaves ("Sempre permitir").
+- **TV pelo controle do Google TV:** sem pedido de lista de apps no protocolo; os apps abrem por link
+  (`https://…` dos apps grandes ou `market://launch?id=<pacote>`). A TV fecha a conexão de quem não responde ao ping.
+  Uma TV anunciada no Bonjour pode estar em repouso e fora do Wi-Fi: por isso o teste da porta 6466 antes de
+  oferecer o pareamento.
+- **iPhone bloqueado:** o relógio e o CarPlay acordam o app do iPhone em segundo plano, muitas vezes bloqueado. As
+  chaves usam `AfterFirstUnlockThisDeviceOnly` (as antigas migram em `Keychain.migrateAccessibility()` ao abrir), o
+  app relê as contas ao ficar ativo (`reloadAccountsIfChanged`) e nunca manda ao relógio um pacote montado sem
+  conseguir ler as chaves (apagaria as contas dele).
+- **Cenas, links e Siri:** `Home/HomeScene.swift` (cena = lista de `HomeCommand` por aparelho; `SceneStore`
+  observável; `SceneDraft` é a lógica dos editores do Mac e do iPhone), guardadas em UserDefaults (`scenes`) e
+  levadas ao relógio no `WatchPayload`. `Home/LarLink.swift` trata `lar://` (Mac: `application(_:open:)`; iPhone:
+  `onOpenURL`). Siri/Atalhos são App Intents em `Apps/Shared/LarIntents.swift` (iPhone e relógio); o Mac não tem,
+  porque o SwiftPM não gera os metadados de App Intents: lá ficam os links.
+- **Organização e avisos:** `Home/DeviceCustomization.swift` (nome, favorito, cômodo, oculto por id;
+  `HomeStore.sections(grouping:)` é o agrupamento de todas as telas, inclusive CarPlay), salvo por
+  `AccountSettings.bindListPreferences` e levado ao relógio no `WatchPayload`. `Home/HomeAlert.swift` compara duas
+  leituras (lavadora LG de um estado ativo para END/COMPLETE, por `controls["runState"]`); `Notifier` publica no Mac e
+  no iPhone (`HomeStore.onAlerts`); o iPhone ainda pede leituras em segundo plano (`BGAppRefreshTask`
+  `com.coupled.lar.refresh`).
+- **Texto na TV:** pelo protocolo do Google TV, `RemoteImeBatchEdit` (campo 21) com os contadores que a TV mandou
+  por último; pelo ADB, `input text` (espaço = `%s`, entre aspas simples).
+- **Widgets e grupo de Porta-chaves:** a conta grátis não tem App Groups, mas tem Keychain Sharing. No iPhone e no
+  relógio, `Keychain.sharedGroup` (Info.plist `LarKeychainGroup`) põe as chaves, o certificado das TVs e as
+  preferências (`Preferences`, que migra do UserDefaults na primeira leitura) no grupo
+  `$(AppIdentifierPrefix)com.coupled.lar.shared`, lido pelos alvos `LarWidgets` (iOS: widgets, controles da Central
+  de Controle, Atividade ao Vivo) e `LarWatchWidgets` (complicações). O widget lê o `WidgetSnapshot` salvo pelo app e
+  tenta uma leitura nova; os botões rodam App Intents no processo do widget (`IntentContext.makeModel`). Como o
+  widget também renova o token do SmartThings, o cliente relê o refresh token salvo antes de renovar.
+- **Mac:** atalho global por Carbon (`HotKey`, sem permissão de Acessibilidade); widgets e Siri no Mac exigiriam
+  assinar o app com perfil (na conta grátis vence em 7 dias), por isso o Mac segue com assinatura ad hoc e links.
+- **TVs no relógio:** o watchOS não deixa abrir conexão com aparelhos da rede local; o relógio usa
+  `RelayedTVProvider`, que pede ao iPhone por WatchConnectivity (`TVRelay`), e só funciona com o iPhone por perto.
 - **zsh:** `log` é um comando interno do zsh; use `/usr/bin/log show --predicate 'subsystem == "<bundle id>"'`.
 
 ## Convenções

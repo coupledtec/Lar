@@ -2,7 +2,7 @@ import Foundation
 import LarCore
 import Observation
 
-typealias AllSettings = SettingsStorage & AccountSettings
+typealias AllSettings = LarSettings
 
 /// Ties the settings to the stores: the device list for every account, and an air conditioner's full controls
 /// while its screen is open.
@@ -10,51 +10,42 @@ typealias AllSettings = SettingsStorage & AccountSettings
 @Observable
 final class AppModel {
     let home: HomeStore
+    let scenes: SceneStore
     @ObservationIgnored let settings: AllSettings
     /// The air conditioner whose screen is open; polled only while it is.
     private(set) var airConditioner: ACStore?
     @ObservationIgnored private let isPreview: Bool
 
+    /// The air conditioner's room temperature next to the house in the menu bar.
+    var showsTemperatureInMenuBar = Preferences.bool(forKey: "menuBarTemperature") ?? false {
+        didSet { Preferences.set(showsTemperatureInMenuBar, forKey: "menuBarTemperature") }
+    }
+
+    /// ⌃⌥L opens the Lar from any app.
+    var usesHotKey = Preferences.bool(forKey: "globalHotKey") ?? true {
+        didSet { Preferences.set(usesHotKey, forKey: "globalHotKey") }
+    }
+
     init(settings: AllSettings) {
         self.settings = settings
         self.home = HomeStore(makeProviders: { Self.providers(settings) })
+        self.scenes = SceneStore(settings: settings)
         self.isPreview = false
+        settings.bindListPreferences(to: home)
     }
 
     /// Fixed data that never touches the network, for snapshots.
     init(preview home: HomeStore, airConditioner: ACStore? = nil) {
-        self.settings = InMemorySettings(token: "preview")
+        let settings = InMemorySettings(token: "preview")
+        self.settings = settings
+        self.scenes = SceneStore(settings: settings)
         self.home = home
         self.airConditioner = airConditioner
         self.isPreview = true
     }
 
     static func providers(_ settings: AllSettings) -> [any DeviceProvider] {
-        var out: [any DeviceProvider] = []
-        if let token = settings.token, !token.isEmpty {
-            out.append(LGProvider(client: ThinQClient(token: token, clientID: settings.clientID)))
-        }
-        if let tuya = settings.tuya {
-            out.append(TuyaClient(credentials: tuya))
-        }
-        if settings.tvDiscovery || settings.tvHost != nil {
-            let discover: @Sendable () async -> [TVDiscovery.Found]
-            if settings.tvDiscovery {
-                discover = { await TVDiscovery.scan() }
-            } else {
-                discover = { [] }
-            }
-            out.append(AndroidTVProvider(
-                manualHosts: settings.tvHost.map { [$0] } ?? [],
-                known: settings.knownTVs,
-                discover: discover,
-                remember: { AppSettings.saveKnownTVs($0) }
-            ))
-        }
-        if let smartThings = settings.smartThings {
-            out.append(SmartThingsClient(credentials: smartThings, saveRefreshToken: { AppSettings.saveSmartThingsRefreshToken($0) }))
-        }
-        return out
+        Accounts.providers(settings, includeTVs: true)
     }
 
     // MARK: Air conditioner screen

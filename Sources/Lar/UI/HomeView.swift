@@ -14,6 +14,10 @@ struct HomeView: View {
         case airConditioner(rawID: String)
         case light(id: String)
         case tv(id: String)
+        /// A scene's editor; nil makes a new one.
+        case scene(id: UUID?)
+        /// A device's name, room, favorite and visibility.
+        case device(id: String)
     }
 
     @State private var route: Route?
@@ -39,6 +43,12 @@ struct HomeView: View {
                     .transition(.move(edge: .trailing).combined(with: .opacity))
             case .tv(let id):
                 TVDetailView(home: home, deviceID: id) { go(.list) }
+                    .transition(.move(edge: .trailing).combined(with: .opacity))
+            case .device(let id):
+                DeviceSettingsView(home: home, deviceID: id) { go(.list) }
+                    .transition(.move(edge: .trailing).combined(with: .opacity))
+            case .scene(let id):
+                SceneEditorView(home: home, scenes: model.scenes, sceneID: id) { go(.list) }
                     .transition(.move(edge: .trailing).combined(with: .opacity))
             }
         }
@@ -100,7 +110,20 @@ struct HomeView: View {
             if home.isRefreshing {
                 ProgressView().controlSize(.mini)
             }
-            Button { go(.settings) } label: {
+            if home.devices.filter(\.hasLiveVideo).count > 1 {
+                Button { CameraWindow.showAll(home: home) } label: {
+                    Image(systemName: "rectangle.grid.2x2")
+                        .font(.system(size: 13))
+                        .frame(width: 24, height: 24)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .help("Todas as câmeras ao vivo")
+                .accessibilityLabel("Todas as câmeras")
+            }
+            Button {
+                Task { if await SettingsLock.unlock() { go(.settings) } }
+            } label: {
                 Image(systemName: "gearshape")
                     .font(.system(size: 13))
                     .frame(width: 24, height: 24)
@@ -145,29 +168,35 @@ struct HomeView: View {
 
     private var sections: some View {
         VStack(alignment: .leading, spacing: 12) {
-            ForEach(groups, id: \.kind) { group in
+            SceneStrip(home: home, scenes: model.scenes) { go(.scene(id: $0)) }
+            ForEach(home.sections(grouping: home.grouping)) { section in
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(Labels.kindTitle(group.kind).uppercased())
+                    Text(section.title.uppercased())
                         .font(.system(size: 10, weight: .semibold))
                         .tracking(0.6)
                         .foregroundStyle(Theme.secondaryText)
                         .padding(.bottom, 2)
-                    ForEach(group.devices) { device in
+                    ForEach(section.devices) { device in
                         DeviceRow(device: device, opens: opens(device)) { open(device) } onToggle: {
                             home.toggle(device.id)
                         }
+                        .contextMenu { deviceMenu(device) }
                     }
                 }
             }
         }
     }
 
-    private var groups: [(kind: DeviceKind, devices: [HomeDevice])] {
-        let devices = home.devices
-        return HomeStore.kindOrder.compactMap { kind in
-            let matching = devices.filter { $0.kind == kind }
-            return matching.isEmpty ? nil : (kind, matching)
+    /// Right-click on a device: favorite, its settings (name, room), hide.
+    @ViewBuilder
+    private func deviceMenu(_ device: HomeDevice) -> some View {
+        let custom = home.customization(of: device.id)
+        Button(custom.isFavorite ? "Tirar dos favoritos" : "Adicionar aos favoritos") {
+            home.customize(device.id) { $0.isFavorite.toggle() }
         }
+        Button("Nome e cômodo…") { go(.device(id: device.id)) }
+        Divider()
+        Button("Ocultar da lista") { home.customize(device.id) { $0.isHidden = true } }
     }
 
     /// Whether clicking the row opens a screen (or a window) rather than just switching it.

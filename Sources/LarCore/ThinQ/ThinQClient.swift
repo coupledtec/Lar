@@ -136,7 +136,7 @@ public struct ThinQClient: Sendable {
         do {
             (data, response) = try await transport(request)
         } catch let error as URLError {
-            Self.log.error("\(method, privacy: .public) \(path, privacy: .public) failed: \(error.code.rawValue, privacy: .public)")
+            Self.log.error("\(method, privacy: .public) \(path, privacy: .private) failed: \(error.code.rawValue, privacy: .public)")
             throw ThinQError.network(error.localizedDescription)
         }
         let status = (response as? HTTPURLResponse)?.statusCode ?? 0
@@ -144,7 +144,7 @@ public struct ThinQClient: Sendable {
 
         if let error = envelope?["error"] {
             let code = error["code"]?.string ?? ""
-            Self.log.error("\(method, privacy: .public) \(path, privacy: .public) status \(status, privacy: .public) code \(code, privacy: .public)")
+            Self.log.error("\(method, privacy: .public) \(path, privacy: .private) status \(status, privacy: .public) code \(code, privacy: .public)")
             throw ThinQError.from(
                 code: code,
                 message: error["message"]?.string ?? "Request failed",
@@ -152,7 +152,7 @@ public struct ThinQClient: Sendable {
             )
         }
         guard (200..<300).contains(status), let envelope else {
-            Self.log.error("\(method, privacy: .public) \(path, privacy: .public) status \(status, privacy: .public)")
+            Self.log.error("\(method, privacy: .public) \(path, privacy: .private) status \(status, privacy: .public)")
             if status >= 500 { throw ThinQError.serverError(status) }
             throw status == 401 ? ThinQError.unauthorized : ThinQError.invalidResponse
         }

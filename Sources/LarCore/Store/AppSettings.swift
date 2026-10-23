@@ -1,11 +1,39 @@
 import Foundation
 import Security
 
-/// Generic-password storage in the login keychain.
+/// Generic-password storage: the login keychain on the Mac; on the iPhone and the watch, the keychain group the app
+/// shares with its widgets (`LarKeychainGroup` in Info.plist), so they read the same accounts.
 public enum Keychain {
     public static let service = "com.coupled.lar"
 
+    /// The shared access group, or nil (the Mac, tests): items then go to the app's own.
+    public static let sharedGroup: String? = {
+        #if os(macOS)
+        return nil
+        #else
+        return (Bundle.main.object(forInfoDictionaryKey: "LarKeychainGroup") as? String).flatMap { $0.isEmpty ? nil : $0 }
+        #endif
+    }()
+
     public static func read(_ account: String) -> String? {
+        readData(account).flatMap { String(data: $0, encoding: .utf8) }
+    }
+
+    @discardableResult
+    public static func write(_ value: String, account: String, label: String = "Lar – LG ThinQ token") -> Bool {
+        writeData(Data(value.utf8), account: account, label: label)
+    }
+
+    public static func delete(_ account: String, service: String = service) {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: service,
+            kSecAttrAccount as String: account,
+        ]
+        SecItemDelete(query as CFDictionary)
+    }
+
+    static func readData(_ account: String, service: String = service) -> Data? {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
@@ -14,39 +42,85 @@ public enum Keychain {
             kSecMatchLimit as String: kSecMatchLimitOne,
         ]
         var result: AnyObject?
-        guard SecItemCopyMatching(query as CFDictionary, &result) == errSecSuccess,
-              let data = result as? Data
-        else { return nil }
-        return String(data: data, encoding: .utf8)
+        guard SecItemCopyMatching(query as CFDictionary, &result) == errSecSuccess else { return nil }
+        return result as? Data
     }
 
     @discardableResult
-    public static func write(_ value: String, account: String, label: String = "Lar – LG ThinQ token") -> Bool {
+    static func writeData(_ data: Data, account: String, service: String = service, label: String) -> Bool {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
             kSecAttrAccount as String: account,
         ]
-        let data = Data(value.utf8)
         let status = SecItemUpdate(query as CFDictionary, [kSecValueData as String: data] as CFDictionary)
         if status == errSecItemNotFound {
             var item = query
             item[kSecValueData as String] = data
             item[kSecAttrLabel as String] = label
-            // Keep the token on this Mac: no iCloud Keychain sync, no backups.
-            item[kSecAttrAccessible as String] = kSecAttrAccessibleWhenUnlockedThisDeviceOnly
+            // Keep it on this device: no iCloud Keychain sync, no backups.
+            item[kSecAttrAccessible as String] = accessibility
+            if let sharedGroup { item[kSecAttrAccessGroup as String] = sharedGroup }
             return SecItemAdd(item as CFDictionary, nil) == errSecSuccess
         }
         return status == errSecSuccess
     }
 
-    public static func delete(_ account: String) {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: service,
-            kSecAttrAccount as String: account,
-        ]
-        SecItemDelete(query as CFDictionary)
+    /// Readable once the device has been unlocked after starting up: the iPhone app is woken in the background by
+    /// the watch and CarPlay, often while locked, and must still read its keys then.
+    static var accessibility: CFString { kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly }
+
+    /// Moves keys saved by older versions to `accessibility` and into the shared group. Run while unlocked.
+    public static func migrateAccessibility() {
+        #if !os(macOS)
+        var update: [String: Any] = [kSecAttrAccessible as String: accessibility]
+        if let sharedGroup { update[kSecAttrAccessGroup as String] = sharedGroup }
+        for service in [service, Preferences.service] {
+            let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: service]
+            SecItemUpdate(query as CFDictionary, update as CFDictionary)
+        }
+        #endif
+        TVRemoteIdentity.migrateAccessibility()
+    }
+}
+
+/// The app's preferences (not secrets): UserDefaults on the Mac; on the iPhone and the watch, items in the shared
+/// keychain group, so the widgets see the same scenes, favorites and TVs. Values saved by older versions in
+/// UserDefaults move over the first time they're read.
+public enum Preferences {
+    static let service = "com.coupled.lar.prefs"
+
+    private static var shared: Bool { Keychain.sharedGroup != nil }
+
+    public static func object(forKey key: String) -> Any? {
+        guard shared else { return UserDefaults.standard.object(forKey: key) }
+        if let data = Keychain.readData(key, service: service),
+           let box = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any] {
+            return box["value"]
+        }
+        guard let old = UserDefaults.standard.object(forKey: key) else { return nil }
+        set(old, forKey: key)
+        return old
+    }
+
+    public static func set(_ value: Any?, forKey key: String) {
+        guard shared else { return UserDefaults.standard.set(value, forKey: key) }
+        UserDefaults.standard.removeObject(forKey: key)
+        guard let value else { return Keychain.delete(key, service: service) }
+        guard let data = try? PropertyListSerialization.data(fromPropertyList: ["value": value], format: .binary, options: 0) else { return }
+        Keychain.writeData(data, account: key, service: service, label: "Lar – \(key)")
+    }
+
+    public static func string(forKey key: String) -> String? { object(forKey: key) as? String }
+    public static func data(forKey key: String) -> Data? { object(forKey: key) as? Data }
+    public static func bool(forKey key: String) -> Bool? { object(forKey: key) as? Bool }
+
+    static func decoded<T: Decodable>(_ type: T.Type, forKey key: String) -> T? {
+        data(forKey: key).flatMap { try? JSONDecoder().decode(type, from: $0) }
+    }
+
+    static func setEncoded<T: Encodable>(_ value: T, forKey key: String) {
+        set(try? JSONEncoder().encode(value), forKey: key)
     }
 }
 
@@ -82,9 +156,9 @@ public final class AppSettings: SettingsStorage {
     }
 
     public var clientID: String {
-        if let id = defaults.string(forKey: "clientID") { return id }
+        if let id = Preferences.string(forKey: "clientID") { return id }
         let id = "lar-\(UUID().uuidString.lowercased())"
-        defaults.set(id, forKey: "clientID")
+        Preferences.set(id, forKey: "clientID")
         return id
     }
 
@@ -94,11 +168,8 @@ public final class AppSettings: SettingsStorage {
     }
 
     public var temperatureLimits: TemperatureLimits {
-        get {
-            defaults.data(forKey: "temperatureLimits")
-                .flatMap { try? JSONDecoder().decode(TemperatureLimits.self, from: $0) } ?? .standard
-        }
-        set { defaults.set(try? JSONEncoder().encode(newValue), forKey: "temperatureLimits") }
+        get { Preferences.decoded(TemperatureLimits.self, forKey: "temperatureLimits") ?? .standard }
+        set { Preferences.setEncoded(newValue, forKey: "temperatureLimits") }
     }
 }
 
@@ -108,6 +179,11 @@ public final class InMemorySettings: SettingsStorage {
     public var tvHost: String?
     public var tvDiscovery = false
     public var knownTVs: [AndroidTVProvider.KnownTV] = []
+    public var pairedTVs: [String] = []
+    public var tvPins: [String: String] = [:]
+    public var scenes: [HomeScene] = []
+    public var customizations: [String: DeviceCustomization] = [:]
+    public var grouping: DeviceGrouping = .kind
     public var token: String?
     public var clientID = "lar-test"
     public var deviceID: String?
@@ -132,6 +208,29 @@ public protocol AccountSettings: AnyObject {
     var tvDiscovery: Bool { get set }
     /// TVs seen before, so one that's off the network still shows (offline).
     var knownTVs: [AndroidTVProvider.KnownTV] { get set }
+    /// TVs paired with the Google TV remote protocol, by advertised name (or address).
+    var pairedTVs: [String] { get set }
+    /// The paired TVs' certificates (SHA-256), pinned at the first connection (public data, not secrets).
+    var tvPins: [String: String] { get set }
+    /// The scenes made on this device (or, on the watch, received from the iPhone).
+    var scenes: [HomeScene] { get set }
+    /// Names, favorites, rooms and hidden devices, by device id.
+    var customizations: [String: DeviceCustomization] { get set }
+    var grouping: DeviceGrouping { get set }
+}
+
+extension AccountSettings {
+    /// Loads the list preferences into the store and saves them back whenever they change there.
+    @MainActor
+    public func bindListPreferences(to home: HomeStore, afterChange: @escaping () -> Void = {}) {
+        home.customizations = customizations
+        home.grouping = grouping
+        home.onListPreferencesChange = { [weak self] customizations, grouping in
+            self?.customizations = customizations
+            self?.grouping = grouping
+            afterChange()
+        }
+    }
 }
 
 extension AppSettings: AccountSettings {
@@ -150,12 +249,12 @@ extension AppSettings: AccountSettings {
     public var tuya: TuyaClient.Credentials? {
         get {
             guard let id = Self.secret("tuya-client-id"), let secret = Self.secret("tuya-secret") else { return nil }
-            return TuyaClient.Credentials(clientID: id, secret: secret, region: UserDefaults.standard.string(forKey: "tuyaRegion") ?? "us")
+            return TuyaClient.Credentials(clientID: id, secret: secret, region: Preferences.string(forKey: "tuyaRegion") ?? "us")
         }
         set {
             Self.setSecret(newValue?.clientID, "tuya-client-id", label: "Lar – Tuya Access ID")
             Self.setSecret(newValue?.secret, "tuya-secret", label: "Lar – Tuya Access Secret")
-            UserDefaults.standard.set(newValue?.region, forKey: "tuyaRegion")
+            Preferences.set(newValue?.region, forKey: "tuyaRegion")
         }
     }
 
@@ -184,13 +283,13 @@ extension AppSettings: AccountSettings {
     }
 
     public var tvHost: String? {
-        get { UserDefaults.standard.string(forKey: "tvHost").flatMap { $0.isEmpty ? nil : $0 } }
-        set { UserDefaults.standard.set(newValue, forKey: "tvHost") }
+        get { Preferences.string(forKey: "tvHost").flatMap { $0.isEmpty ? nil : $0 } }
+        set { Preferences.set(newValue, forKey: "tvHost") }
     }
 
     public var tvDiscovery: Bool {
-        get { UserDefaults.standard.object(forKey: "tvDiscovery") as? Bool ?? true }
-        set { UserDefaults.standard.set(newValue, forKey: "tvDiscovery") }
+        get { Preferences.bool(forKey: "tvDiscovery") ?? true }
+        set { Preferences.set(newValue, forKey: "tvDiscovery") }
     }
 
     public var knownTVs: [AndroidTVProvider.KnownTV] {
@@ -198,13 +297,45 @@ extension AppSettings: AccountSettings {
         set { Self.saveKnownTVs(newValue) }
     }
 
+    public var pairedTVs: [String] {
+        get { Preferences.object(forKey: "pairedTVs") as? [String] ?? [] }
+        set { Self.savePairedTVs(newValue) }
+    }
+
+    public var customizations: [String: DeviceCustomization] {
+        get { Preferences.decoded([String: DeviceCustomization].self, forKey: "deviceCustomizations") ?? [:] }
+        set { Preferences.setEncoded(newValue, forKey: "deviceCustomizations") }
+    }
+
+    public var grouping: DeviceGrouping {
+        get { Preferences.string(forKey: "deviceGrouping").flatMap(DeviceGrouping.init(rawValue:)) ?? .kind }
+        set { Preferences.set(newValue.rawValue, forKey: "deviceGrouping") }
+    }
+
+    public var scenes: [HomeScene] {
+        get { Preferences.decoded([HomeScene].self, forKey: "scenes") ?? [] }
+        set { Preferences.setEncoded(newValue, forKey: "scenes") }
+    }
+
+    public var tvPins: [String: String] {
+        get { Preferences.object(forKey: "tvCertificatePins") as? [String: String] ?? [:] }
+        set { Self.saveTVPins(newValue) }
+    }
+
+    public static func saveTVPins(_ pins: [String: String]) {
+        Preferences.set(pins, forKey: "tvCertificatePins")
+    }
+
+    public static func savePairedTVs(_ names: [String]) {
+        Preferences.set(names, forKey: "pairedTVs")
+    }
+
     static func loadKnownTVs() -> [AndroidTVProvider.KnownTV] {
-        UserDefaults.standard.data(forKey: "knownTVs")
-            .flatMap { try? JSONDecoder().decode([AndroidTVProvider.KnownTV].self, from: $0) } ?? []
+        Preferences.decoded([AndroidTVProvider.KnownTV].self, forKey: "knownTVs") ?? []
     }
 
     public static func saveKnownTVs(_ tvs: [AndroidTVProvider.KnownTV]) {
-        UserDefaults.standard.set(try? JSONEncoder().encode(tvs), forKey: "knownTVs")
+        Preferences.setEncoded(tvs, forKey: "knownTVs")
     }
 
     /// SmartThings hands out a new refresh token at every renewal and the old one stops working at once.

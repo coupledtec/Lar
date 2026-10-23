@@ -3,9 +3,10 @@ import PackageDescription
 
 let package = Package(
     name: "Lar",
-    platforms: [.macOS(.v15)],
+    platforms: [.macOS(.v15), .iOS(.v18), .watchOS(.v11)],
     products: [
         .executable(name: "Lar", targets: ["Lar"]),
+        .library(name: "LarCore", targets: ["LarCore"]),
     ],
     targets: [
         .target(name: "LarCore"),
