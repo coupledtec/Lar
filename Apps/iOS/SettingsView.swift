@@ -17,6 +17,8 @@ struct SettingsView: View {
     @State private var stSecret = ""
     @State private var stRefresh = ""
     @State private var useOAuth = false
+    @State private var signingIn = false
+    @State private var stError: String?
     @State private var tvHost = ""
     @State private var notifyLaundry = Notifier.laundryEnabled
     @State private var lockSettings = SettingsLock.isEnabled
@@ -122,14 +124,22 @@ struct SettingsView: View {
                     .textInputAutocapitalization(.never)
                     .autocorrectionDisabled()
                 SecureField("Client secret", text: $stSecret)
-                SecureField("Refresh token", text: $stRefresh)
-                Button("Salvar") {
-                    save {
-                        settings.smartThings = .oauth(clientID: stClientID.trimmed, secret: stSecret.trimmed, refreshToken: stRefresh.trimmed)
-                        stClientID = ""; stSecret = ""; stRefresh = ""
+                SecureField("Refresh token (opcional)", text: $stRefresh)
+                if stRefresh.trimmed.isEmpty {
+                    Button(savedOAuth != nil && stClientID.trimmed.isEmpty ? "Entrar de novo no SmartThings" : "Entrar no SmartThings") {
+                        signInToSmartThings()
                     }
+                    .disabled(signInCredentials == nil || signingIn)
+                } else {
+                    Button("Salvar") {
+                        save {
+                            settings.smartThings = .oauth(clientID: stClientID.trimmed, secret: stSecret.trimmed, refreshToken: stRefresh.trimmed)
+                            stClientID = ""; stSecret = ""; stRefresh = ""
+                        }
+                    }
+                    .disabled(stClientID.trimmed.isEmpty || stSecret.trimmed.isEmpty)
                 }
-                .disabled(stClientID.trimmed.isEmpty || stSecret.trimmed.isEmpty || stRefresh.trimmed.isEmpty)
+                if let stError { Text(stError).font(.footnote).foregroundStyle(.orange) }
             } else {
                 SecureField(settings.smartThings != nil ? "•••••• salvo" : "Token pessoal", text: $stToken)
                 Button("Salvar") { save { settings.smartThings = .personalToken(stToken.trimmed); stToken = "" } }
@@ -141,7 +151,37 @@ struct SettingsView: View {
         } header: {
             header("SmartThings", .smartThings)
         } footer: {
-            Text("Use uma autorização OAuth própria para o iPhone: o refresh token muda a cada renovação e não pode ser dividido com o Lar do Mac.")
+            Text("Use uma integração OAuth própria para o iPhone (outra para o Mac e outra para a TV): o refresh token muda a cada renovação, e dois aparelhos com a mesma integração se desconectam um ao outro.")
+        }
+    }
+
+    /// The integration to sign in with: the one typed, or the one saved.
+    private var savedOAuth: (clientID: String, secret: String)? {
+        if case .oauth(let id, let secret, _)? = settings.smartThings { return (id, secret) }
+        return nil
+    }
+
+    private var signInCredentials: (clientID: String, secret: String)? {
+        if !stClientID.trimmed.isEmpty, !stSecret.trimmed.isEmpty { return (stClientID.trimmed, stSecret.trimmed) }
+        return stClientID.trimmed.isEmpty && stSecret.trimmed.isEmpty ? savedOAuth : nil
+    }
+
+    private func signInToSmartThings() {
+        guard let (clientID, secret) = signInCredentials else { return }
+        signingIn = true
+        stError = nil
+        Task {
+            defer { signingIn = false }
+            do {
+                let refresh = try await SmartThingsSignIn.run(clientID: clientID, secret: secret)
+                save {
+                    settings.smartThings = .oauth(clientID: clientID, secret: secret, refreshToken: refresh)
+                    stClientID = ""; stSecret = ""
+                }
+            } catch is CancellationError {
+            } catch {
+                stError = (error as? ProviderError)?.message ?? error.localizedDescription
+            }
         }
     }
 

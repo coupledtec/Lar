@@ -24,6 +24,8 @@ struct SettingsView: View {
     @State private var stSecret = ""
     @State private var stRefresh = ""
     @State private var showOAuth = false
+    @State private var signingIn = false
+    @State private var stError: String?
     @State private var tvHost = ""
     @State private var limits = TemperatureLimits.standard
     @State private var launchAtLogin = SMAppService.mainApp.status == .enabled
@@ -123,6 +125,36 @@ struct SettingsView: View {
 
     // MARK: SmartThings
 
+    /// The integration to sign in with: the one typed, or the one saved.
+    private var savedOAuth: (clientID: String, secret: String)? {
+        if case .oauth(let id, let secret, _)? = settings.smartThings { return (id, secret) }
+        return nil
+    }
+
+    private var signInCredentials: (clientID: String, secret: String)? {
+        if !stClientID.trimmed.isEmpty, !stSecret.trimmed.isEmpty { return (stClientID.trimmed, stSecret.trimmed) }
+        return stClientID.trimmed.isEmpty && stSecret.trimmed.isEmpty ? savedOAuth : nil
+    }
+
+    private func signInToSmartThings() {
+        guard let (clientID, secret) = signInCredentials else { return }
+        signingIn = true
+        stError = nil
+        Task {
+            defer { signingIn = false }
+            do {
+                let refresh = try await SmartThingsSignIn.run(clientID: clientID, secret: secret)
+                save {
+                    settings.smartThings = .oauth(clientID: clientID, secret: secret, refreshToken: refresh)
+                    stClientID = ""; stSecret = ""
+                }
+            } catch is CancellationError {
+            } catch {
+                stError = (error as? ProviderError)?.message ?? error.localizedDescription
+            }
+        }
+    }
+
     private var smartThingsSection: some View {
         section("SmartThings", provider: .smartThings) {
             hint("Token pessoal (os novos valem 24 h, bom para testar) ou, para não expirar, uma integração OAuth.")
@@ -133,17 +165,28 @@ struct SettingsView: View {
             if showOAuth {
                 field("Client ID", text: $stClientID, placeholder: "Client ID")
                 secret("Client secret", text: $stSecret)
-                secret("Refresh token", text: $stRefresh)
+                secret("Refresh token (opcional)", text: $stRefresh)
                 HStack {
-                    Spacer()
-                    Button("Salvar") {
-                        save {
-                            settings.smartThings = .oauth(clientID: stClientID.trimmed, secret: stSecret.trimmed, refreshToken: stRefresh.trimmed)
-                            stClientID = ""; stSecret = ""; stRefresh = ""
-                        }
+                    if let stError {
+                        Text(stError).font(.system(size: 11)).foregroundStyle(Theme.warning).lineLimit(2)
                     }
-                    .disabled(stClientID.trimmed.isEmpty || stSecret.trimmed.isEmpty || stRefresh.trimmed.isEmpty)
+                    Spacer()
+                    if stRefresh.trimmed.isEmpty {
+                        Button(savedOAuth != nil && stClientID.trimmed.isEmpty ? "Entrar de novo" : "Entrar no SmartThings") {
+                            signInToSmartThings()
+                        }
+                        .disabled(signInCredentials == nil || signingIn)
+                    } else {
+                        Button("Salvar") {
+                            save {
+                                settings.smartThings = .oauth(clientID: stClientID.trimmed, secret: stSecret.trimmed, refreshToken: stRefresh.trimmed)
+                                stClientID = ""; stSecret = ""; stRefresh = ""
+                            }
+                        }
+                        .disabled(stClientID.trimmed.isEmpty || stSecret.trimmed.isEmpty)
+                    }
                 }
+                hint("Uma integração para cada aparelho (Mac, iPhone, TV): com a mesma, um desconecta o outro.")
             } else {
                 HStack(spacing: 6) {
                     secret(settings.smartThings != nil ? "•••••• salvo" : "Token pessoal", text: $stToken)
