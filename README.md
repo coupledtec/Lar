@@ -53,6 +53,10 @@ controle remoto da TV.
 - **Diagnóstico:** em Ajustes, o estado de cada conta, quanto demorou a última leitura e o último erro, com um
   relatório para copiar sem nenhuma chave.
 - **Touchpad da TV** no iPhone (deslizar navega, tocar é OK).
+- **Porteiro (VoIP/SIP):** atenda o porteiro, fale e abra o portão (as teclas que ele espera, ex.: `*1`), ou ligue
+  para ele. Em Ajustes → Porteiro: servidor, usuário e senha do ramal, número do porteiro e as teclas do portão.
+  O Mac fica registrado e toca sempre; o iPhone toca com o Lar aberto (com o app fechado, só com a conta paga de
+  desenvolvedor da Apple). Áudio G.711, como todo PABX e porteiro aceita.
 - **Sem servidor no meio:** o Lar conversa direto com a nuvem de cada marca e, no caso das TVs, direto com a TV pela
   rede de casa.
 

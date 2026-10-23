@@ -124,6 +124,14 @@ Dois alvos com separação rígida:
   (região de 150 m, "Sempre").
 - **Histórico:** `Home/History.swift` grava em `Application Support/Lar/history.json` (5 min, 30 dias);
   `ACHistoryView` (Swift Charts) é compilado no Mac e no iPhone.
+- **Porteiro VoIP:** `VoIP/` é um telefone SIP próprio (o Lar é MIT; Linphone e PJSIP são GPL): `SIPClient` (UDP para o
+  servidor como proxy de saída, REGISTER com Digest MD5/SHA-256 e rport, keep-alive a cada 25 s, INVITE de entrada e
+  saída, CANCEL/BYE, INFO), `RTPSession` (G.711 μ/A, 20 ms, porta par 20000–29999, envio e recepção na mesma porta,
+  teclas RFC 4733), `AudioIO` (AVAudioEngine com processamento de voz) e `PhoneStore`. `SIPClientTests` testa contra
+  um PABX simulado. A senha fica no Porta-chaves (`sip-password`). O iPhone só registra com o app aberto: tocar com o
+  app fechado exige PushKit (conta paga) — o Mac poderia mandar o push, sem servidor externo.
+- **Porta-chaves no Mac:** `Vault` guarda todas as chaves num item só (`vault`) e o `build-app.sh` assina com um
+  certificado de desenvolvedor do Mac, para o "Sempre permitir" valer entre versões.
 - **TVs no relógio:** o watchOS não deixa abrir conexão com aparelhos da rede local; o relógio usa
   `RelayedTVProvider`, que pede ao iPhone por WatchConnectivity (`TVRelay`), e só funciona com o iPhone por perto.
 - **zsh:** `log` é um comando interno do zsh; use `/usr/bin/log show --predicate 'subsystem == "<bundle id>"'`.
