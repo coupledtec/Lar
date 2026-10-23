@@ -13,6 +13,37 @@ final class LarModel {
     private(set) var airConditioner: ACStore?
     /// After the list preferences change here (the iPhone hands them to the watch).
     @ObservationIgnored var onListPreferencesChange: (() -> Void)?
+    /// The last sync with the Mac, and what went wrong if it did.
+    private(set) var lastSync: Date?
+    private(set) var syncProblem: String?
+    @ObservationIgnored private var syncTask: Task<Void, Never>?
+
+    /// Brings the scenes and the list's organization in step with the Mac (iPhone only, when paired).
+    func syncWithMac() async {
+        guard SyncClient.isPaired else { return }
+        do {
+            if try await SyncClient.sync(settings) == .pull {
+                scenes.reload()
+                home.customizations = settings.customizations
+                home.grouping = settings.grouping
+                onListPreferencesChange?()
+            }
+            lastSync = Date()
+            syncProblem = nil
+        } catch {
+            syncProblem = (error as? SyncError)?.message ?? error.localizedDescription
+        }
+    }
+
+    /// A sync shortly after a change here (several quick changes go as one).
+    func scheduleSync() {
+        syncTask?.cancel()
+        syncTask = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(2))
+            guard !Task.isCancelled else { return }
+            await self?.syncWithMac()
+        }
+    }
 
     /// - Parameter extraProviders: accounts the shared list doesn't build, like the watch's TVs through the iPhone.
     init(settings: LarSettings, includeTVs: Bool, extraProviders: @escaping () -> [any DeviceProvider] = { [] }) {

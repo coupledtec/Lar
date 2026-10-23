@@ -184,6 +184,7 @@ public final class InMemorySettings: SettingsStorage {
     public var scenes: [HomeScene] = []
     public var customizations: [String: DeviceCustomization] = [:]
     public var grouping: DeviceGrouping = .kind
+    public var syncUpdatedAt = Date.distantPast
     public var token: String?
     public var clientID = "lar-test"
     public var deviceID: String?
@@ -217,6 +218,8 @@ public protocol AccountSettings: AnyObject {
     /// Names, favorites, rooms and hidden devices, by device id.
     var customizations: [String: DeviceCustomization] { get set }
     var grouping: DeviceGrouping { get set }
+    /// When the scenes or the list's organization last changed here (or came from the other side).
+    var syncUpdatedAt: Date { get set }
 }
 
 extension AccountSettings {
@@ -228,6 +231,7 @@ extension AccountSettings {
         home.onListPreferencesChange = { [weak self] customizations, grouping in
             self?.customizations = customizations
             self?.grouping = grouping
+            self?.markSyncChange()
             afterChange()
         }
     }
@@ -310,6 +314,11 @@ extension AppSettings: AccountSettings {
     public var grouping: DeviceGrouping {
         get { Preferences.string(forKey: "deviceGrouping").flatMap(DeviceGrouping.init(rawValue:)) ?? .kind }
         set { Preferences.set(newValue.rawValue, forKey: "deviceGrouping") }
+    }
+
+    public var syncUpdatedAt: Date {
+        get { Preferences.object(forKey: "syncUpdatedAt") as? Date ?? .distantPast }
+        set { Preferences.set(newValue, forKey: "syncUpdatedAt") }
     }
 
     public var scenes: [HomeScene] {

@@ -21,6 +21,41 @@ final class AppModel {
         didSet { Preferences.set(showsTemperatureInMenuBar, forKey: "menuBarTemperature") }
     }
 
+    /// Answers the paired iPhones (scenes and the list's organization); nil in previews.
+    @ObservationIgnored private(set) var sync: SyncServer?
+    /// The code an iPhone types to pair, while shown.
+    private(set) var pairingCode: String?
+
+    func startSync() {
+        let settings = settings, home = home, scenes = scenes
+        let server = SyncServer(state: { SyncState.capture(settings) }, apply: { incoming in
+            incoming.apply(to: settings)
+            scenes.reload()
+            home.customizations = settings.customizations
+            home.grouping = settings.grouping
+        })
+        try? server.start()
+        sync = server
+    }
+
+    func showPairingCode() {
+        pairingCode = try? sync?.startPairing()
+        // The code works for five minutes.
+        Task { [weak self] in
+            try? await Task.sleep(for: .seconds(300))
+            self?.hidePairingCode()
+        }
+    }
+
+    func hidePairingCode() {
+        sync?.stopPairing()
+        pairingCode = nil
+    }
+
+    func forgetPairedPhones() {
+        try? sync?.forgetPairedDevices()
+    }
+
     /// ⌃⌥L opens the Lar from any app.
     var usesHotKey = Preferences.bool(forKey: "globalHotKey") ?? true {
         didSet { Preferences.set(usesHotKey, forKey: "globalHotKey") }

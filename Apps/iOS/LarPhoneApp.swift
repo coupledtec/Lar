@@ -16,7 +16,10 @@ struct LarPhoneApp: App {
     init() {
         Self.link.start(model: Self.model)
         IntentContext.model = Self.model
-        Self.model.onListPreferencesChange = { Self.link.sendAccounts() }
+        Self.model.onListPreferencesChange = {
+            Self.link.sendAccounts()
+            Self.model.scheduleSync()
+        }
         Self.model.home.onAlerts = { Notifier.post($0) }
         Self.model.home.onRefreshed = {
             WidgetSnapshot.save(from: Self.model.home)
@@ -50,6 +53,10 @@ struct LarPhoneApp: App {
                 model.home.isPopoverVisible = true
                 model.home.start()
                 link.sendAccounts()
+                Task {
+                    await model.syncWithMac()
+                    link.sendAccounts()
+                }
             case .background:
                 model.home.suspend()
                 Self.scheduleRefresh()

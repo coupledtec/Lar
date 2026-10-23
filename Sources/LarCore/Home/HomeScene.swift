@@ -86,11 +86,13 @@ public final class SceneStore {
             scenes.append(scene)
         }
         settings.scenes = scenes
+        settings.markSyncChange()
     }
 
     public func delete(_ id: UUID) {
         scenes.removeAll { $0.id == id }
         settings.scenes = scenes
+        settings.markSyncChange()
     }
 
     /// After the scenes changed elsewhere (the watch receiving the iPhone's).

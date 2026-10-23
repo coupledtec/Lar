@@ -52,7 +52,7 @@ targets:
                 UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).CarPlaySceneDelegate
         ITSAppUsesNonExemptEncryption: false
         NSLocalNetworkUsageDescription: O Lar procura e controla as TVs Android e Google TV da sua rede.
-        NSBonjourServices: [_androidtvremote2._tcp]
+        NSBonjourServices: [_androidtvremote2._tcp, _lar-sync._tcp, _lar-pair._tcp]
         UIBackgroundModes: [fetch]
         NSSupportsLiveActivities: true
         NSFaceIDUsageDescription: O Lar pede o Face ID para abrir os Ajustes, onde ficam as chaves das contas.

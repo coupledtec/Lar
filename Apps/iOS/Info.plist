@@ -42,6 +42,8 @@
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_androidtvremote2._tcp</string>
+		<string>_lar-sync._tcp</string>
+		<string>_lar-pair._tcp</string>
 	</array>
 	<key>NSFaceIDUsageDescription</key>
 	<string>O Lar pede o Face ID para abrir os Ajustes, onde ficam as chaves das contas.</string>

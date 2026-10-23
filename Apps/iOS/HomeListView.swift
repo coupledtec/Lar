@@ -68,7 +68,10 @@ struct HomeListView: View {
                 DeviceSettingsSheet(home: home, deviceID: editing.id)
             }
             .sheet(item: $editingScene) { editing in
-                SceneEditorSheet(home: home, scenes: model.scenes, sceneID: editing.id) { link.sendAccounts() }
+                SceneEditorSheet(home: home, scenes: model.scenes, sceneID: editing.id) {
+                    link.sendAccounts()
+                    model.scheduleSync()
+                }
             }
             .sheet(isPresented: $showingSettings) {
                 SettingsView(model: model, link: link)
@@ -101,6 +104,7 @@ struct HomeListView: View {
                             Button("Apagar", systemImage: "trash", role: .destructive) {
                                 model.scenes.delete(scene.id)
                                 link.sendAccounts()
+                                model.scheduleSync()
                             }
                         }
                     }

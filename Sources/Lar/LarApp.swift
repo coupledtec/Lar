@@ -34,6 +34,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         self.model = model
         self.controller = controller
         Notifier.start()
+        model.startSync()
         store.onAlerts = { Notifier.post($0) }
         store.start()
 

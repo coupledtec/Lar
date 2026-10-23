@@ -44,6 +44,7 @@ struct SettingsView: View {
                     smartThingsSection
                     tvSection
                     listSection
+                    phoneSection
                     if settings.token != nil { temperatureSection }
                     generalSection
                 }
@@ -182,6 +183,31 @@ struct SettingsView: View {
                 }
                 Spacer()
                 if settings.tvHost != nil { removeButton { settings.tvHost = nil } }
+            }
+        }
+    }
+
+    // MARK: iPhone
+
+    private var phoneSection: some View {
+        section("iPhone") {
+            hint("Cenas, nomes, favoritos e cômodos ficam iguais no Mac e no iPhone pela rede de casa (as chaves das contas não passam). No iPhone: Ajustes → Mac → Parear.")
+            if let code = model.pairingCode {
+                HStack {
+                    Text(code.prefix(3) + " " + code.suffix(3))
+                        .font(.system(size: 22, weight: .semibold, design: .monospaced))
+                    Spacer()
+                    Button("Fechar") { model.hidePairingCode() }.font(.system(size: 11))
+                }
+                hint("Digite este código no iPhone. Vale por 5 minutos.")
+            } else {
+                HStack {
+                    Button("Parear um iPhone") { model.showPairingCode() }.font(.system(size: 11))
+                    Spacer()
+                    Button("Esquecer iPhones", role: .destructive) { model.forgetPairedPhones() }
+                        .font(.system(size: 11))
+                        .help("Os iPhones pareados param de sincronizar até parear de novo")
+                }
             }
         }
     }
