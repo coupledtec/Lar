@@ -6,7 +6,7 @@
 	<true/>
 	<key>keychain-access-groups</key>
 	<array>
-		<string>$(AppIdentifierPrefix)com.coupled.lar.shared</string>
+		<string>$(AppIdentifierPrefix)$(LAR_BUNDLE_PREFIX).lar.shared</string>
 	</array>
 </dict>
 </plist>

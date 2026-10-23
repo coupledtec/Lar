@@ -21,11 +21,11 @@
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LarKeychainGroup</key>
-	<string>$(AppIdentifierPrefix)com.coupled.lar.shared</string>
+	<string>$(AppIdentifierPrefix)$(LAR_BUNDLE_PREFIX).lar.shared</string>
 	<key>WKApplication</key>
 	<true/>
 	<key>WKCompanionAppBundleIdentifier</key>
-	<string>com.coupled.lar.ios</string>
+	<string>$(LAR_BUNDLE_PREFIX).lar.ios</string>
 	<key>WKRunsIndependentlyOfCompanionApp</key>
 	<false/>
 </dict>

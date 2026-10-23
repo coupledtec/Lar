@@ -4,7 +4,7 @@
 <dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>com.coupled.lar.refresh</string>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER).refresh</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
@@ -26,7 +26,7 @@
 	<array>
 		<dict>
 			<key>CFBundleURLName</key>
-			<string>com.coupled.lar</string>
+			<string>$(LAR_BUNDLE_PREFIX).lar</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>lar</string>
@@ -38,7 +38,7 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LarKeychainGroup</key>
-	<string>$(AppIdentifierPrefix)com.coupled.lar.shared</string>
+	<string>$(AppIdentifierPrefix)$(LAR_BUNDLE_PREFIX).lar.shared</string>
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_androidtvremote2._tcp</string>

@@ -13,7 +13,7 @@ public actor TuyaClient: DeviceProvider, LiveVideoProvider {
         /// "us" (the Americas, where Brazilian accounts live), "eu", "cn" or "in".
         public var region: String
 
-        public init(clientID: String, secret: String, region: String = "us") {
+        public init(clientID: String, secret: String, region: String = HomeRegion.tuyaRegion()) {
             self.clientID = clientID
             self.secret = secret
             self.region = region

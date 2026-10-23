@@ -84,21 +84,23 @@ public enum EnergyEstimate {
         set { Preferences.set(newValue, forKey: "acWatts") }
     }
 
-    /// R$ per kWh.
+    /// The price of a kWh in the device's currency; 0 (the default, since it differs everywhere) leaves the cost out.
     public static var tariff: Double {
-        get { Preferences.object(forKey: "energyTariff") as? Double ?? 0.85 }
+        get { Preferences.object(forKey: "energyTariff") as? Double ?? 0 }
         set { Preferences.set(newValue, forKey: "energyTariff") }
     }
 
     public static func kWh(running seconds: TimeInterval, watts: Double = watts) -> Double { watts * seconds / 3_600_000 }
 
-    /// "3 h 20 min · ~3,3 kWh · ~R$ 2,83".
-    public static func text(running seconds: TimeInterval, watts: Double = watts, tariff: Double = tariff) -> String {
+    /// "3 h 20 min · ~3.3 kWh · ~$2.83", in the device's language and currency.
+    public static func text(running seconds: TimeInterval, watts: Double = watts, tariff: Double = tariff,
+                            locale: Locale = .current) -> String {
         let minutes = Int(seconds / 60)
         let time = minutes >= 60 ? "\(minutes / 60) h \(minutes % 60) min" : "\(minutes) min"
         let energy = kWh(running: seconds, watts: watts)
-        let format = FloatingPointFormatStyle<Double>.number.precision(.fractionLength(1)).locale(Locale(identifier: "pt_BR"))
-        let money = (energy * tariff).formatted(.currency(code: "BRL").locale(Locale(identifier: "pt_BR")))
-        return "\(time) · ~\(energy.formatted(format)) kWh · ~\(money)"
+        let format = FloatingPointFormatStyle<Double>.number.precision(.fractionLength(1)).locale(locale)
+        let parts = [time, "~\(energy.formatted(format)) kWh"]
+        guard tariff > 0 else { return parts.joined(separator: " · ") }
+        return (parts + ["~" + (energy * tariff).formatted(.currency(code: locale.currency?.identifier ?? HomeRegion.currency).locale(locale))]).joined(separator: " · ")
     }
 }

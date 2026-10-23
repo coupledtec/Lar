@@ -11,7 +11,7 @@ struct SettingsView: View {
     @State private var lgToken = ""
     @State private var tuyaID = ""
     @State private var tuyaSecret = ""
-    @State private var tuyaRegion = "us"
+    @State private var tuyaRegion = HomeRegion.tuyaRegion()
     @State private var stToken = ""
     @State private var stClientID = ""
     @State private var stSecret = ""
@@ -59,7 +59,7 @@ struct SettingsView: View {
             .sheet(item: $signIn) { signInView($0) }
             .onAppear {
                 limits = settings.temperatureLimits
-                tuyaRegion = settings.tuya?.region ?? "us"
+                tuyaRegion = settings.tuya?.region ?? HomeRegion.tuyaRegion()
                 if case .oauth? = settings.smartThings { useOAuth = true }
             }
         }
@@ -255,8 +255,8 @@ struct SettingsView: View {
                     .keyboardType(.numberPad)
                     .multilineTextAlignment(.trailing)
             }
-            LabeledContent("Tarifa (R$/kWh)") {
-                TextField("R$", value: Binding(get: { EnergyEstimate.tariff }, set: { EnergyEstimate.tariff = $0 }),
+            LabeledContent("Tarifa (\(HomeRegion.currencySymbol)/kWh)") {
+                TextField(HomeRegion.currencySymbol, value: Binding(get: { EnergyEstimate.tariff }, set: { EnergyEstimate.tariff = $0 }),
                           format: .number.precision(.fractionLength(2)))
                     .keyboardType(.decimalPad)
                     .multilineTextAlignment(.trailing)

@@ -112,6 +112,11 @@ import Testing
     }
 
     @Test func energyText() {
-        #expect(EnergyEstimate.text(running: 12_000, watts: 1000, tariff: 0.85) == "3 h 20 min · ~3,3 kWh · ~R$\u{00A0}2,83")
+        #expect(EnergyEstimate.text(running: 12_000, watts: 1000, tariff: 0.85, locale: Locale(identifier: "pt_BR"))
+                == "3 h 20 min · ~3,3 kWh · ~R$\u{00A0}2,83")
+        #expect(EnergyEstimate.text(running: 12_000, watts: 1000, tariff: 0.15, locale: Locale(identifier: "en_US"))
+                == "3 h 20 min · ~3.3 kWh · ~$0.50")
+        // No tariff set: no cost.
+        #expect(EnergyEstimate.text(running: 600, watts: 1000, tariff: 0, locale: Locale(identifier: "de_DE")) == "10 min · ~0,2 kWh")
     }
 }

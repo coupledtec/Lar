@@ -1,8 +1,10 @@
 # The iPhone and Apple Watch apps. Generate the Xcode project with `xcodegen` in this folder (LarApps.xcodeproj is not
 # kept in git). The Mac app is built by SwiftPM at the repository root.
 name: LarApps
+configFiles:
+  Debug: Signing.xcconfig
+  Release: Signing.xcconfig
 options:
-  bundleIdPrefix: com.coupled
   deploymentTarget:
     iOS: "18.0"
     watchOS: "11.0"
@@ -18,8 +20,7 @@ settings:
     MARKETING_VERSION: "1.0.0"
     CURRENT_PROJECT_VERSION: "1"
     CODE_SIGN_STYLE: Automatic
-    # Your Apple ID's team (Xcode → Settings → Accounts): set here or with DEVELOPMENT_TEAM=… on the command line.
-    DEVELOPMENT_TEAM: ""
+    # The team and the identifiers' prefix come from Signing.xcconfig (and your Local.xcconfig).
     ENABLE_USER_SCRIPT_SANDBOXING: YES
 targets:
   LarPhone:
@@ -63,15 +64,15 @@ targets:
         NSLocationAlwaysAndWhenInUseUsageDescription: Com “Sempre”, o Lar executa as cenas ao chegar e ao sair de casa mesmo com o app fechado.
         NSFaceIDUsageDescription: O Lar pede o Face ID para abrir os Ajustes, onde ficam as chaves das contas.
         # Shared with the widgets: accounts, scenes, favorites, TVs (see Keychain.sharedGroup).
-        LarKeychainGroup: $(AppIdentifierPrefix)com.coupled.lar.shared
-        BGTaskSchedulerPermittedIdentifiers: [com.coupled.lar.refresh]
+        LarKeychainGroup: $(AppIdentifierPrefix)$(LAR_BUNDLE_PREFIX).lar.shared
+        BGTaskSchedulerPermittedIdentifiers: [$(PRODUCT_BUNDLE_IDENTIFIER).refresh]
         # lar://cena/Dormir, lar://ligar/TV da Sala… (Shortcuts' "Open URL"), like the Mac.
         CFBundleURLTypes:
-          - CFBundleURLName: com.coupled.lar
+          - CFBundleURLName: $(LAR_BUNDLE_PREFIX).lar
             CFBundleURLSchemes: [lar]
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.coupled.lar.ios
+        PRODUCT_BUNDLE_IDENTIFIER: $(LAR_BUNDLE_PREFIX).lar.ios
         PRODUCT_NAME: Lar
         TARGETED_DEVICE_FAMILY: "1"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
@@ -97,12 +98,12 @@ targets:
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         WKApplication: true
-        WKCompanionAppBundleIdentifier: com.coupled.lar.ios
+        WKCompanionAppBundleIdentifier: $(LAR_BUNDLE_PREFIX).lar.ios
         WKRunsIndependentlyOfCompanionApp: false
-        LarKeychainGroup: $(AppIdentifierPrefix)com.coupled.lar.shared
+        LarKeychainGroup: $(AppIdentifierPrefix)$(LAR_BUNDLE_PREFIX).lar.shared
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.coupled.lar.ios.watchkitapp
+        PRODUCT_BUNDLE_IDENTIFIER: $(LAR_BUNDLE_PREFIX).lar.ios.watchkitapp
         CODE_SIGN_ENTITLEMENTS: Watch/LarWatch.entitlements
         PRODUCT_NAME: Lar
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
@@ -126,14 +127,14 @@ targets:
         CFBundleDisplayName: Lar
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
-        LarKeychainGroup: $(AppIdentifierPrefix)com.coupled.lar.shared
+        LarKeychainGroup: $(AppIdentifierPrefix)$(LAR_BUNDLE_PREFIX).lar.shared
         NSLocalNetworkUsageDescription: O Lar controla as TVs Android e Google TV da sua rede.
         NSBonjourServices: [_androidtvremote2._tcp]
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.coupled.lar.ios.widgets
+        PRODUCT_BUNDLE_IDENTIFIER: $(LAR_BUNDLE_PREFIX).lar.ios.widgets
         PRODUCT_NAME: LarWidgets
         CODE_SIGN_ENTITLEMENTS: Widgets/LarWidgets.entitlements
         TARGETED_DEVICE_FAMILY: "1"
@@ -154,12 +155,12 @@ targets:
         CFBundleDisplayName: Lar
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
-        LarKeychainGroup: $(AppIdentifierPrefix)com.coupled.lar.shared
+        LarKeychainGroup: $(AppIdentifierPrefix)$(LAR_BUNDLE_PREFIX).lar.shared
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.coupled.lar.ios.watchkitapp.widgets
+        PRODUCT_BUNDLE_IDENTIFIER: $(LAR_BUNDLE_PREFIX).lar.ios.watchkitapp.widgets
         PRODUCT_NAME: LarWatchWidgets
         CODE_SIGN_ENTITLEMENTS: WatchWidgets/LarWatchWidgets.entitlements
         TARGETED_DEVICE_FAMILY: "4"

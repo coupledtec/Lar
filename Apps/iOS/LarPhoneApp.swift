@@ -32,7 +32,9 @@ struct LarPhoneApp: App {
         }
         Notifier.start()
         PresenceMonitor.shared.start(model: Self.model)
+        #if DEBUG
         if SmartThingsImport.run(Self.model) { Self.link.sendAccounts() }
+        #endif
     }
 
     var body: some Scene {
@@ -92,7 +94,7 @@ struct LarPhoneApp: App {
         }
     }
 
-    static let refreshTask = "com.coupled.lar.refresh"
+    static let refreshTask = (Bundle.main.bundleIdentifier ?? "lar") + ".refresh"
 
     /// Asks iOS for the next background read (it decides when; usually within the hour).
     @MainActor

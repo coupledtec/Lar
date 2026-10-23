@@ -18,7 +18,7 @@ struct SettingsView: View {
     @State private var tariff = EnergyEstimate.tariff
     @State private var tuyaID = ""
     @State private var tuyaSecret = ""
-    @State private var tuyaRegion = "us"
+    @State private var tuyaRegion = HomeRegion.tuyaRegion()
     @State private var stToken = ""
     @State private var stClientID = ""
     @State private var stSecret = ""
@@ -59,7 +59,7 @@ struct SettingsView: View {
         }
         .onAppear {
             limits = settings.temperatureLimits
-            tuyaRegion = settings.tuya?.region ?? "us"
+            tuyaRegion = settings.tuya?.region ?? HomeRegion.tuyaRegion()
             if case .oauth? = settings.smartThings { showOAuth = true }
         }
     }
@@ -334,11 +334,11 @@ struct SettingsView: View {
             HStack {
                 Text("Tarifa de energia").font(.system(size: 12))
                 Spacer()
-                TextField("R$", value: $tariff, format: .number.precision(.fractionLength(2)))
+                TextField(HomeRegion.currencySymbol, value: $tariff, format: .number.precision(.fractionLength(2)))
                     .textFieldStyle(.roundedBorder)
                     .frame(width: 70)
                     .onSubmit { EnergyEstimate.tariff = tariff }
-                Text("R$/kWh").font(.system(size: 12))
+                Text("\(HomeRegion.currencySymbol)/kWh").font(.system(size: 12))
             }
             hint("Para a estimativa de consumo no histórico do ar (Enter para salvar).")
         }

@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 import LarCore
 
@@ -26,3 +27,4 @@ enum SmartThingsImport {
         return true
     }
 }
+#endif

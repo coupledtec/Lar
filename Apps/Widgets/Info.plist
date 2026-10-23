@@ -21,7 +21,7 @@
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LarKeychainGroup</key>
-	<string>$(AppIdentifierPrefix)com.coupled.lar.shared</string>
+	<string>$(AppIdentifierPrefix)$(LAR_BUNDLE_PREFIX).lar.shared</string>
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_androidtvremote2._tcp</string>

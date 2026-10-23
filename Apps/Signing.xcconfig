@@ -1,0 +1,11 @@
+// Who signs the apps and under which identifiers. To build your own copy, don't edit this file: create
+// Apps/Local.xcconfig (ignored by git) with your values, for example
+//
+//     LAR_BUNDLE_PREFIX = com.example
+//     DEVELOPMENT_TEAM = ABCDE12345
+//
+// and run `xcodegen` again.
+LAR_BUNDLE_PREFIX = com.coupled
+DEVELOPMENT_TEAM =
+
+#include? "Local.xcconfig"

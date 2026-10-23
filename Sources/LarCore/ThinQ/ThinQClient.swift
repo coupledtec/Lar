@@ -59,9 +59,9 @@ public enum ThinQError: Error, Equatable, Sendable {
 public struct ThinQClient: Sendable {
     public typealias Transport = @Sendable (URLRequest) async throws -> (Data, URLResponse)
 
-    /// Brazil is served by the Americas region.
-    public static let baseURL = URL(string: "https://api-aic.lgthinq.com/")!
-    public static let country = "BR"
+    /// The server and country of the device's region (LG serves each country from one of three regions).
+    public static var baseURL: URL { HomeRegion.thinQServer() }
+    public static var country: String { HomeRegion.country }
     static let apiKey = "v6GFvkweNo7DK7yD3ylIZ9w52aKBU0eJ7wLXkSR3"
 
     private static let log = Logger(subsystem: "com.coupled.lar", category: "api")
