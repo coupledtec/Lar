@@ -77,6 +77,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         guard let model else { return }
         for url in urls {
             guard let link = LarLink(url) else { continue }
+            if case .call(let number) = link {
+                model.call(number)
+                continue
+            }
+            if link == .hangUp {
+                Task { await model.phone.hangup() }
+                continue
+            }
             Task {
                 if model.home.devices.isEmpty { await model.home.refresh() }
                 model.home.open(link, scenes: model.scenes.scenes)

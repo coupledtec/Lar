@@ -2,21 +2,34 @@ import Foundation
 
 /// The app's links, for Shortcuts ("Open URL") and anything else that opens one:
 /// `lar://cena/Dormir`, `lar://ligar/TV da Sala`, `lar://desligar/Luz da sala`, `lar://alternar/Abajur`,
-/// `lar://temperatura/Ar do quarto/23`.
+/// `lar://temperatura/Ar do quarto/23`, `lar://porteiro` (calls the intercom), `lar://discar/*43`,
+/// `lar://encerrar` (ends the call).
 /// Names are matched ignoring case and accents.
 public enum LarLink: Equatable, Sendable {
     case scene(String)
     case power(device: String, on: Bool?)
     case temperature(device: String, value: Double)
+    /// A call: to the intercom (nil) or to a number. The app with the phone handles it.
+    case call(String?)
+    case hangUp
 
     public static let scheme = "lar"
 
     public init?(_ url: URL) {
         guard url.scheme?.lowercased() == Self.scheme, let host = url.host(percentEncoded: false)?.lowercased() else { return nil }
         let name = url.path(percentEncoded: false).trimmingCharacters(in: CharacterSet(charactersIn: "/ "))
+        if host == "porteiro" || host == "intercom" {
+            self = .call(nil)
+            return
+        }
+        if host == "encerrar" || host == "hangup" {
+            self = .hangUp
+            return
+        }
         guard !name.isEmpty else { return nil }
         switch host {
         case "cena", "scene": self = .scene(name)
+        case "discar", "dial": self = .call(name)
         case "ligar", "on": self = .power(device: name, on: true)
         case "desligar", "off": self = .power(device: name, on: false)
         case "alternar", "toggle": self = .power(device: name, on: nil)
@@ -41,6 +54,11 @@ public enum LarLink: Equatable, Sendable {
         case .temperature(let device, let value):
             components.host = "temperatura"
             components.path = "/\(device)/\(HomeText.number(value))"
+        case .call(let number):
+            components.host = number == nil ? "porteiro" : "discar"
+            components.path = number.map { "/" + $0 } ?? ""
+        case .hangUp:
+            components.host = "encerrar"
         }
         return components.url
     }
@@ -75,6 +93,8 @@ extension HomeStore {
             }
             if device.isOn != true { perform(.power(true), on: device.id) }
             perform(.temperature(min(max(value, 16), 30)), on: device.id)
+            return nil
+        case .call, .hangUp:
             return nil
         }
     }

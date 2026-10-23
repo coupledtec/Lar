@@ -88,6 +88,10 @@ import Testing
 @Suite struct LarLinkTests {
     @Test func parsesTheLinks() throws {
         #expect(LarLink(try #require(URL(string: "lar://cena/Dormir"))) == .scene("Dormir"))
+        #expect(LarLink(try #require(URL(string: "lar://porteiro"))) == .call(nil))
+        #expect(LarLink(try #require(URL(string: "lar://discar/*43"))) == .call("*43"))
+        #expect(LarLink(try #require(URL(string: "lar://encerrar"))) == .hangUp)
+        #expect(LarLink.url(.call("*43"))?.absoluteString == "lar://discar/*43")
         #expect(LarLink(try #require(URL(string: "lar://ligar/TV%20da%20Sala"))) == .power(device: "TV da Sala", on: true))
         #expect(LarLink(try #require(URL(string: "LAR://Desligar/Luz"))) == .power(device: "Luz", on: false))
         #expect(LarLink(try #require(URL(string: "lar://alternar/Abajur"))) == .power(device: "Abajur", on: nil))

@@ -59,7 +59,12 @@ final class AppModel {
     }
 
     func callDoor() {
-        Task { await phone.dial() }
+        call(nil)
+    }
+
+    /// Calls the intercom (nil) or a number, and shows the call.
+    func call(_ number: String?) {
+        Task { await phone.dial(number) }
         CallWindow.show(phone)
     }
 

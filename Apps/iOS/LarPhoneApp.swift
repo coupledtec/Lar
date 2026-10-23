@@ -40,6 +40,17 @@ struct LarPhoneApp: App {
                 .tint(.accentColor)
                 .onOpenURL { url in
                     guard let link = LarLink(url) else { return }
+                    if case .call(let number) = link {
+                        Task {
+                            if Self.phone.registration == .off { await Self.phone.start() }
+                            await Self.phone.dial(number)
+                        }
+                        return
+                    }
+                    if link == .hangUp {
+                        Task { await Self.phone.hangup() }
+                        return
+                    }
                     Task {
                         if model.home.devices.isEmpty { await model.home.refresh() }
                         model.home.open(link, scenes: model.scenes.scenes)

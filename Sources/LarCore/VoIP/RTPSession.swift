@@ -2,6 +2,7 @@
 import AVFoundation
 import Foundation
 import Network
+import os
 
 /// A call's audio: RTP over UDP (RFC 3550) with G.711, 20 ms per packet, from the microphone and to the speaker,
 /// with the system's echo cancellation. Sends from the port it receives on, so a server behind NAT (or one that
@@ -16,6 +17,8 @@ public final class RTPSession: @unchecked Sendable {
     private var timestamp = UInt32.random(in: 0...UInt32.max)
     private let ssrc = UInt32.random(in: 1...UInt32.max)
     private var muted = false
+    private var sent = 0, received = 0, skipped = 0
+    static let log = Logger(subsystem: "com.coupled.lar", category: "rtp")
 
     public init() {
         // An even port in the usual RTP range (RTCP would take the odd one above).
@@ -36,6 +39,10 @@ public final class RTPSession: @unchecked Sendable {
         parameters.allowLocalEndpointReuse = true
         let connection = NWConnection(host: NWEndpoint.Host(remote.address), port: port, using: parameters)
         self.connection = connection
+        Self.log.notice("media \(self.localPort) <-> \(remote.address, privacy: .public):\(remote.port), payload \(remote.payload), events \(remote.dtmfPayload.map(String.init) ?? "-", privacy: .public)")
+        connection.stateUpdateHandler = { state in
+            Self.log.notice("media connection: \(String(describing: state), privacy: .public)")
+        }
         connection.start(queue: .global(qos: .userInteractive))
         receive(on: connection)
         let audio = AudioIO { [weak self] frame in self?.send(frame) }
@@ -44,6 +51,7 @@ public final class RTPSession: @unchecked Sendable {
     }
 
     public func stop() {
+        lock.withLock { Self.log.notice("media ended: sent \(self.sent), received \(self.received), skipped \(self.skipped)") }
         audio?.stop()
         audio = nil
         connection?.cancel()
@@ -63,6 +71,8 @@ public final class RTPSession: @unchecked Sendable {
             let header = Self.header(payloadType: remote.payload, marker: false, sequence: sequence, timestamp: timestamp, ssrc: ssrc)
             sequence &+= 1
             timestamp &+= UInt32(samples.count)
+            sent += 1
+            if sent == 1 || sent % 500 == 0 { Self.log.info("sent \(self.sent) packets, received \(self.received)") }
             return header + Data(payload)
         }
         connection.send(content: packet, completion: .idempotent)
@@ -117,10 +127,27 @@ public final class RTPSession: @unchecked Sendable {
 
     // MARK: Receiving
 
+    private func count(_ counter: ReferenceWritableKeyPath<RTPSession, Int>) {
+        lock.withLock {
+            self[keyPath: counter] += 1
+            if counter == \.received, received == 1 || received % 500 == 0 {
+                Self.log.info("received \(self.received) packets (skipped \(self.skipped))")
+            }
+        }
+    }
+
     private func receive(on connection: NWConnection) {
         connection.receiveMessage { [weak self] data, _, _, error in
             guard let self else { return }
-            if let data, let samples = self.decode(data) { self.audio?.play(samples) }
+            if let data {
+                if let samples = self.decode(data) {
+                    self.audio?.play(samples)
+                    self.count(\.received)
+                } else {
+                    self.count(\.skipped)
+                }
+            }
+            if let error { Self.log.error("media receive: \(error.localizedDescription, privacy: .public)") }
             if error == nil, self.connection === connection { self.receive(on: connection) }
         }
     }
@@ -144,12 +171,15 @@ public final class RTPSession: @unchecked Sendable {
     }
 }
 
-/// Microphone in, speaker out, at the call's 8 kHz, with the system's voice processing (echo cancellation).
+/// Microphone in, speaker out, at the call's 8 kHz; on the iPhone with the system's voice processing (echo
+/// cancellation).
 final class AudioIO: @unchecked Sendable {
-    private let engine = AVAudioEngine()
-    private let player = AVAudioPlayerNode()
+    private var engine = AVAudioEngine()
+    private var player = AVAudioPlayerNode()
     private let onFrame: ([Int16]) -> Void
+    private let lock = NSLock()
     private var pending: [Int16] = []
+    private var heard = false
     private let callFormat = AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 8000, channels: 1, interleaved: true)!
     private let playFormat = AVAudioFormat(standardFormatWithSampleRate: 8000, channels: 1)!
 
@@ -163,24 +193,82 @@ final class AudioIO: @unchecked Sendable {
         try session.setCategory(.playAndRecord, mode: .voiceChat, options: [.allowBluetoothHFP, .defaultToSpeaker])
         try session.setActive(true)
         #endif
+        #if os(macOS)
+        // On the Mac voice processing fails to build its device whenever there are virtual audio devices (meeting
+        // and streaming apps add them), and a failed try leaves the engine unusable: the plain microphone, then.
+        try run(voiceProcessing: false)
+        #else
+        do {
+            try run(voiceProcessing: true)
+        } catch {
+            RTPSession.log.error("audio with voice processing: \(error.localizedDescription, privacy: .public)")
+            try restartPlain()
+        }
+        #endif
+    }
+
+    /// A fresh engine without voice processing (one that failed to start with it stays unusable).
+    private func restartPlain() throws {
+        teardown()
+        try? engine.inputNode.setVoiceProcessingEnabled(false)
+        engine = AVAudioEngine()
+        player = AVAudioPlayerNode()
+        try run(voiceProcessing: false)
+    }
+
+    private func run(voiceProcessing: Bool) throws {
         let input = engine.inputNode
-        try? input.setVoiceProcessingEnabled(true)
+        if voiceProcessing {
+            do { try input.setVoiceProcessingEnabled(true) } catch {
+                RTPSession.log.error("voice processing: \(error.localizedDescription, privacy: .public)")
+            }
+        }
         let inputFormat = input.outputFormat(forBus: 0)
-        guard let converter = AVAudioConverter(from: inputFormat, to: callFormat) else { throw URLError(.cannotDecodeContentData) }
+        RTPSession.log.notice("microphone: \(inputFormat.channelCount) ch at \(inputFormat.sampleRate) Hz, voice processing \(input.isVoiceProcessingEnabled)")
+        // The Mac's microphones come as several channels with no known layout (the converter's own downmix gives
+        // silence): they're averaged here into one, then converted to the call's rate.
+        guard inputFormat.sampleRate > 0, inputFormat.channelCount > 0,
+              let mono = AVAudioFormat(standardFormatWithSampleRate: inputFormat.sampleRate, channels: 1),
+              let converter = AVAudioConverter(from: mono, to: callFormat) else { throw URLError(.cannotDecodeContentData) }
         input.installTap(onBus: 0, bufferSize: 1024, format: inputFormat) { [weak self] buffer, _ in
-            self?.convert(buffer, with: converter)
+            guard let mixed = Self.mix(buffer, into: mono) else { return }
+            self?.convert(mixed, with: converter)
         }
         engine.attach(player)
         engine.connect(player, to: engine.mainMixerNode, format: playFormat)
-        try engine.start()
+        do {
+            try engine.start()
+        } catch {
+            input.removeTap(onBus: 0)
+            throw error
+        }
         player.play()
+    }
+
+    /// The average of the buffer's channels, as one float channel.
+    static func mix(_ buffer: AVAudioPCMBuffer, into mono: AVAudioFormat) -> AVAudioPCMBuffer? {
+        guard let channels = buffer.floatChannelData,
+              let output = AVAudioPCMBuffer(pcmFormat: mono, frameCapacity: buffer.frameLength),
+              let out = output.floatChannelData?[0] else { return nil }
+        let count = Int(buffer.frameLength), channelCount = Int(buffer.format.channelCount)
+        let stride = buffer.format.isInterleaved ? channelCount : 1
+        output.frameLength = buffer.frameLength
+        for frame in 0..<count {
+            var sum: Float = 0
+            for channel in 0..<channelCount {
+                sum += buffer.format.isInterleaved ? channels[0][frame * stride + channel] : channels[channel][frame]
+            }
+            out[frame] = sum / Float(channelCount)
+        }
+        return output
     }
 
     private func convert(_ buffer: AVAudioPCMBuffer, with converter: AVAudioConverter) {
         let capacity = AVAudioFrameCount(Double(buffer.frameLength) * 8000 / buffer.format.sampleRate) + 16
         guard let output = AVAudioPCMBuffer(pcmFormat: callFormat, frameCapacity: capacity) else { return }
         var consumed = false
-        converter.convert(to: output, error: nil) { _, status in
+        var error: NSError?
+        converter.convert(to: output, error: &error) { _, status in
             if consumed {
                 status.pointee = .noDataNow
                 return nil
@@ -189,12 +277,22 @@ final class AudioIO: @unchecked Sendable {
             status.pointee = .haveData
             return buffer
         }
-        guard let samples = output.int16ChannelData?[0] else { return }
-        pending.append(contentsOf: UnsafeBufferPointer(start: samples, count: Int(output.frameLength)))
-        while pending.count >= 160 {
-            onFrame(Array(pending.prefix(160)))
-            pending.removeFirst(160)
+        if let error { RTPSession.log.error("microphone conversion: \(error.localizedDescription, privacy: .public)") }
+        guard let samples = output.int16ChannelData?[0], output.frameLength > 0 else { return }
+        let frames: [[Int16]] = lock.withLock {
+            if !heard, UnsafeBufferPointer(start: samples, count: Int(output.frameLength)).contains(where: { $0 != 0 }) {
+                heard = true
+                RTPSession.log.notice("microphone: sound")
+            }
+            pending.append(contentsOf: UnsafeBufferPointer(start: samples, count: Int(output.frameLength)))
+            var frames: [[Int16]] = []
+            while pending.count >= 160 {
+                frames.append(Array(pending.prefix(160)))
+                pending.removeFirst(160)
+            }
+            return frames
         }
+        frames.forEach(onFrame)
     }
 
     func play(_ samples: [Int16]) {
@@ -205,10 +303,14 @@ final class AudioIO: @unchecked Sendable {
         player.scheduleBuffer(buffer)
     }
 
-    func stop() {
+    private func teardown() {
         engine.inputNode.removeTap(onBus: 0)
         player.stop()
         engine.stop()
+    }
+
+    func stop() {
+        teardown()
         #if os(iOS)
         try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
         #endif
