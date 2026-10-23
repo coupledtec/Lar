@@ -10,6 +10,8 @@ public final class SyncServer {
     private var pairingListener: NWListener?
     private let state: @MainActor () -> SyncState
     private let apply: @MainActor (SyncState) -> Void
+    /// A timer handed over by an iPhone; false when the Mac doesn't know the device.
+    private let offTimer: @MainActor (String, Double?) -> Bool
     private let port: NWEndpoint.Port
     private let advertise: Bool
 
@@ -19,7 +21,9 @@ public final class SyncServer {
     ///   - state: the Mac's current shared state; `apply`: takes an iPhone's newer one.
     ///   - port, advertise: a fixed port without Bonjour, for tests.
     public init(port: NWEndpoint.Port = .any, advertise: Bool = true,
-                state: @escaping @MainActor () -> SyncState, apply: @escaping @MainActor (SyncState) -> Void) {
+                state: @escaping @MainActor () -> SyncState, apply: @escaping @MainActor (SyncState) -> Void,
+                offTimer: @escaping @MainActor (String, Double?) -> Bool = { _, _ in false }) {
+        self.offTimer = offTimer
         self.port = port
         self.advertise = advertise
         self.state = state
@@ -65,6 +69,8 @@ public final class SyncServer {
                 case .put(let incoming):
                     apply(incoming)
                     try await connection.send(.ok)
+                case .offTimer(let id, let seconds):
+                    try await connection.send(offTimer(id, seconds) ? .ok : .error("aparelho desconhecido no Mac"))
                 default:
                     try await connection.send(.error("pedido inválido"))
                 }

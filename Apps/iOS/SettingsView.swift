@@ -36,6 +36,7 @@ struct SettingsView: View {
                 listSection
                 if settings.token != nil { temperatureSection }
                 MacSyncSection(model: model)
+                HomeLocationSection()
                 watchSection
                 Section { NavigationLink("Diagnóstico") { DiagnosticsView(model: model) } }
                 Section {

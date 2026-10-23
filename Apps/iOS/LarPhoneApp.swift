@@ -26,6 +26,7 @@ struct LarPhoneApp: App {
             LaundryActivities.update(Self.model.home.devices)
         }
         Notifier.start()
+        PresenceMonitor.shared.start(model: Self.model)
     }
 
     var body: some Scene {

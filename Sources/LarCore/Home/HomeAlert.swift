@@ -6,6 +6,12 @@ public struct HomeAlert: Equatable, Sendable, Identifiable {
     public var title: String
     public var body: String
 
+    public init(id: String, title: String, body: String) {
+        self.id = id
+        self.title = title
+        self.body = body
+    }
+
     /// LG's run states while a cycle is going (anything not idle, paused or done).
     static let idleStates: Set = ["POWER_OFF", "INITIAL", "END", "COMPLETE", "SLEEP", "PAUSE", "ERROR", "STANDBY"]
     static let doneStates: Set = ["END", "COMPLETE"]

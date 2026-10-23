@@ -55,6 +55,8 @@ targets:
         NSBonjourServices: [_androidtvremote2._tcp, _lar-sync._tcp, _lar-pair._tcp]
         UIBackgroundModes: [fetch]
         NSSupportsLiveActivities: true
+        NSLocationWhenInUseUsageDescription: O Lar marca onde fica a sua casa para executar cenas ao chegar e ao sair.
+        NSLocationAlwaysAndWhenInUseUsageDescription: Com “Sempre”, o Lar executa as cenas ao chegar e ao sair de casa mesmo com o app fechado.
         NSFaceIDUsageDescription: O Lar pede o Face ID para abrir os Ajustes, onde ficam as chaves das contas.
         # Shared with the widgets: accounts, scenes, favorites, TVs (see Keychain.sharedGroup).
         LarKeychainGroup: $(AppIdentifierPrefix)com.coupled.lar.shared

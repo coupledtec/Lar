@@ -22,12 +22,19 @@ public struct HomeScene: Codable, Sendable, Identifiable, Equatable, Hashable {
     /// An SF Symbol.
     public var symbol: String
     public var actions: [Action]
+    /// Runs by itself at this time (on the Mac).
+    public var schedule: SceneSchedule?
+    /// Runs by itself on arriving or leaving (on the iPhone).
+    public var presence: ScenePresence?
 
-    public init(id: UUID = UUID(), name: String, symbol: String = "sparkles", actions: [Action]) {
+    public init(id: UUID = UUID(), name: String, symbol: String = "sparkles", actions: [Action],
+                schedule: SceneSchedule? = nil, presence: ScenePresence? = nil) {
         self.id = id
         self.name = name
         self.symbol = symbol
         self.actions = actions
+        self.schedule = schedule
+        self.presence = presence
     }
 
     /// The symbols offered when making a scene.
@@ -127,6 +134,8 @@ public struct SceneDraft: Equatable, Sendable {
     public var choices: [String: Bool]
     /// Air conditioners turned on by the scene: the target to set (absent: left as it is).
     public var temperatures: [String: Double]
+    public var schedule: SceneSchedule?
+    public var presence: ScenePresence?
     public let original: HomeScene?
 
     public init(editing scene: HomeScene? = nil) {
@@ -143,6 +152,8 @@ public struct SceneDraft: Equatable, Sendable {
         }
         self.choices = choices
         self.temperatures = temperatures
+        schedule = scene?.schedule
+        presence = scene?.presence
     }
 
     /// Every device as it is now.
@@ -185,6 +196,7 @@ public struct SceneDraft: Equatable, Sendable {
                 actions.append(.init(deviceID: id, deviceName: name, command: .temperature(target)))
             }
         }
-        return HomeScene(id: original?.id ?? UUID(), name: name.trimmingCharacters(in: .whitespaces), symbol: symbol, actions: actions)
+        return HomeScene(id: original?.id ?? UUID(), name: name.trimmingCharacters(in: .whitespaces), symbol: symbol,
+                         actions: actions, schedule: schedule, presence: presence)
     }
 }

@@ -64,6 +64,23 @@ public enum SyncClient {
         }
     }
 
+    /// Asks the Mac to turn the device off later (it stays on; the iPhone may be locked). False when it can't.
+    public static func handOffTimer(deviceID: String, seconds: Double?, endpoint: NWEndpoint? = nil) async -> Bool {
+        guard let key = key() else { return false }
+        var target = endpoint
+        if target == nil { target = try? await find(SyncLink.serviceType) }
+        guard let target else { return false }
+        let link = SyncConnection(NWConnection(to: target, using: SyncLink.parameters(secret: key)))
+        defer { Task { await link.close() } }
+        do {
+            try await link.start()
+            try await link.send(.offTimer(deviceID: deviceID, seconds: seconds))
+            return try await link.receive() == .ok
+        } catch {
+            return false
+        }
+    }
+
     /// The first Mac advertising the service, after a short browse.
     static func find(_ type: String) async throws -> NWEndpoint? {
         let browser = NWBrowser(for: .bonjour(type: type, domain: nil), using: .tcp)

@@ -35,6 +35,13 @@ final class LarModel {
         }
     }
 
+    /// A turn-off timer: kept here, and handed to the Mac when paired, which keeps it even if the iPhone sleeps.
+    func setOffTimer(_ deviceID: String, minutes: Int?) {
+        let seconds = minutes.map { TimeInterval($0 * 60) }
+        home.setOffTimer(deviceID, after: seconds)
+        Task { _ = await SyncClient.handOffTimer(deviceID: deviceID, seconds: seconds) }
+    }
+
     /// A sync shortly after a change here (several quick changes go as one).
     func scheduleSync() {
         syncTask?.cancel()

@@ -141,3 +141,44 @@ import Testing
         #expect(home.device(id: Self.ac.id)?.isOn == true)
     }
 }
+
+@Suite struct AutomationTests {
+    static var calendar: Calendar {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: "America/Sao_Paulo")!
+        return calendar
+    }
+
+    static func date(_ day: Int, _ hour: Int, _ minute: Int, _ second: Int = 0) -> Date {
+        calendar.date(from: DateComponents(year: 2026, month: 10, day: day, hour: hour, minute: minute, second: second))!
+    }
+
+    @Test func dueOnceInTheWindowAndOnTheRightDays() {
+        // 23 Oct 2026 is a Friday (weekday 6).
+        let night = HomeScene(name: "Dormir", actions: [], schedule: SceneSchedule(hour: 23, minute: 0))
+        let weekend = HomeScene(name: "Sábado", actions: [], schedule: SceneSchedule(hour: 23, minute: 0, weekdays: [1, 7]))
+        let scenes = [night, weekend, HomeScene(name: "Manual", actions: [])]
+        #expect(HomeScene.due(scenes, after: Self.date(23, 22, 59, 40), through: Self.date(23, 23, 0, 10), calendar: Self.calendar).map(\.name) == ["Dormir"])
+        #expect(HomeScene.due(scenes, after: Self.date(23, 23, 0, 10), through: Self.date(23, 23, 0, 40), calendar: Self.calendar).isEmpty)
+        #expect(HomeScene.due(scenes, after: Self.date(24, 22, 59, 40), through: Self.date(24, 23, 0, 10), calendar: Self.calendar).map(\.name)
+                == ["Dormir", "Sábado"])
+        // A Mac asleep from 20:00 to 23:30 doesn't run a 23:00 scene half an hour late.
+        #expect(HomeScene.due(scenes, after: Self.date(23, 20, 0), through: Self.date(23, 23, 30), calendar: Self.calendar).isEmpty)
+    }
+
+    @Test func scheduleText() {
+        #expect(SceneSchedule(hour: 7, minute: 5).text == "Todo dia às 07:05")
+        #expect(SceneSchedule(hour: 7, minute: 0, weekdays: [2, 3, 4, 5, 6]).text == "Dias úteis às 07:00")
+        #expect(SceneSchedule(hour: 9, minute: 30, weekdays: [2, 4]).text == "seg, qua às 09:30")
+    }
+
+    @MainActor
+    @Test func offTimerTurnsOff() async throws {
+        let home = HomeStore(previewDevices: [SceneTests.tv])
+        home.setOffTimer(SceneTests.tv.id, after: 0.1)
+        #expect(home.offTimerText(SceneTests.tv.id) == "desliga em 1 min")
+        try await Task.sleep(for: .milliseconds(400))
+        #expect(home.device(id: SceneTests.tv.id)?.isOn == false)
+        #expect(home.offTimers.isEmpty)
+    }
+}

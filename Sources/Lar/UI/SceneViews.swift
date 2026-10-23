@@ -62,6 +62,63 @@ struct SceneStrip: View {
     }
 }
 
+/// When the scene runs by itself: at a time (the Mac runs it), on arriving or leaving (the iPhone does).
+private struct SceneAutomationEditor: View {
+    @Binding var draft: SceneDraft
+
+    private static let days = [(1, "D"), (2, "S"), (3, "T"), (4, "Q"), (5, "Q"), (6, "S"), (7, "S")]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack {
+                Toggle("No horário", isOn: Binding(
+                    get: { draft.schedule != nil },
+                    set: { draft.schedule = $0 ? SceneSchedule(hour: 23, minute: 0) : nil }
+                ))
+                .toggleStyle(.checkbox)
+                if let schedule = draft.schedule {
+                    DatePicker("", selection: Binding(
+                        get: { Calendar.current.date(bySettingHour: schedule.hour, minute: schedule.minute, second: 0, of: Date()) ?? Date() },
+                        set: { date in
+                            draft.schedule?.hour = Calendar.current.component(.hour, from: date)
+                            draft.schedule?.minute = Calendar.current.component(.minute, from: date)
+                        }
+                    ), displayedComponents: .hourAndMinute)
+                    .labelsHidden()
+                    .fixedSize()
+                }
+                Spacer()
+                Picker("", selection: $draft.presence) {
+                    Text("Sem localização").tag(ScenePresence?.none)
+                    ForEach(ScenePresence.allCases, id: \.self) { Text($0.text).tag(ScenePresence?.some($0)) }
+                }
+                .labelsHidden()
+                .fixedSize()
+            }
+            if let schedule = draft.schedule {
+                HStack(spacing: 4) {
+                    ForEach(Self.days, id: \.0) { day, letter in
+                        let on = schedule.weekdays.isEmpty || schedule.weekdays.contains(day)
+                        Button(letter) {
+                            var days = schedule.weekdays.isEmpty ? Set(1...7) : schedule.weekdays
+                            if days.contains(day) { days.remove(day) } else { days.insert(day) }
+                            draft.schedule?.weekdays = days.count == 7 ? [] : days
+                        }
+                        .buttonStyle(.plain)
+                        .frame(width: 22, height: 22)
+                        .background(Circle().fill(Color.white.opacity(on ? 0.22 : 0.05)))
+                    }
+                    Text(schedule.text).font(.system(size: 10)).foregroundStyle(Theme.secondaryText).padding(.leading, 4)
+                }
+            }
+            Text("O horário roda no Mac (com o Lar aberto); chegar e sair, no iPhone.")
+                .font(.system(size: 10))
+                .foregroundStyle(Theme.secondaryText)
+        }
+        .font(.system(size: 11))
+    }
+}
+
 /// An air conditioner the scene turns on: keep its target, or set one.
 private struct SceneTemperatureRow: View {
     @Binding var draft: SceneDraft
@@ -130,6 +187,7 @@ struct SceneEditorView: View {
                     .buttonStyle(.plain)
                 }
             }
+            SceneAutomationEditor(draft: $draft)
             HStack {
                 Text("APARELHOS")
                     .font(.system(size: 10, weight: .semibold))

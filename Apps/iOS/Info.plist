@@ -49,6 +49,10 @@
 	<string>O Lar pede o Face ID para abrir os Ajustes, onde ficam as chaves das contas.</string>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>O Lar procura e controla as TVs Android e Google TV da sua rede.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Com “Sempre”, o Lar executa as cenas ao chegar e ao sair de casa mesmo com o app fechado.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>O Lar marca onde fica a sua casa para executar cenas ao chegar e ao sair.</string>
 	<key>NSSupportsLiveActivities</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>

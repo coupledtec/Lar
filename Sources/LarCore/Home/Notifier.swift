@@ -18,8 +18,9 @@ public enum Notifier {
         center.requestAuthorization(options: [.alert, .sound]) { _, _ in }
     }
 
-    public static func post(_ alerts: [HomeAlert]) {
-        guard laundryEnabled else { return }
+    /// - Parameter force: post even with the laundry alerts off (a scene that ran by itself).
+    public static func post(_ alerts: [HomeAlert], force: Bool = false) {
+        guard laundryEnabled || force else { return }
         let center = UNUserNotificationCenter.current()
         for alert in alerts {
             let content = UNMutableNotificationContent()

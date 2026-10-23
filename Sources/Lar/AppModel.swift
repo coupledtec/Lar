@@ -33,9 +33,32 @@ final class AppModel {
             scenes.reload()
             home.customizations = settings.customizations
             home.grouping = settings.grouping
+        }, offTimer: { id, seconds in
+            guard home.device(id: id) != nil else { return false }
+            home.setOffTimer(id, after: seconds)
+            return true
         })
         try? server.start()
         sync = server
+    }
+
+    /// Runs the scenes whose time has come (checked every half minute; the Mac is the one that's always on).
+    func startScheduler() {
+        let home = home, scenes = scenes
+        Task {
+            var last = Date()
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(30))
+                let now = Date()
+                for scene in HomeScene.due(scenes.scenes, after: last, through: now) {
+                    if home.devices.isEmpty { await home.refresh() }
+                    let problem = home.run(scene)
+                    Notifier.post([HomeAlert(id: "scene:\(scene.id)", title: scene.name,
+                                             body: problem ?? "Cena executada no horário.")], force: true)
+                }
+                last = now
+            }
+        }
     }
 
     func showPairingCode() {

@@ -21,6 +21,9 @@ public enum AccountState: Equatable, Sendable {
 public final class HomeStore {
     public private(set) var serverDevices: [HomeDevice] = []
     public private(set) var accounts: [Provider: AccountState] = [:]
+    /// Devices that turn off by themselves, and when.
+    public internal(set) var offTimers: [String: Date] = [:]
+    @ObservationIgnored var offTimerTasks: [String: Task<Void, Never>] = [:]
     /// How each account's last reads went, for the Diagnostics screen.
     public private(set) var health: [Provider: AccountHealth] = [:]
     public private(set) var isRefreshing = false
@@ -62,7 +65,7 @@ public final class HomeStore {
     static let failuresBeforeOffline = 3
 
     @ObservationIgnored private let makeProviders: () -> [any DeviceProvider]
-    @ObservationIgnored private let now: () -> Date
+    @ObservationIgnored let now: () -> Date
     @ObservationIgnored private let sleep: @Sendable (Duration) async -> Void
     @ObservationIgnored private let isPreview: Bool
     @ObservationIgnored private var providers: [Provider: any DeviceProvider] = [:]

@@ -181,7 +181,7 @@ struct HomeView: View {
                         .foregroundStyle(Theme.secondaryText)
                         .padding(.bottom, 2)
                     ForEach(section.devices) { device in
-                        DeviceRow(device: device, opens: opens(device)) { open(device) } onToggle: {
+                        DeviceRow(device: device, note: home.offTimerText(device.id), opens: opens(device)) { open(device) } onToggle: {
                             home.toggle(device.id)
                         }
                         .contextMenu { deviceMenu(device) }
@@ -199,6 +199,19 @@ struct HomeView: View {
             home.customize(device.id) { $0.isFavorite.toggle() }
         }
         Button("Nome e cômodo…") { go(.device(id: device.id)) }
+        if device.canSwitch {
+            Menu("Desligar em") {
+                ForEach([15, 30, 60, 90, 120], id: \.self) { minutes in
+                    Button(minutes < 60 ? "\(minutes) min" : "\(minutes / 60) h\(minutes % 60 == 0 ? "" : " \(minutes % 60) min")") {
+                        home.setOffTimer(device.id, after: TimeInterval(minutes * 60))
+                    }
+                }
+                if home.offTimers[device.id] != nil {
+                    Divider()
+                    Button("Cancelar timer") { home.setOffTimer(device.id, after: nil) }
+                }
+            }
+        }
         Divider()
         Button("Ocultar da lista") { home.customize(device.id) { $0.isHidden = true } }
     }
@@ -231,6 +244,8 @@ struct HomeView: View {
 /// chevron when it opens more.
 struct DeviceRow: View {
     var device: HomeDevice
+    /// "desliga em 23 min", when it has a timer.
+    var note: String? = nil
     var opens: Bool
     var onOpen: () -> Void
     var onToggle: () -> Void
@@ -257,7 +272,7 @@ struct DeviceRow: View {
                 Text(device.name)
                     .font(.system(size: 13))
                     .lineLimit(1)
-                Text(Labels.subtitle(device))
+                Text([Labels.subtitle(device), note].compactMap { $0 }.joined(separator: " · "))
                     .font(.system(size: 11))
                     .foregroundStyle(Theme.secondaryText)
                     .lineLimit(1)

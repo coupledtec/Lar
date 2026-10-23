@@ -125,7 +125,7 @@ struct HomeListView: View {
 
     @ViewBuilder
     private func row(_ device: HomeDevice) -> some View {
-        let content = DeviceRow(device: device) { home.toggle(device.id) }
+        let content = DeviceRow(device: device, note: home.offTimerText(device.id)) { home.toggle(device.id) }
         if Palette.opens(device) {
             NavigationLink(value: device.id) { content }
         } else {
@@ -142,6 +142,18 @@ struct HomeListView: View {
             home.customize(device.id) { $0.isFavorite.toggle() }
         }
         Button("Nome e cômodo…", systemImage: "pencil") { editingDevice = DeviceEditing(id: device.id) }
+        if device.canSwitch {
+            Menu("Desligar em", systemImage: "timer") {
+                ForEach([15, 30, 60, 90, 120], id: \.self) { minutes in
+                    Button(minutes < 60 ? "\(minutes) min" : "\(minutes / 60) h\(minutes % 60 == 0 ? "" : " \(minutes % 60) min")") {
+                        model.setOffTimer(device.id, minutes: minutes)
+                    }
+                }
+                if home.offTimers[device.id] != nil {
+                    Button("Cancelar timer", role: .destructive) { model.setOffTimer(device.id, minutes: nil) }
+                }
+            }
+        }
         Button("Ocultar da lista", systemImage: "eye.slash") { home.customize(device.id) { $0.isHidden = true } }
     }
 
@@ -176,6 +188,7 @@ struct HomeListView: View {
 /// A device: a round button that switches it, its name and its state with where it comes from.
 struct DeviceRow: View {
     var device: HomeDevice
+    var note: String? = nil
     var onToggle: () -> Void
 
     private var isOn: Bool { device.isOn == true && device.isOnline }
@@ -195,7 +208,7 @@ struct DeviceRow: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(device.name)
                     .lineLimit(1)
-                Text(Labels.subtitle(device))
+                Text([Labels.subtitle(device), note].compactMap { $0 }.joined(separator: " · "))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)

@@ -50,6 +50,8 @@ enum SyncMessage: Codable, Sendable, Equatable {
     case state(SyncState)
     case put(SyncState)
     case ok
+    /// The iPhone hands a turn-off timer to the Mac (nil seconds cancels it).
+    case offTimer(deviceID: String, seconds: Double?)
     /// Pairing only: the Mac's long-term key for the next connections.
     case key(Data)
     case error(String)
