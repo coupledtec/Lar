@@ -55,6 +55,8 @@ struct SettingsView: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) { Button("OK") { dismiss() } }
             }
+            // On the Form, not on its section: rows are rebuilt as the list redraws, and a sheet on one closes with it.
+            .sheet(item: $signIn) { signInView($0) }
             .onAppear {
                 limits = settings.temperatureLimits
                 tuyaRegion = settings.tuya?.region ?? "us"
@@ -153,7 +155,6 @@ struct SettingsView: View {
         } footer: {
             Text("Use uma integração OAuth própria para o iPhone (outra para o Mac e outra para a TV): o refresh token muda a cada renovação, e dois aparelhos com a mesma integração se desconectam um ao outro.")
         }
-        .sheet(item: $signIn) { signInView($0) }
     }
 
     /// The integration to sign in with: the one typed, or the one saved.

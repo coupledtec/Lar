@@ -2,6 +2,7 @@
 import Foundation
 import SwiftUI
 import WebKit
+import os
 
 /// Signing in to SmartThings with an OAuth integration: the account's own page in a web view, its answer caught on
 /// the way to the integration's redirect (the page never loads), and the code traded for the first refresh token.
@@ -155,6 +156,8 @@ private struct SignInWebView {
             self.onCallback = onCallback
         }
 
+        static let log = Logger(subsystem: "com.coupled.lar", category: "smartthings")
+
         static func isCallback(_ url: URL?) -> Bool {
             guard let url else { return false }
             return url.absoluteString.hasPrefix(SmartThingsSignIn.redirect) || url.scheme == "lar"
@@ -162,12 +165,14 @@ private struct SignInWebView {
 
         private func finish(_ url: URL) {
             guard !done else { return }
+            Self.log.notice("sign-in answered: \(url.host() ?? "-", privacy: .public), code \(url.query()?.contains("code=") == true)")
             done = true
             onCallback(url)
         }
 
         func webView(_ webView: WKWebView, decidePolicyFor action: WKNavigationAction,
                      decisionHandler: @escaping @MainActor (WKNavigationActionPolicy) -> Void) {
+            Self.log.notice("sign-in page: \(action.request.url?.host() ?? "-", privacy: .public)\(action.request.url?.path() ?? "", privacy: .public)")
             if let url = action.request.url, Self.isCallback(url) {
                 decisionHandler(.cancel)
                 finish(url)
@@ -184,6 +189,7 @@ private struct SignInWebView {
         }
 
         func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+            Self.log.error("sign-in failed: \(error.localizedDescription, privacy: .public)")
             let failing = (error as NSError).userInfo[NSURLErrorFailingURLErrorKey] as? URL
             if let url = failing ?? webView.url, Self.isCallback(url) { finish(url) }
         }
