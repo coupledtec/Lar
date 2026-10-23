@@ -59,6 +59,9 @@ struct ACControlView: View {
                     }
                 }
                 .disabled(!isOn)
+                Section("Últimas 24 horas") {
+                    ACHistoryView(deviceID: device.id)
+                }
                 if store.connection != .connected || store.transientMessage != nil {
                     Section { Text(statusLine(store)).font(.footnote).foregroundStyle(.orange) }
                 }

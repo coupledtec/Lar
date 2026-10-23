@@ -9,6 +9,8 @@ struct TVControlView: View {
 
     @State private var apps: [AndroidTVProvider.App] = []
     @State private var text = ""
+    /// Swipes instead of the arrows (remembered).
+    @AppStorage("tvTouchpad") private var touchpad = false
 
     private var device: HomeDevice? { home.device(id: deviceID) }
     private var isOn: Bool { device?.isOn == true && device?.isOnline == true }
@@ -80,7 +82,14 @@ struct TVControlView: View {
 
     private var remote: some View {
         VStack(spacing: 22) {
-            if device?.hasDirectionalPad != false { dPad }
+            if device?.hasDirectionalPad != false {
+                Picker("Controle", selection: $touchpad) {
+                    Text("Setas").tag(false)
+                    Text("Touchpad").tag(true)
+                }
+                .pickerStyle(.segmented)
+                if touchpad { touchSurface } else { dPad }
+            }
             HStack(spacing: 18) {
                 round("arrow.uturn.backward", "Voltar", .back)
                 round("house", "Início", .home)
@@ -116,6 +125,21 @@ struct TVControlView: View {
         guard !text.isEmpty else { return }
         home.typeOnTV(text, on: deviceID)
         text = ""
+    }
+
+    /// Swipe to move (one step per swipe), tap for OK.
+    private var touchSurface: some View {
+        RoundedRectangle(cornerRadius: 24, style: .continuous)
+            .fill(Color.secondary.opacity(0.15))
+            .frame(height: 220)
+            .overlay(Text("Deslize para navegar · toque para OK").font(.footnote).foregroundStyle(.secondary))
+            .contentShape(Rectangle())
+            .gesture(DragGesture(minimumDistance: 20).onEnded { swipe in
+                let dx = swipe.translation.width, dy = swipe.translation.height
+                press(abs(dx) > abs(dy) ? (dx > 0 ? .right : .left) : (dy > 0 ? .down : .up))
+            })
+            .onTapGesture { press(.select) }
+            .accessibilityLabel("Touchpad")
     }
 
     private var dPad: some View {

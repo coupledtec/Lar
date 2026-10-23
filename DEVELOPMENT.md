@@ -114,6 +114,16 @@ Dois alvos com separação rígida:
   widget também renova o token do SmartThings, o cliente relê o refresh token salvo antes de renovar.
 - **Mac:** atalho global por Carbon (`HotKey`, sem permissão de Acessibilidade); widgets e Siri no Mac exigiriam
   assinar o app com perfil (na conta grátis vence em 7 dias), por isso o Mac segue com assinatura ad hoc e links.
+- **Sincronização Mac–iPhone:** `Sync/` — o Mac (`SyncServer`) anuncia `_lar-sync._tcp` com TLS-PSK (chave de 32
+  bytes no Porta-chaves, conta `sync-key`); o pareamento abre `_lar-pair._tcp` com PSK derivada do código de 6
+  dígitos só enquanto o código aparece e entrega a chave. `SyncState` (cenas, personalizações, agrupamento) vence
+  pelo `syncUpdatedAt`. O iPhone também entrega timers de desligar ao Mac. O teste `SyncTests` roda servidor e
+  cliente reais no loopback com contas de Porta-chaves próprias.
+- **Automações:** `Home/Automation.swift` (`SceneSchedule`, `HomeScene.due` com tolerância de 10 min, timers no
+  `HomeStore`); o Mac confere a cada 30 s (`AppModel.startScheduler`); chegar/sair é `PresenceMonitor` no iPhone
+  (região de 150 m, "Sempre").
+- **Histórico:** `Home/History.swift` grava em `Application Support/Lar/history.json` (5 min, 30 dias);
+  `ACHistoryView` (Swift Charts) é compilado no Mac e no iPhone.
 - **TVs no relógio:** o watchOS não deixa abrir conexão com aparelhos da rede local; o relógio usa
   `RelayedTVProvider`, que pede ao iPhone por WatchConnectivity (`TVRelay`), e só funciona com o iPhone por perto.
 - **zsh:** `log` é um comando interno do zsh; use `/usr/bin/log show --predicate 'subsystem == "<bundle id>"'`.

@@ -37,6 +37,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         model.startSync()
         model.startScheduler()
         store.onAlerts = { Notifier.post($0) }
+        store.onRefreshed = { [weak store] in
+            guard let devices = store?.devices else { return }
+            Task { await HistoryStore.shared.record(devices) }
+        }
         store.start()
 
         // Don't poll while the Mac sleeps; catch up right after waking.

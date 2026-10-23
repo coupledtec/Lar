@@ -14,6 +14,8 @@ struct SettingsView: View {
     @State private var lgToken = ""
     @State private var notifyLaundry = Notifier.laundryEnabled
     @State private var lockSettings = SettingsLock.isEnabled
+    @State private var acWatts = EnergyEstimate.watts
+    @State private var tariff = EnergyEstimate.tariff
     @State private var tuyaID = ""
     @State private var tuyaSecret = ""
     @State private var tuyaRegion = "us"
@@ -277,6 +279,25 @@ struct SettingsView: View {
                 .toggleStyle(.switch)
                 .controlSize(.small)
                 .font(.system(size: 12))
+            HStack {
+                Text("Potência do ar").font(.system(size: 12))
+                Spacer()
+                TextField("W", value: $acWatts, format: .number)
+                    .textFieldStyle(.roundedBorder)
+                    .frame(width: 70)
+                    .onSubmit { EnergyEstimate.watts = acWatts }
+                Text("W").font(.system(size: 12))
+            }
+            HStack {
+                Text("Tarifa de energia").font(.system(size: 12))
+                Spacer()
+                TextField("R$", value: $tariff, format: .number.precision(.fractionLength(2)))
+                    .textFieldStyle(.roundedBorder)
+                    .frame(width: 70)
+                    .onSubmit { EnergyEstimate.tariff = tariff }
+                Text("R$/kWh").font(.system(size: 12))
+            }
+            hint("Para a estimativa de consumo no histórico do ar (Enter para salvar).")
         }
         .onChange(of: limits) { _, new in settings.temperatureLimits = new }
     }

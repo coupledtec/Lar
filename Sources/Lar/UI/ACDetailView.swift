@@ -4,6 +4,8 @@ import SwiftUI
 /// One LG air conditioner with every control (Celsius's popover), opened from the list.
 struct ACDetailView: View {
     var store: ACStore
+    /// The list's id of this unit ("lg:<id>"), for its history.
+    var deviceID = ""
     var onBack: () -> Void
     /// Freezes the animation clock, for snapshots.
     var fixedDate: Date?
@@ -45,6 +47,8 @@ struct ACDetailView: View {
             if caps.hasToggles {
                 toggleRows
             }
+            Divider()
+            ACHistoryView(deviceID: deviceID, compact: true)
         }
         .redacted(reason: status == nil ? .placeholder : [])
     }

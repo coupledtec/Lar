@@ -40,6 +40,19 @@ controle remoto da TV.
 - **Câmeras juntas:** todas ao vivo numa janela (Mac) ou numa tela (iPhone), pelo botão de grade.
 - **Mac:** ⌃⌥L abre o Lar de qualquer app, e a temperatura do ar pode aparecer ao lado da casinha (Ajustes → Lista).
 - **Ajustes protegidos:** Face ID (iPhone) ou Touch ID/senha (Mac) para abrir os Ajustes, onde ficam as chaves.
+- **TV Samsung e soundbar (SmartThings):** controle remoto com direcional, voltar, início, volume, mudo, canal,
+  entradas e apps (a soundbar: volume, mudo e entrada).
+- **Ar-condicionado em todo lugar:** cenas podem definir a temperatura; Siri ("Ajustar o ar no Lar"), widget com
+  − / + e o link `lar://temperatura/Ar do quarto/23`.
+- **Automações:** cenas no horário (com dias da semana; executadas pelo Mac, que fica ligado), ao chegar e ao sair de
+  casa (iPhone, marque a casa em Ajustes → Casa) e "Desligar em…" no menu de cada aparelho.
+- **Mac e iPhone iguais:** cenas, nomes, favoritos e cômodos sincronizam pela rede de casa, com criptografia. No Mac,
+  Ajustes → iPhone → Parear um iPhone; no iPhone, Ajustes → Mac. As chaves das contas não passam.
+- **Histórico do ar:** temperatura das últimas 24 h, tempo ligado hoje e estimativa de kWh e R$ (potência e tarifa
+  em Ajustes → Ar-condicionado).
+- **Diagnóstico:** em Ajustes, o estado de cada conta, quanto demorou a última leitura e o último erro, com um
+  relatório para copiar sem nenhuma chave.
+- **Touchpad da TV** no iPhone (deslizar navega, tocar é OK).
 - **Sem servidor no meio:** o Lar conversa direto com a nuvem de cada marca e, no caso das TVs, direto com a TV pela
   rede de casa.
 

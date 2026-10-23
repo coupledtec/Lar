@@ -31,6 +31,7 @@ targets:
       # The Mac's air conditioner illustration, the same files on both.
       - path: ../Sources/Lar/UI/Components/ACUnitView.swift
       - path: ../Sources/Lar/UI/Components/AirflowView.swift
+      - path: ../Sources/Lar/UI/Components/ACHistoryView.swift
     dependencies:
       - package: Lar
         product: LarCore

@@ -202,6 +202,17 @@ struct SettingsView: View {
             Stepper("Mínima: \(Labels.temperature(limits.minimum))°C", value: $limits.minimum, in: 16...(limits.maximum - 1))
             Stepper("Máxima: \(Labels.temperature(limits.maximum))°C", value: $limits.maximum, in: (limits.minimum + 1)...32)
             Toggle("Meio grau", isOn: $limits.halfDegrees)
+            LabeledContent("Potência do ar (W)") {
+                TextField("W", value: Binding(get: { EnergyEstimate.watts }, set: { EnergyEstimate.watts = $0 }), format: .number)
+                    .keyboardType(.numberPad)
+                    .multilineTextAlignment(.trailing)
+            }
+            LabeledContent("Tarifa (R$/kWh)") {
+                TextField("R$", value: Binding(get: { EnergyEstimate.tariff }, set: { EnergyEstimate.tariff = $0 }),
+                          format: .number.precision(.fractionLength(2)))
+                    .keyboardType(.decimalPad)
+                    .multilineTextAlignment(.trailing)
+            }
         }
         .onChange(of: limits) { _, new in
             settings.temperatureLimits = new

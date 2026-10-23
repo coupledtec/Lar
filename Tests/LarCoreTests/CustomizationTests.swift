@@ -82,3 +82,36 @@ import Testing
         #expect(!report.contains("Luz da sala"))
     }
 }
+
+@Suite struct HistoryTests {
+    @Test func recordsThrottledAndCountsOnTime() async throws {
+        let file = FileManager.default.temporaryDirectory.appendingPathComponent("lar-history-\(UUID().uuidString).json")
+        defer { try? FileManager.default.removeItem(at: file) }
+        let store = HistoryStore(file: file)
+        var ac = HomeDevice(provider: .lg, rawID: "ac", name: "Ar", kind: .airConditioner, isOn: true)
+        ac.controls["roomTemperatureValue"] = "26"
+        let start = Date(timeIntervalSince1970: 1_800_000_000)
+        await store.record([ac], at: start)
+        await store.record([ac], at: start.addingTimeInterval(60))  // too soon: skipped
+        await store.record([ac], at: start.addingTimeInterval(600))
+        ac.isOn = false
+        await store.record([ac], at: start.addingTimeInterval(1200))
+        let samples = await store.samples(of: ac.id, since: start)
+        #expect(samples.count == 3)
+        #expect(samples.first?.room == 26)
+        #expect(HistoryStore.onTime(samples, from: start, to: start.addingTimeInterval(3600)) == 1200)
+        // Read back from the file by a fresh store.
+        #expect(await HistoryStore(file: file).samples(of: ac.id, since: start).count == 3)
+    }
+
+    @Test func gapsArentCountedAsOn() {
+        let start = Date(timeIntervalSince1970: 0)
+        let samples = [HistorySample(date: start, deviceID: "a", isOn: true),
+                       HistorySample(date: start.addingTimeInterval(7200), deviceID: "a", isOn: false)]
+        #expect(HistoryStore.onTime(samples, from: start, to: start.addingTimeInterval(7200)) == 900)
+    }
+
+    @Test func energyText() {
+        #expect(EnergyEstimate.text(running: 12_000, watts: 1000, tariff: 0.85) == "3 h 20 min · ~3,3 kWh · ~R$\u{00A0}2,83")
+    }
+}

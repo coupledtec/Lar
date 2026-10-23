@@ -34,9 +34,9 @@ struct HomeView: View {
             case .settings:
                 SettingsView(model: model, canGoBack: home.hasAccounts, onDiagnostics: { go(.diagnostics) }) { go(.list) }
                     .transition(.move(edge: .trailing).combined(with: .opacity))
-            case .airConditioner:
+            case .airConditioner(let rawID):
                 if let store = model.airConditioner {
-                    ACDetailView(store: store, onBack: { go(.list) }, fixedDate: fixedDate)
+                    ACDetailView(store: store, deviceID: "lg:\(rawID)", onBack: { go(.list) }, fixedDate: fixedDate)
                         .transition(.move(edge: .trailing).combined(with: .opacity))
                 }
             case .light(let id):

@@ -24,6 +24,8 @@ struct LarPhoneApp: App {
         Self.model.home.onRefreshed = {
             WidgetSnapshot.save(from: Self.model.home)
             LaundryActivities.update(Self.model.home.devices)
+            let devices = Self.model.home.devices
+            Task { await HistoryStore.shared.record(devices) }
         }
         Notifier.start()
         PresenceMonitor.shared.start(model: Self.model)
