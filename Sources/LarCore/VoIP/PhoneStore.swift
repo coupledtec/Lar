@@ -2,6 +2,7 @@
 import AVFoundation
 import Foundation
 import Observation
+import os
 
 /// The intercom's settings: the SIP account (password in the keychain), who the intercom is, and the keys that
 /// open the gate during a call.
@@ -95,7 +96,10 @@ public final class PhoneStore {
     public func start() async {
         await stop()
         settings = PhoneSettings.load()
-        guard isConfigured, let password = PhoneSettings.password else { return }
+        guard isConfigured, let password = PhoneSettings.password else {
+            SIPClient.log.notice("intercom off: enabled \(self.settings.isEnabled), complete \(self.settings.isComplete)")
+            return
+        }
         let account = SIPAccount(server: settings.server, port: settings.port, user: settings.user, password: password,
                                  domain: settings.domain.isEmpty ? nil : settings.domain)
         let client = SIPClient(account: account) { [weak self] event in

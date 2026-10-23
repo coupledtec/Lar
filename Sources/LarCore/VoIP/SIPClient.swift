@@ -1,5 +1,6 @@
 import Foundation
 import Network
+import os
 
 /// A SIP account: the server (a PBX or VoIP provider), the extension's user and password.
 public struct SIPAccount: Sendable, Equatable {
@@ -51,6 +52,7 @@ public protocol SIPTransport: Sendable {
 /// the server (as an outbound proxy), which suits a cloud PBX behind the home router. Media is someone else's job:
 /// this hands over and takes the SDP.
 public actor SIPClient {
+    static let log = Logger(subsystem: "com.coupled.lar", category: "sip")
     public let account: SIPAccount
     private let transport: any SIPTransport
     private let events: @Sendable (SIPEvent) -> Void
@@ -67,7 +69,9 @@ public actor SIPClient {
     private var provisional: [String: @Sendable (SIPMessage) -> Void] = [:]
     private var dialogs: [String: Dialog] = [:]
 
-    static let expires = 300
+    /// Short, so that if another phone on the same extension took the binding (servers often keep one), this one
+    /// is back within a couple of minutes.
+    static let expires = 120
     static let keepAlive: Duration = .seconds(25)
     /// RFC 3261's T1: the first retransmission over UDP.
     static let t1: Duration = .milliseconds(500)
@@ -104,7 +108,14 @@ public actor SIPClient {
         do {
             try await transport.start()
         } catch {
+            Self.log.error("no route to \(self.account.server, privacy: .public): \(error.localizedDescription, privacy: .public)")
             report(.failed("Servidor não responde"))
+            // The network may not be up yet (the app starting with the Mac): try again in a while.
+            refreshTask = Task { [weak self] in
+                try? await Task.sleep(for: .seconds(30))
+                guard !Task.isCancelled else { return }
+                await self?.start()
+            }
             return
         }
         let stream = transport.incoming
@@ -148,6 +159,7 @@ public actor SIPClient {
                     _ = try? await sendRegister(expires: Self.expires)
                 }
             }
+            Self.log.notice("bindings: \(response.headers("Contact").joined(separator: " | "), privacy: .public)")
             report(.registered)
             let granted = response.header("Expires").flatMap(Int.init) ?? Self.expires
             scheduleRefresh(after: max(30, Double(granted) * 0.8))
@@ -185,6 +197,7 @@ public actor SIPClient {
     }
 
     private func report(_ state: SIPRegistration) {
+        Self.log.notice("registration: \(String(describing: state), privacy: .public)")
         registration = state
         events(.registration(state))
     }
@@ -313,6 +326,7 @@ public actor SIPClient {
 
     private func received(_ data: Data) async {
         guard let message = SIPMessage.parse(data) else { return }
+        Self.log.info("<- \(message.startLine, privacy: .public) [\(message.callID ?? "", privacy: .public)]")
         if message.isRequest {
             await handleRequest(message)
         } else {
@@ -560,6 +574,9 @@ final class UDPTransport: SIPTransport, @unchecked Sendable {
     }
 
     func send(_ data: Data) async {
+        if data.count > 4, let line = String(decoding: data.prefix(120), as: UTF8.self).split(separator: "\r\n").first {
+            SIPClient.log.info("-> \(line, privacy: .public)")
+        }
         connection?.send(content: data, completion: .idempotent)
     }
 
