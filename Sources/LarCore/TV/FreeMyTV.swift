@@ -1,10 +1,12 @@
 import Foundation
+import os
 
 /// Free My TV, the owner's home screen app on an Android TV: the Lar hands it, over ADB, its scenes and how the list
 /// is organized (for the TV's Casa tab), and notices to show over whatever is on screen (the intercom calling, the
 /// washer done). The app only takes these from the ADB shell (its receiver needs android.permission.DUMP).
 public enum FreeMyTV {
     static let package = "io.freemytv"
+    static let log = Logger(subsystem: "com.coupled.lar", category: "freemytv")
     static let receiver = "io.freemytv/.LarReceiver"
 
     /// The TV's own icon names for the scenes' SF Symbols.
@@ -58,7 +60,9 @@ extension AndroidTVProvider {
     @discardableResult
     public func sendToFreeMyTV(_ broadcast: String) async -> Int {
         var count = 0
-        for host in freeMyTVHosts() {
+        let hosts = freeMyTVHosts()
+        FreeMyTV.log.info("Free My TV: \(hosts.count, privacy: .public) TV(s)")
+        for host in hosts {
             do {
                 let installed = try await shellOn(host, "pm list packages \(FreeMyTV.package)")
                 guard installed.contains("package:\(FreeMyTV.package)") else { continue }
@@ -66,6 +70,7 @@ extension AndroidTVProvider {
                 _ = try await shellOn(host, "appops set \(FreeMyTV.package) SYSTEM_ALERT_WINDOW allow; am broadcast \(broadcast)")
                 count += 1
             } catch {
+                FreeMyTV.log.error("Free My TV: \((error as? ProviderError)?.message ?? error.localizedDescription, privacy: .public)")
                 continue
             }
         }
