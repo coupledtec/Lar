@@ -114,6 +114,18 @@ struct HomeView: View {
             if home.isRefreshing {
                 ProgressView().controlSize(.mini)
             }
+            if model.phone.isConfigured {
+                Button { model.callDoor() } label: {
+                    Image(systemName: "bell.and.waves.left.and.right")
+                        .font(.system(size: 13))
+                        .frame(width: 24, height: 24)
+                        .contentShape(Rectangle())
+                        .foregroundStyle(model.phone.registration == .registered ? Color.primary : Theme.warning)
+                }
+                .buttonStyle(.plain)
+                .help(model.phone.registration == .registered ? "Ligar para o porteiro" : "Porteiro: sem registro no servidor")
+                .accessibilityLabel("Ligar para o porteiro")
+            }
             if home.devices.filter(\.hasLiveVideo).count > 1 {
                 Button { CameraWindow.showAll(home: home) } label: {
                     Image(systemName: "rectangle.grid.2x2")

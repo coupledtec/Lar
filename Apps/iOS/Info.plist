@@ -53,6 +53,8 @@
 	<string>Com “Sempre”, o Lar executa as cenas ao chegar e ao sair de casa mesmo com o app fechado.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>O Lar marca onde fica a sua casa para executar cenas ao chegar e ao sair.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>O Lar usa o microfone nas chamadas com o porteiro.</string>
 	<key>NSSupportsLiveActivities</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>
@@ -75,6 +77,7 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
+		<string>audio</string>
 	</array>
 	<key>UILaunchScreen</key>
 	<dict/>

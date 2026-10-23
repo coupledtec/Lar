@@ -1,3 +1,4 @@
+import AudioToolbox
 import LarCore
 import SwiftUI
 
@@ -6,6 +7,7 @@ import SwiftUI
 struct HomeListView: View {
     var model: LarModel
     var link: WatchLink
+    var phone: PhoneStore
 
     @State private var showingSettings = false
     /// The scene being made (nil id) or changed.
@@ -42,6 +44,15 @@ struct HomeListView: View {
                     } label: { Image(systemName: "gearshape") }
                         .accessibilityLabel("Ajustes")
                 }
+                if phone.isConfigured {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button { Task { await phone.dial() } } label: {
+                            Image(systemName: "bell.and.waves.left.and.right")
+                                .foregroundStyle(phone.registration == .registered ? Color.accentColor : .orange)
+                        }
+                        .accessibilityLabel("Ligar para o porteiro")
+                    }
+                }
                 if home.devices.filter(\.hasLiveVideo).count > 1 {
                     ToolbarItem(placement: .topBarLeading) {
                         NavigationLink(value: "cameras") { Image(systemName: "rectangle.grid.2x2") }
@@ -73,8 +84,12 @@ struct HomeListView: View {
                     model.scheduleSync()
                 }
             }
+            .fullScreenCover(item: Binding(get: { phone.call }, set: { _ in })) { call in
+                CallView(phone: phone, call: call)
+                    .task(id: call.state == .incoming) { await ring(while: call) }
+            }
             .sheet(isPresented: $showingSettings) {
-                SettingsView(model: model, link: link)
+                SettingsView(model: model, link: link, phone: phone)
             }
             .onAppear { if !home.hasAccounts { showingSettings = true } }
         }
@@ -155,6 +170,16 @@ struct HomeListView: View {
             }
         }
         Button("Ocultar da lista", systemImage: "eye.slash") { home.customize(device.id) { $0.isHidden = true } }
+    }
+
+    /// Rings and vibrates while the intercom calls (with the app open).
+    private func ring(while call: PhoneCall) async {
+        guard call.state == .incoming else { return }
+        while phone.call?.state == .incoming, !Task.isCancelled {
+            AudioServicesPlayAlertSound(SystemSoundID(1005))
+            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+            try? await Task.sleep(for: .seconds(2))
+        }
     }
 
     private var problemLine: String? {

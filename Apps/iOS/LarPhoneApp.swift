@@ -7,6 +7,9 @@ struct LarPhoneApp: App {
     /// One model for the phone's window and the CarPlay screen.
     @MainActor static let model = LarModel(settings: AppSettings(), includeTVs: true)
     @MainActor static let link = WatchLink()
+    /// The intercom: registered while the app is open (iOS doesn't let it listen in the background without Apple's
+    /// VoIP push, which needs a paid developer account); a call in progress keeps going with the screen locked.
+    @MainActor static let phone = PhoneStore()
     @State private var model = LarPhoneApp.model
     @State private var link = LarPhoneApp.link
     @Environment(\.scenePhase) private var phase
@@ -33,7 +36,7 @@ struct LarPhoneApp: App {
 
     var body: some Scene {
         WindowGroup {
-            HomeListView(model: model, link: link)
+            HomeListView(model: model, link: link, phone: Self.phone)
                 .tint(.accentColor)
                 .onOpenURL { url in
                     guard let link = LarLink(url) else { return }
@@ -55,6 +58,7 @@ struct LarPhoneApp: App {
                 model.home.reloadAccountsIfChanged()
                 model.home.isPopoverVisible = true
                 model.home.start()
+                if Self.phone.registration == .off { Task { await Self.phone.start() } }
                 link.sendAccounts()
                 Task {
                     await model.syncWithMac()
@@ -62,6 +66,8 @@ struct LarPhoneApp: App {
                 }
             case .background:
                 model.home.suspend()
+                // Off the PBX while it can't answer, unless a call is going on.
+                if Self.phone.call == nil { Task { await Self.phone.stop() } }
                 Self.scheduleRefresh()
             default:
                 break

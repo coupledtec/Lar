@@ -36,6 +36,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         Notifier.start()
         model.startSync()
         model.startScheduler()
+        model.startPhone()
         store.onAlerts = { Notifier.post($0) }
         store.onRefreshed = { [weak store] in
             guard let devices = store?.devices else { return }

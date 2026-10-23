@@ -47,5 +47,7 @@
 	<true/>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>O Lar conversa com a sua TV Android pela rede de casa para ligar, desligar e servir de controle remoto.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>O Lar usa o microfone nas chamadas com o porteiro.</string>
 </dict>
 </plist>

@@ -47,6 +47,7 @@ struct SettingsView: View {
                     tvSection
                     listSection
                     phoneSection
+                    PorteiroSection(phone: model.phone)
                     if settings.token != nil { temperatureSection }
                     generalSection
                 }

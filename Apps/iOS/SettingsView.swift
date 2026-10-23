@@ -5,6 +5,7 @@ import SwiftUI
 struct SettingsView: View {
     var model: LarModel
     var link: WatchLink
+    var phone: PhoneStore
 
     @Environment(\.dismiss) private var dismiss
     @State private var lgToken = ""
@@ -35,6 +36,7 @@ struct SettingsView: View {
                 tvSection
                 listSection
                 if settings.token != nil { temperatureSection }
+                PorteiroSection(phone: phone)
                 MacSyncSection(model: model)
                 HomeLocationSection()
                 watchSection

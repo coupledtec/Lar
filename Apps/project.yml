@@ -32,6 +32,7 @@ targets:
       - path: ../Sources/Lar/UI/Components/ACUnitView.swift
       - path: ../Sources/Lar/UI/Components/AirflowView.swift
       - path: ../Sources/Lar/UI/Components/ACHistoryView.swift
+      - path: ../Sources/Lar/UI/Components/CallView.swift
     dependencies:
       - package: Lar
         product: LarCore
@@ -54,7 +55,8 @@ targets:
         ITSAppUsesNonExemptEncryption: false
         NSLocalNetworkUsageDescription: O Lar procura e controla as TVs Android e Google TV da sua rede.
         NSBonjourServices: [_androidtvremote2._tcp, _lar-sync._tcp, _lar-pair._tcp]
-        UIBackgroundModes: [fetch]
+        UIBackgroundModes: [fetch, audio]
+        NSMicrophoneUsageDescription: O Lar usa o microfone nas chamadas com o porteiro.
         NSSupportsLiveActivities: true
         NSLocationWhenInUseUsageDescription: O Lar marca onde fica a sua casa para executar cenas ao chegar e ao sair.
         NSLocationAlwaysAndWhenInUseUsageDescription: Com “Sempre”, o Lar executa as cenas ao chegar e ao sair de casa mesmo com o app fechado.

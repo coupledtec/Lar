@@ -11,6 +11,8 @@ typealias AllSettings = LarSettings
 final class AppModel {
     let home: HomeStore
     let scenes: SceneStore
+    /// The intercom (SIP): always registered while the Mac runs, so it rings here even with the iPhone away.
+    let phone = PhoneStore()
     @ObservationIgnored let settings: AllSettings
     /// The air conditioner whose screen is open; polled only while it is.
     private(set) var airConditioner: ACStore?
@@ -43,6 +45,22 @@ final class AppModel {
     }
 
     /// Runs the scenes whose time has come (checked every half minute; the Mac is the one that's always on).
+    func startPhone() {
+        let phone = phone
+        phone.onIncoming = { call in
+            CallWindow.show(phone)
+            CallWindow.startRinging()
+            Notifier.post([HomeAlert(id: "call:\(call.id)", title: call.name, body: "Chamando no porteiro.")], force: true)
+        }
+        phone.onEnded = { _ in CallWindow.closeSoon() }
+        Task { await phone.start() }
+    }
+
+    func callDoor() {
+        Task { await phone.dial() }
+        CallWindow.show(phone)
+    }
+
     func startScheduler() {
         let home = home, scenes = scenes
         Task {
