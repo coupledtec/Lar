@@ -18,6 +18,7 @@ struct HomeView: View {
         case scene(id: UUID?)
         /// A device's name, room, favorite and visibility.
         case device(id: String)
+        case diagnostics
     }
 
     @State private var route: Route?
@@ -31,7 +32,7 @@ struct HomeView: View {
             case .list:
                 list.transition(.move(edge: .leading).combined(with: .opacity))
             case .settings:
-                SettingsView(model: model, canGoBack: home.hasAccounts) { go(.list) }
+                SettingsView(model: model, canGoBack: home.hasAccounts, onDiagnostics: { go(.diagnostics) }) { go(.list) }
                     .transition(.move(edge: .trailing).combined(with: .opacity))
             case .airConditioner:
                 if let store = model.airConditioner {
@@ -43,6 +44,9 @@ struct HomeView: View {
                     .transition(.move(edge: .trailing).combined(with: .opacity))
             case .tv(let id):
                 TVDetailView(home: home, deviceID: id) { go(.list) }
+                    .transition(.move(edge: .trailing).combined(with: .opacity))
+            case .diagnostics:
+                DiagnosticsView(model: model) { go(.settings) }
                     .transition(.move(edge: .trailing).combined(with: .opacity))
             case .device(let id):
                 DeviceSettingsView(home: home, deviceID: id) { go(.list) }

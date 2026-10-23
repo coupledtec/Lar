@@ -36,6 +36,7 @@ struct SettingsView: View {
                 listSection
                 if settings.token != nil { temperatureSection }
                 watchSection
+                Section { NavigationLink("Diagnóstico") { DiagnosticsView(model: model) } }
                 Section {
                     Text("As chaves ficam no Porta-chaves deste iPhone e só vão para o seu Apple Watch. O Lar não tem servidor nem coleta dados.")
                         .font(.footnote)

@@ -8,6 +8,7 @@ import SwiftUI
 struct SettingsView: View {
     var model: AppModel
     var canGoBack: Bool
+    var onDiagnostics: () -> Void = {}
     var onBack: () -> Void
 
     @State private var lgToken = ""
@@ -270,6 +271,8 @@ struct SettingsView: View {
 
     private var generalSection: some View {
         section("Geral") {
+            Button("Diagnóstico…", action: onDiagnostics)
+                .font(.system(size: 12))
             Toggle("Abrir ao iniciar o Mac", isOn: $launchAtLogin)
                 .toggleStyle(.switch)
                 .controlSize(.small)

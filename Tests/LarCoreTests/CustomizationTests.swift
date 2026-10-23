@@ -69,3 +69,16 @@ import Testing
         #expect(HomeAlert.alerts(from: [Self.washer("RUNNING")], to: [Self.washer("POWER_OFF")]).isEmpty)
     }
 }
+
+@MainActor
+@Suite struct DiagnosticsTests {
+    @Test func reportHasNoNamesNorKeys() {
+        let home = HomeStore(previewDevices: CustomizationTests.devices, accounts: [.lg: .connected, .tuya: .unauthorized])
+        let report = home.diagnosticsReport(app: "iPhone", version: "1.0", pairedTVs: 1, sharedKeychain: true)
+        #expect(report.contains("LG ThinQ: conectada"))
+        #expect(report.contains("Smart Life: chave recusada"))
+        #expect(report.contains("TVs pareadas: 1"))
+        #expect(!report.contains("Tomada"))
+        #expect(!report.contains("Luz da sala"))
+    }
+}

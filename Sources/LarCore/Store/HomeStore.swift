@@ -21,6 +21,8 @@ public enum AccountState: Equatable, Sendable {
 public final class HomeStore {
     public private(set) var serverDevices: [HomeDevice] = []
     public private(set) var accounts: [Provider: AccountState] = [:]
+    /// How each account's last reads went, for the Diagnostics screen.
+    public private(set) var health: [Provider: AccountHealth] = [:]
     public private(set) var isRefreshing = false
     /// A short-lived error to show, e.g. a command the device rejected.
     public private(set) var transientMessage: String?
@@ -81,6 +83,7 @@ public final class HomeStore {
         var provider: Provider
         var devices: [HomeDevice]
         var error: (any Error)?
+        var duration: Duration = .zero
     }
 
     struct Pending {
@@ -201,10 +204,12 @@ public final class HomeStore {
             for provider in current {
                 group.addTask {
                     // Each read says whose it is, taken from the client itself.
+                    let start = ContinuousClock.now
                     do {
-                        return AccountRead(provider: provider.provider, devices: try await provider.devices(), error: nil)
+                        let devices = try await provider.devices()
+                        return AccountRead(provider: provider.provider, devices: devices, error: nil, duration: ContinuousClock.now - start)
                     } catch {
-                        return AccountRead(provider: provider.provider, devices: [], error: error)
+                        return AccountRead(provider: provider.provider, devices: [], error: error, duration: ContinuousClock.now - start)
                     }
                 }
             }
@@ -214,6 +219,16 @@ public final class HomeStore {
         }
         for read in results where providers[read.provider] != nil {
             let kind = read.provider
+            var entry = health[kind] ?? AccountHealth()
+            entry.lastRead = now()
+            entry.duration = read.duration
+            if let error = read.error {
+                entry.lastError = (error as? ProviderError)?.message ?? error.localizedDescription
+                entry.lastErrorAt = now()
+            } else {
+                entry.deviceCount = read.devices.count
+            }
+            health[kind] = entry
             switch read.error.map(Result<[HomeDevice], Error>.failure) ?? .success(read.devices) {
             case .success(let list):
                 Self.log.debug("\(kind.rawValue, privacy: .public): \(list.count, privacy: .public) devices")
