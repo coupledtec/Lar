@@ -57,6 +57,8 @@ controle remoto da TV.
   para ele. Em Ajustes → Porteiro: servidor, usuário e senha do ramal, número do porteiro e as teclas do portão.
   O Mac fica registrado e toca sempre; o iPhone toca com o Lar aberto (com o app fechado, só com a conta paga de
   desenvolvedor da Apple). Áudio G.711, como todo PABX e porteiro aceita.
+- **Free My TV:** com o app Free My TV numa TV que o Mac alcança por ADB, o Lar manda para a aba Casa da TV as cenas,
+  nomes, favoritos e cômodos (a cada mudança) e mostra por cima da tela o porteiro chamando e a lavadora pronta.
 - **Sem servidor no meio:** o Lar conversa direto com a nuvem de cada marca e, no caso das TVs, direto com a TV pela
   rede de casa.
 

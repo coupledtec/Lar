@@ -47,7 +47,9 @@ final class AppModel {
     /// Runs the scenes whose time has come (checked every half minute; the Mac is the one that's always on).
     func startPhone() {
         let phone = phone
-        phone.onIncoming = { call in
+        phone.onIncoming = { [weak self] call in
+            self?.noticeOnTVs(call.name == "Porteiro" ? "Porteiro chamando" : "Chamada: \(call.name)",
+                              "Atenda no Mac ou no iPhone.", doorbell: true)
             CallWindow.show(phone)
             CallWindow.startRinging()
             Notifier.post([HomeAlert(id: "call:\(call.id)", title: call.name, body: "Chamando no porteiro.")], force: true)
@@ -59,6 +61,33 @@ final class AppModel {
     func callDoor() {
         Task { await phone.dial() }
         CallWindow.show(phone)
+    }
+
+    /// Free My TV on the TVs (by ADB): the scenes and the list's organization, whenever they change (checked every
+    /// minute), and the notices below.
+    func startTVBridge() {
+        let settings = settings, home = home
+        Task {
+            var lastSent = Data()
+            var sentAt = Date.distantPast
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(lastSent.isEmpty ? 20 : 60))
+                let json = FreeMyTV.export(scenes: settings.scenes, customizations: settings.customizations, grouping: settings.grouping)
+                // Again after a while too, for a TV that was off.
+                guard json != lastSent || Date().timeIntervalSince(sentAt) > 1800,
+                      let tv = home.tv as? AndroidTVProvider else { continue }
+                if await tv.sendFreeMyTVUpdate(json) > 0 {
+                    lastSent = json
+                    sentAt = Date()
+                }
+            }
+        }
+    }
+
+    /// A notice on the TVs' screens (the intercom calling, the washer done).
+    func noticeOnTVs(_ title: String, _ body: String, doorbell: Bool) {
+        guard let tv = home.tv as? AndroidTVProvider else { return }
+        Task { await tv.sendFreeMyTVNotice(title: title, body: body, doorbell: doorbell) }
     }
 
     func startScheduler() {

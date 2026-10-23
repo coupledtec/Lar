@@ -511,6 +511,16 @@ public actor AndroidTVProvider: TVRemoteProvider {
 
     // MARK: ADB
 
+    /// The TVs the Mac has reached by ADB (their last addresses), for Free My TV.
+    func freeMyTVHosts() -> [String] {
+        guard useADB else { return [] }
+        return Array(Set(known.values.map(\.host) + manualHosts)).filter { !$0.isEmpty }
+    }
+
+    func shellOn(_ host: String, _ command: String) async throws -> String {
+        try await shell(command, host: host)
+    }
+
     private func host(of device: HomeDevice) throws -> String {
         guard let host = device.controls["host"], !host.isEmpty else { throw ProviderError.unsupported }
         return host

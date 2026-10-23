@@ -37,7 +37,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         model.startSync()
         model.startScheduler()
         model.startPhone()
-        store.onAlerts = { Notifier.post($0) }
+        model.startTVBridge()
+        store.onAlerts = { [weak model] alerts in
+            Notifier.post(alerts)
+            for alert in alerts { model?.noticeOnTVs(alert.title, alert.body, doorbell: false) }
+        }
         store.onRefreshed = { [weak store] in
             guard let devices = store?.devices else { return }
             Task { await HistoryStore.shared.record(devices) }

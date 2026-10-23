@@ -193,3 +193,30 @@ import Testing
         #expect(AndroidTVProvider.shellText("it's; rm") == "'it'\\''s;%srm'")
     }
 }
+
+@Suite struct FreeMyTVTests {
+    @Test func exportIsPlainForTheTV() throws {
+        let scene = HomeScene(id: UUID(uuidString: "00000000-0000-0000-0000-000000000001")!, name: "Dormir", symbol: "moon.fill", actions: [
+            .init(deviceID: "lg:ac", deviceName: "Ar", command: .power(true)),
+            .init(deviceID: "lg:ac", deviceName: "Ar", command: .temperature(24)),
+            .init(deviceID: "tuya:l", deviceName: "Luz", command: .color(LightColor(hue: 0, saturation: 1))),
+        ])
+        let data = FreeMyTV.export(scenes: [scene], customizations: ["smartThings:t": DeviceCustomization(name: "TV", isFavorite: true, room: "Sala")],
+                                   grouping: .room)
+        let json = try #require(try JSONSerialization.jsonObject(with: data) as? [String: Any])
+        #expect(json["grouping"] as? String == "room")
+        let scenes = try #require(json["scenes"] as? [[String: Any]])
+        #expect(scenes.first?["symbol"] as? String == "bedtime")
+        let actions = try #require(scenes.first?["actions"] as? [[String: Any]])
+        #expect(actions.count == 2)
+        #expect(actions[1]["type"] as? String == "temperature")
+        let devices = try #require(json["devices"] as? [String: [String: Any]])
+        #expect(devices["smartThings:t"]?["room"] as? String == "Sala")
+    }
+
+    @Test func broadcastNeedsNoQuoting() {
+        let args = FreeMyTV.notice(title: "Porteiro chamando", body: "Atenda; já!", doorbell: true)
+        #expect(args.hasPrefix("--es kind doorbell -a io.freemytv.LAR -n io.freemytv/.LarReceiver"))
+        #expect(!args.contains(";") && !args.contains("'") && !args.contains("á"))
+    }
+}

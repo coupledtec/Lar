@@ -132,6 +132,11 @@ Dois alvos com separação rígida:
   app fechado exige PushKit (conta paga) — o Mac poderia mandar o push, sem servidor externo.
 - **Porta-chaves no Mac:** `Vault` guarda todas as chaves num item só (`vault`) e o `build-app.sh` assina com um
   certificado de desenvolvedor do Mac, para o "Sempre permitir" valer entre versões.
+- **Free My TV:** `TV/FreeMyTV.swift` — o Mac manda `am broadcast -a io.freemytv.LAR -n io.freemytv/.LarReceiver` pelo
+  ADB (extras em base64): `kind=update` com o JSON das cenas (comandos simples: power/brightness/temperature) e das
+  personalizações, a cada mudança (conferido a cada minuto, `AppModel.startTVBridge`), e `kind=doorbell|alert` para
+  avisos na tela. O receptor do app exige `android.permission.DUMP` (só shell e sistema); o Lar libera
+  `SYSTEM_ALERT_WINDOW` por `appops`.
 - **TVs no relógio:** o watchOS não deixa abrir conexão com aparelhos da rede local; o relógio usa
   `RelayedTVProvider`, que pede ao iPhone por WatchConnectivity (`TVRelay`), e só funciona com o iPhone por perto.
 - **zsh:** `log` é um comando interno do zsh; use `/usr/bin/log show --predicate 'subsystem == "<bundle id>"'`.
