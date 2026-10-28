@@ -1,0 +1,7201 @@
+{
+  "sourceLanguage" : "pt-BR",
+  "strings" : {
+    "" : {},
+    " em %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " in %@"
+          }
+        }
+      }
+    },
+    " às %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " at %@"
+          }
+        }
+      }
+    },
+    "%@ em %@." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ at %@."
+          }
+        }
+      }
+    },
+    "%@ está fora do ar." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ is unreachable."
+          }
+        }
+      }
+    },
+    "%@ graus" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ degrees"
+          }
+        }
+      }
+    },
+    "%@ não aceita temperatura." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ doesn't take a temperature."
+          }
+        }
+      }
+    },
+    "%@ não foi encontrado." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ wasn't found."
+          }
+        }
+      }
+    },
+    "%@ · fora do ar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · unreachable"
+          }
+        }
+      }
+    },
+    "%@, Alexa: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, Alexa: %@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@, Alexa: %2$@"
+          }
+        }
+      }
+    },
+    "%@. Desligar tira a TV da rede: se ela não ligar pelo Lar, use o controle." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@. Turning off takes the TV off the network: if it doesn't turn on from Lar, use the remote."
+          }
+        }
+      }
+    },
+    "%@/kWh" : {},
+    "%@: %@ fora do ar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: %@ unreachable"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$@ fora do ar"
+          }
+        }
+      }
+    },
+    "%@: a chave foi recusada. Veja os Ajustes." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: the key was refused. See Settings."
+          }
+        }
+      }
+    },
+    "%@: conta da Alexa desconectada, a parte dela não rodou" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: Alexa account disconnected, its part didn't run"
+          }
+        }
+      }
+    },
+    "%@: nenhum Echo no ar, a parte da Alexa não rodou" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: no Echo online, the Alexa part didn't run"
+          }
+        }
+      }
+    },
+    "%@C" : {},
+    "%@°" : {},
+    "%@°C" : {},
+    "%lld aparelhos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld devices"
+          }
+        }
+      }
+    },
+    "%lld aparelhos · lido %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld devices · read %@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld aparelhos · lido %2$@"
+          }
+        }
+      }
+    },
+    "%lld comandos" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld commands"
+          }
+        }
+      }
+    },
+    "%lld de %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld of %lld"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld de %2$lld"
+          }
+        }
+      }
+    },
+    "%lld h%@" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld h%2$@"
+          }
+        }
+      }
+    },
+    "%lld ligados" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld on"
+          }
+        }
+      }
+    },
+    "%lld min" : {},
+    "%lld%%" : {},
+    ".5" : {},
+    "1 aparelho" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 device"
+          }
+        }
+      }
+    },
+    "1. Configurações → Dispositivos e conexões → Recursos remotos: marque \"Habilitar recursos remotos\"." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1. Settings → Devices & connections → Remote features: check \"Enable remote features\"."
+          }
+        }
+      }
+    },
+    "1. Token pessoal" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1. Personal token"
+          }
+        }
+      }
+    },
+    "2. Client ID e Client Secret" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2. Client ID and Client Secret"
+          }
+        }
+      }
+    },
+    "2. Na mesma tela, em Preferências do app Xbox: \"Permitir conexões de qualquer dispositivo\"." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2. On the same screen, under Xbox app preferences: \"Allow connections from any device\"."
+          }
+        }
+      }
+    },
+    "3. Configurações → Geral → Opções de energia: escolha \"Suspensão\". Em \"Economia de energia\" o Xbox não liga pelo Lar." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3. Settings → General → Power options: choose \"Sleep\". In \"Energy saving\" the Xbox can't be turned on from Lar."
+          }
+        }
+      }
+    },
+    "3. Entrar e pegar o código" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3. Sign in and get the code"
+          }
+        }
+      }
+    },
+    "4. Refresh token" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4. Refresh token"
+          }
+        }
+      }
+    },
+    "5. No Lar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "5. In Lar"
+          }
+        }
+      }
+    },
+    "5060" : {},
+    "A Amazon não autorizou" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amazon didn't authorize it"
+          }
+        }
+      }
+    },
+    "A Amazon não disse quem é a conta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amazon didn't say whose account this is"
+          }
+        }
+      }
+    },
+    "A Amazon não registrou o Lar: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amazon didn't register Lar: %@"
+          }
+        }
+      }
+    },
+    "A App Store não confirmou a compra." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The App Store didn't confirm the purchase."
+          }
+        }
+      }
+    },
+    "A Microsoft não confirmou o login." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Microsoft didn't confirm the sign-in."
+          }
+        }
+      }
+    },
+    "A Microsoft não deu um código para entrar." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Microsoft didn't provide a sign-in code."
+          }
+        }
+      }
+    },
+    "A TV não foi encontrada pelo iPhone" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The iPhone couldn't find the TV"
+          }
+        }
+      }
+    },
+    "A TV não ligou pela rede; ligue pelo controle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The TV didn't turn on over the network; use the remote"
+          }
+        }
+      }
+    },
+    "A TV não respondeu (está ligada e na mesma rede?)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The TV didn't answer (is it on and on the same network?)"
+          }
+        }
+      }
+    },
+    "A TV não respondeu pelo ADB (depuração desligada ou não aprovada). Pareando, ela mostra um código e o Lar passa a usar o controle do Google TV, sem depuração." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The TV didn't answer over ADB (debugging off or not approved). Pair it: it shows a code and Lar uses the Google TV remote instead, with no debugging."
+          }
+        }
+      }
+    },
+    "A TV parou de responder" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The TV stopped answering"
+          }
+        }
+      }
+    },
+    "A TV precisa estar ligada. Ela vai mostrar um código de 6 letras e números: digite aqui. É só uma vez, e não precisa ligar nada nas configurações da TV." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The TV must be on. It will show a 6-character code: type it here. It's only once, and nothing needs to be turned on in the TV's settings."
+          }
+        }
+      }
+    },
+    "A TV recusou a conexão" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The TV refused the connection"
+          }
+        }
+      }
+    },
+    "A casa compartilhada não está mais disponível. Voltando para a sua." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The shared home is no longer available. Going back to yours."
+          }
+        }
+      }
+    },
+    "A compra está esperando aprovação (Compartilhamento Familiar ou banco)." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The purchase is waiting for approval (Family Sharing or the bank)."
+          }
+        }
+      }
+    },
+    "A conta Microsoft não tem perfil do Xbox, ou é de uma criança (precisa ser de um adulto)." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This Microsoft account has no Xbox profile, or belongs to a child (it must be an adult's)."
+          }
+        }
+      }
+    },
+    "A câmera não mandou o vídeo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The camera didn't send the video"
+          }
+        }
+      }
+    },
+    "A senha fica no Porta-chaves. O Mac fica registrado no servidor e toca mesmo com o popover fechado." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The password stays in the Keychain. The Mac stays registered with the server and rings even with the popover closed."
+          }
+        }
+      }
+    },
+    "APARELHOS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DEVICES"
+          }
+        }
+      }
+    },
+    "Abajur do quarto" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bedroom lamp"
+          }
+        }
+      }
+    },
+    "Abra %@ em qualquer celular ou computador, digite o código abaixo e entre com a conta Microsoft do Xbox." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open %@ on any phone or computer, enter the code below and sign in with the Xbox's Microsoft account."
+          }
+        }
+      }
+    },
+    "Abra a busca ou um campo de texto na TV e digite aqui." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open the search or a text field on the TV and type here."
+          }
+        }
+      }
+    },
+    "Abra o Lar no iPhone para conectar a Alexa." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Lar on the iPhone to connect Alexa."
+          }
+        }
+      }
+    },
+    "Abra o Lar no iPhone para configurar as contas." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Lar on the iPhone to set up the accounts."
+          }
+        }
+      }
+    },
+    "Abra o Lar para carregar os aparelhos." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Lar to load the devices."
+          }
+        }
+      }
+    },
+    "Abra o Lar uma vez e tente de novo." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Lar once and try again."
+          }
+        }
+      }
+    },
+    "Abra o link abaixo no navegador, trocando CLIENT_ID pelo seu. Entre na conta Samsung e autorize. A página que abre depois mostra, em “args”, o “code”: copie (vale poucos minutos)." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open the link below in a browser, replacing CLIENT_ID with yours. Sign in to your Samsung account and authorize. The page that opens next shows the “code” under “args”: copy it (it lasts a few minutes)."
+          }
+        }
+      }
+    },
+    "Abra os Ajustes do Lar → SmartThings → Entrar de novo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Lar's Settings → SmartThings → Sign in again."
+          }
+        }
+      }
+    },
+    "Abrir" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open"
+          }
+        }
+      }
+    },
+    "Abrir Ajustes → Porteiro" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Settings → Intercom"
+          }
+        }
+      }
+    },
+    "Abrir ao iniciar o Mac" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open at login"
+          }
+        }
+      }
+    },
+    "Abrir iot.tuya.com" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open iot.tuya.com"
+          }
+        }
+      }
+    },
+    "Abrir o Lar com %@ em qualquer app" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Lar with %@ from any app"
+          }
+        }
+      }
+    },
+    "Abrir portão" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open gate"
+          }
+        }
+      }
+    },
+    "Abrir uma issue no GitHub" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open an issue on GitHub"
+          }
+        }
+      }
+    },
+    "Access ID" : {},
+    "Access ID e Access Secret de um projeto Cloud em iot.tuya.com com a conta do Smart Life vinculada. O passo a passo está no README do Lar." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Access ID and Access Secret of a Cloud project on iot.tuya.com with the Smart Life account linked. The steps are in Lar's README."
+          }
+        }
+      }
+    },
+    "Access ID e Access Secret de um projeto Cloud em iot.tuya.com com a conta do Smart Life vinculada. Vale para Nova Digital, Ekaza e outras marcas Tuya." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Access ID and Access Secret of a Cloud project on iot.tuya.com with the Smart Life account linked. Works for Nova Digital, Ekaza and other Tuya brands."
+          }
+        }
+      }
+    },
+    "Access ID · salvo" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Access ID · saved"
+          }
+        }
+      }
+    },
+    "Access Secret · salvo" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Access Secret · saved"
+          }
+        }
+      }
+    },
+    "Aceite “Permitir depuração USB?” na TV" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accept “Allow USB debugging?” on the TV"
+          }
+        }
+      }
+    },
+    "Aceite “Permitir depuração USB?” na TV (marque “Sempre permitir”)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accept “Allow USB debugging?” on the TV (check “Always allow”)"
+          }
+        }
+      }
+    },
+    "Adicionado ao app Casa" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Added to the Home app"
+          }
+        }
+      }
+    },
+    "Adicionar aos favoritos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add to Favorites"
+          }
+        }
+      }
+    },
+    "Agendada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scheduled"
+          }
+        }
+      }
+    },
+    "Agrupar por" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Group by"
+          }
+        }
+      }
+    },
+    "Ajude o Lar a continuar gratuito" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Help keep Lar free"
+          }
+        }
+      }
+    },
+    "Ajustado em %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set to %@"
+          }
+        }
+      }
+    },
+    "Ajustado em %@°C" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set to %@°C"
+          }
+        }
+      }
+    },
+    "Ajustar temperatura do ar" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set air conditioner temperature"
+          }
+        }
+      }
+    },
+    "Ajustes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        }
+      }
+    },
+    "Alexa (Echo)" : {},
+    "Alta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "High"
+          }
+        }
+      }
+    },
+    "Alternar aparelho" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toggle device"
+          }
+        }
+      }
+    },
+    "Ambiente" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Room"
+          }
+        }
+      }
+    },
+    "Ambiente %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Room %@"
+          }
+        }
+      }
+    },
+    "Ambiente %@ °C" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Room %@ °C"
+          }
+        }
+      }
+    },
+    "Ambiente %@°C" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Room %@°C"
+          }
+        }
+      }
+    },
+    "Ambiente 26° · ajustado em %lld°" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Room 26° · set to %lld°"
+          }
+        }
+      }
+    },
+    "Ambiente 26° · ajustado em 22°" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Room 26° · set to 22°"
+          }
+        }
+      }
+    },
+    "Ambiente · %@ °C" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Room · %@ °C"
+          }
+        }
+      }
+    },
+    "Américas" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Americas"
+          }
+        }
+      }
+    },
+    "Anterior" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previous"
+          }
+        }
+      }
+    },
+    "Anunciar em todos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Announce on all"
+          }
+        }
+      }
+    },
+    "Anunciar o porteiro e os avisos nos Echos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Announce the intercom and alerts on the Echos"
+          }
+        }
+      }
+    },
+    "Anunciar…" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Announce…"
+          }
+        }
+      }
+    },
+    "Ao chegar em casa" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When arriving home"
+          }
+        }
+      }
+    },
+    "Ao sair de casa" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When leaving home"
+          }
+        }
+      }
+    },
+    "Ao vivo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Live"
+          }
+        }
+      }
+    },
+    "Apagar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        }
+      }
+    },
+    "Apagar cena" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete scene"
+          }
+        }
+      }
+    },
+    "Aparelho" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Device"
+          }
+        }
+      }
+    },
+    "Aparelho do Lar" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lar device"
+          }
+        }
+      }
+    },
+    "Aparelho “%@” não encontrado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Device “%@” not found"
+          }
+        }
+      }
+    },
+    "Aparelhos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Devices"
+          }
+        }
+      }
+    },
+    "Aponte a câmera do celular para o código e entre na sua conta Samsung. No fim, a página mostra um \"code\" de 6 letras: digite-o aqui." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Point your phone's camera at the code and sign in to your Samsung account. At the end, the page shows a 6-letter \"code\": type it here."
+          }
+        }
+      }
+    },
+    "App Casa" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home app"
+          }
+        }
+      }
+    },
+    "Apps" : {},
+    "Aquecendo até %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heating to %@"
+          }
+        }
+      }
+    },
+    "Ar da sala" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Living room AC"
+          }
+        }
+      }
+    },
+    "Ar do Escritório" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Office AC"
+          }
+        }
+      }
+    },
+    "Ar-condicionado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Air conditioner"
+          }
+        }
+      }
+    },
+    "Ar-condicionado desligado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Air conditioner off"
+          }
+        }
+      }
+    },
+    "Ar-condicionado ligado, %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Air conditioner on, %@"
+          }
+        }
+      }
+    },
+    "Ar-condicionado “%@” não encontrado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Air conditioner “%@” not found"
+          }
+        }
+      }
+    },
+    "As chaves ficam no Porta-chaves deste iPhone e só vão para o seu Apple Watch. O Lar não tem servidor nem coleta dados." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The keys stay in this iPhone's Keychain and only go to your Apple Watch. Lar has no server and collects no data."
+          }
+        }
+      }
+    },
+    "As contas conectadas não têm aparelhos." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The connected accounts have no devices."
+          }
+        }
+      }
+    },
+    "As gorjetas não estão disponíveis agora." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tips aren't available right now."
+          }
+        }
+      }
+    },
+    "As setas e o Enter do teclado também funcionam aqui. Desligar tira a TV da rede: se ela não ligar pelo Lar, use o controle." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The keyboard's arrows and Return work here too. Turning off takes the TV off the network: if it doesn't turn on from Lar, use the remote."
+          }
+        }
+      }
+    },
+    "As setas e o Enter do teclado também funcionam aqui. OK é o botão A, e Voltar é o B." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The keyboard's arrows and Return work here too. OK is the A button, and Back is B."
+          }
+        }
+      }
+    },
+    "Atender e ligar para o porteiro pelo Lar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Answer and call the intercom from Lar"
+          }
+        }
+      }
+    },
+    "Atender e ligar pelo Lar" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Answer and call from Lar"
+          }
+        }
+      }
+    },
+    "Atualizado para a versão %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Updated to version %@."
+          }
+        }
+      }
+    },
+    "Atualizar sozinho" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update automatically"
+          }
+        }
+      }
+    },
+    "Atualização disponível" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update available"
+          }
+        }
+      }
+    },
+    "Aumentar" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Increase"
+          }
+        }
+      }
+    },
+    "Aumentar %@" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Increase %@"
+          }
+        }
+      }
+    },
+    "Aumentar 1°" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Up 1°"
+          }
+        }
+      }
+    },
+    "Aumentar volume" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volume up"
+          }
+        }
+      }
+    },
+    "Auto" : {},
+    "Avisar quando a lavadora terminar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notify when the washer finishes"
+          }
+        }
+      }
+    },
+    "Baixa" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Low"
+          }
+        }
+      }
+    },
+    "Bom dia" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Good morning"
+          }
+        }
+      }
+    },
+    "Botão X" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "X button"
+          }
+        }
+      }
+    },
+    "Botão Y" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Y button"
+          }
+        }
+      }
+    },
+    "Botão direito num aparelho: favoritos (ficam no topo), nome, cômodo ou ocultar." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Right-click a device: favorite (goes to the top), name, room or hide."
+          }
+        }
+      }
+    },
+    "Brilho" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brightness"
+          }
+        }
+      }
+    },
+    "Brilho · %lld%%" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brightness · %lld%%"
+          }
+        }
+      }
+    },
+    "Brilhos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sparkles"
+          }
+        }
+      }
+    },
+    "Buscando seus aparelhos…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finding your devices…"
+          }
+        }
+      }
+    },
+    "Buscar rotina" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search routines"
+          }
+        }
+      }
+    },
+    "Buy Me a Coffee" : {},
+    "CENAS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SCENES"
+          }
+        }
+      }
+    },
+    "CH" : {},
+    "Cada aparelho com a sua integração (o iPhone, o Mac, o relógio, a TV): o refresh token muda a cada renovação, e dois com a mesma se desconectam. Para criar, um token pessoal com a permissão de apps (account.smartthings.com/tokens): o Lar cria a integração e abre o login." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Each device with its own integration (the iPhone, the Mac, the watch, the TV): the refresh token changes on every renewal, and two sharing one sign each other out. To create one, a personal token with the apps permission (account.smartthings.com/tokens): Lar creates the integration and opens the sign-in."
+          }
+        }
+      }
+    },
+    "Cafeteira" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coffee maker"
+          }
+        }
+      }
+    },
+    "Calor" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heat"
+          }
+        }
+      }
+    },
+    "Cama" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bed"
+          }
+        }
+      }
+    },
+    "Caminhada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Walk"
+          }
+        }
+      }
+    },
+    "Canal anterior" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previous channel"
+          }
+        }
+      }
+    },
+    "Cancelada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Canceled"
+          }
+        }
+      }
+    },
+    "Cancelar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        }
+      }
+    },
+    "Cancelar timer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel timer"
+          }
+        }
+      }
+    },
+    "Casa" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home"
+          }
+        }
+      }
+    },
+    "Casa (Apple)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home (Apple)"
+          }
+        }
+      }
+    },
+    "Casa de exemplo (sem contas)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sample home (no accounts)"
+          }
+        }
+      }
+    },
+    "Casa no Lar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home in Lar"
+          }
+        }
+      }
+    },
+    "Cena" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scene"
+          }
+        }
+      }
+    },
+    "Cena do Lar" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lar scene"
+          }
+        }
+      }
+    },
+    "Cena executada no horário." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scene ran on schedule."
+          }
+        }
+      }
+    },
+    "Cena “%@” não encontrada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scene “%@” not found"
+          }
+        }
+      }
+    },
+    "Cenas" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scenes"
+          }
+        }
+      }
+    },
+    "Cenas do Lar" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lar scenes"
+          }
+        }
+      }
+    },
+    "Cenas, nomes, favoritos e cômodos ficam iguais no Mac e no iPhone pela rede de casa (as chaves das contas não passam). No iPhone: Ajustes → Mac → Parear." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scenes, names, favorites and rooms stay the same on the Mac and the iPhone over the home network (the account keys don't travel). On the iPhone: Settings → Mac → Pair."
+          }
+        }
+      }
+    },
+    "Cenas, nomes, favoritos e cômodos ficam iguais no Mac e no iPhone pela rede de casa. As chaves das contas não passam." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scenes, names, favorites and rooms stay the same on the Mac and the iPhone over the home network. The account keys don't travel."
+          }
+        }
+      }
+    },
+    "Centrifugando" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spinning"
+          }
+        }
+      }
+    },
+    "Certificado do controle: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remote certificate: %@"
+          }
+        }
+      }
+    },
+    "Chamada de %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Call from %@"
+          }
+        }
+      }
+    },
+    "Chamada perdida" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Missed call"
+          }
+        }
+      }
+    },
+    "Chamando no porteiro." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intercom calling."
+          }
+        }
+      }
+    },
+    "Chamando…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calling…"
+          }
+        }
+      }
+    },
+    "Chave inválida ou expirada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid or expired key"
+          }
+        }
+      }
+    },
+    "Chave recusada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Key refused"
+          }
+        }
+      }
+    },
+    "Cinema" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Movie"
+          }
+        }
+      }
+    },
+    "Client ID" : {},
+    "Client ID da integração do relógio" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Client ID of the watch's integration"
+          }
+        }
+      }
+    },
+    "Clique para executar; botão direito para editar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Click to run; right-click to edit"
+          }
+        }
+      }
+    },
+    "Colar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paste"
+          }
+        }
+      }
+    },
+    "Com o Mac ligado, o Lar fica sempre aberto: se ele parar sem você mandar sair, volta sozinho." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "With the Mac on, Lar stays open: if it stops without you quitting it, it comes back by itself."
+          }
+        }
+      }
+    },
+    "Com o app fechado, o porteiro continua tocando e os aparelhos continuam sendo lidos (avisos, cenas, relógio). Usa um pouco mais de bateria. Com a localização “Sempre”, o iPhone abre o Lar sozinho depois de reiniciar (após o primeiro desbloqueio). Se você fechar o Lar arrastando para cima, ele só volta quando o iPhone mudar de lugar ou você abrir." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "With the app closed, the intercom keeps ringing and the devices keep being read (alerts, scenes, watch). Uses a bit more battery. With location “Always”, the iPhone opens Lar by itself after restarting (after the first unlock). If you close Lar by swiping it up, it only comes back when the iPhone changes place or you open it."
+          }
+        }
+      }
+    },
+    "Com som" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unmute"
+          }
+        }
+      }
+    },
+    "Comece o pareamento de novo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start pairing again"
+          }
+        }
+      }
+    },
+    "Como criar à mão (Client ID, secret e refresh token)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How to create it by hand (Client ID, secret and refresh token)"
+          }
+        }
+      }
+    },
+    "Como preparar o Xbox" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How to set up the Xbox"
+          }
+        }
+      }
+    },
+    "Como se fosse dito a este Echo: vale para tudo o que a Alexa controla." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "As if said to this Echo: works for everything Alexa controls."
+          }
+        }
+      }
+    },
+    "Conectada." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connected."
+          }
+        }
+      }
+    },
+    "Conectando à câmera…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connecting to the camera…"
+          }
+        }
+      }
+    },
+    "Conectando…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connecting…"
+          }
+        }
+      }
+    },
+    "Configurar automaticamente" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set up automatically"
+          }
+        }
+      }
+    },
+    "Configurar o SmartThings" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set up SmartThings"
+          }
+        }
+      }
+    },
+    "Configure as contas no Lar do iPhone." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set up the accounts in Lar on the iPhone."
+          }
+        }
+      }
+    },
+    "Configure o servidor SIP (usuário, senha e o número do porteiro) para ligar e atender." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set up the SIP server (user, password and the intercom's number) to call and answer."
+          }
+        }
+      }
+    },
+    "Confirmar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm"
+          }
+        }
+      }
+    },
+    "Conta: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account: %@"
+          }
+        }
+      }
+    },
+    "Contas" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accounts"
+          }
+        }
+      }
+    },
+    "Contribuir com código" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contribute code"
+          }
+        }
+      }
+    },
+    "Controle" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remote"
+          }
+        }
+      }
+    },
+    "Controle da TV: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TV remote: %@"
+          }
+        }
+      }
+    },
+    "Copiada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copied"
+          }
+        }
+      }
+    },
+    "Copiado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copied"
+          }
+        }
+      }
+    },
+    "Copiar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy"
+          }
+        }
+      }
+    },
+    "Copiar a chave" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy the key"
+          }
+        }
+      }
+    },
+    "Copiar o código e abrir a página" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy the code and open the page"
+          }
+        }
+      }
+    },
+    "Copiar relatório (sem chaves)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy report (no keys)"
+          }
+        }
+      }
+    },
+    "Cor" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Color"
+          }
+        }
+      }
+    },
+    "Cor %lld°" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Color %lld°"
+          }
+        }
+      }
+    },
+    "Cozinha" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kitchen"
+          }
+        }
+      }
+    },
+    "Criando as integrações…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Creating the integrations…"
+          }
+        }
+      }
+    },
+    "Criando…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Creating…"
+          }
+        }
+      }
+    },
+    "Criar a integração deste %@ e entrar" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create this %@'s integration and sign in"
+          }
+        }
+      }
+    },
+    "Criar a integração do relógio e entrar" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create the watch's integration and sign in"
+          }
+        }
+      }
+    },
+    "Criar e entrar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create and sign in"
+          }
+        }
+      }
+    },
+    "Criar token (account.smartthings.com)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create token (account.smartthings.com)"
+          }
+        }
+      }
+    },
+    "Criar token (connect-pat.lgthinq.com)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create token (connect-pat.lgthinq.com)"
+          }
+        }
+      }
+    },
+    "Criar uma cena" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create a scene"
+          }
+        }
+      }
+    },
+    "Crie a integração deste Mac: cole um token pessoal com a permissão de apps (Apps). O Lar cria a integração e abre o login; o token não fica guardado." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create this Mac's integration: paste a personal token with the apps permission (Apps). Lar creates the integration and opens the sign-in; the token isn't kept."
+          }
+        }
+      }
+    },
+    "Crie cenas no app Lar." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create scenes in the Lar app."
+          }
+        }
+      }
+    },
+    "Crie uma cena para ligar e desligar vários aparelhos de uma vez." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create a scene to turn several devices on and off at once."
+          }
+        }
+      }
+    },
+    "Câmera" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Camera"
+          }
+        }
+      }
+    },
+    "Câmera do portão" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gate camera"
+          }
+        }
+      }
+    },
+    "Câmeras" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cameras"
+          }
+        }
+      }
+    },
+    "Código" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Code"
+          }
+        }
+      }
+    },
+    "Código da TV" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TV code"
+          }
+        }
+      }
+    },
+    "Código errado; confira o que aparece na TV" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wrong code; check what the TV shows"
+          }
+        }
+      }
+    },
+    "Código errado; confira o que o Mac mostra" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wrong code; check what the Mac shows"
+          }
+        }
+      }
+    },
+    "Código mostrado no Mac" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Code shown on the Mac"
+          }
+        }
+      }
+    },
+    "Cômodo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Room"
+          }
+        }
+      }
+    },
+    "Definir temperatura" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set temperature"
+          }
+        }
+      }
+    },
+    "Deixe o nome em branco para usar o da conta. Os aparelhos ocultos ficam em Ajustes → Lista." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leave the name empty to use the account's. Hidden devices are in Settings → List."
+          }
+        }
+      }
+    },
+    "Deixe o nome em branco para usar o da conta. Os aparelhos ocultos ficam nos Ajustes → Lista." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leave the name empty to use the account's. Hidden devices are in Settings → List."
+          }
+        }
+      }
+    },
+    "Desligada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Off"
+          }
+        }
+      }
+    },
+    "Desligada ou fora da rede" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Off or not on the network"
+          }
+        }
+      }
+    },
+    "Desligado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Off"
+          }
+        }
+      }
+    },
+    "Desligar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn off"
+          }
+        }
+      }
+    },
+    "Desligar %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn off %@"
+          }
+        }
+      }
+    },
+    "Desligar a TV" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn off the TV"
+          }
+        }
+      }
+    },
+    "Desligar aparelho" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn off device"
+          }
+        }
+      }
+    },
+    "Desligar em" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn off in"
+          }
+        }
+      }
+    },
+    "Deslize para navegar · toque para OK" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Swipe to move · tap for OK"
+          }
+        }
+      }
+    },
+    "Desumidificando" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drying the air"
+          }
+        }
+      }
+    },
+    "Diagnóstico" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diagnostics"
+          }
+        }
+      }
+    },
+    "Diagnóstico…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diagnostics…"
+          }
+        }
+      }
+    },
+    "Dias úteis às %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weekdays at %@"
+          }
+        }
+      }
+    },
+    "Digitar na TV" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type on the TV"
+          }
+        }
+      }
+    },
+    "Digitar na TV (busca aberta)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type on the TV (search open)"
+          }
+        }
+      }
+    },
+    "Digitar no Xbox (busca aberta)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type on the Xbox (search open)"
+          }
+        }
+      }
+    },
+    "Digite este código no iPhone. Vale por 2 minutos e para depois de 5 tentativas erradas." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type this code on the iPhone. It works for 2 minutes and stops after 5 wrong tries."
+          }
+        }
+      }
+    },
+    "Digite o código de 6 letras e números que apareceu na TV." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type the 6-character code shown on the TV."
+          }
+        }
+      }
+    },
+    "Digite o código que apareceu na tela da TV." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type the code shown on the TV screen."
+          }
+        }
+      }
+    },
+    "Diminuir" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Decrease"
+          }
+        }
+      }
+    },
+    "Diminuir %@" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Decrease %@"
+          }
+        }
+      }
+    },
+    "Diminuir 1°" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Down 1°"
+          }
+        }
+      }
+    },
+    "Diminuir volume" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volume down"
+          }
+        }
+      }
+    },
+    "Direção do ar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Airflow direction"
+          }
+        }
+      }
+    },
+    "Domínio" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domain"
+          }
+        }
+      }
+    },
+    "Domínio (opcional)" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domain (optional)"
+          }
+        }
+      }
+    },
+    "Dormir" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bedtime"
+          }
+        }
+      }
+    },
+    "Echo fora do ar ou conta da Alexa desconectada." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Echo offline or Alexa account disconnected."
+          }
+        }
+      }
+    },
+    "Editar" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit"
+          }
+        }
+      }
+    },
+    "Editar cena" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit scene"
+          }
+        }
+      }
+    },
+    "Editar…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit…"
+          }
+        }
+      }
+    },
+    "Em account.smartthings.com/tokens, toque em “Generate new token”, dê um nome (Lar) e marque a permissão Apps (todas as opções). Copie o token: ele aparece uma vez só. Ele serve só para criar a integração; o Lar não o guarda." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "At account.smartthings.com/tokens, tap “Generate new token”, name it (Lar) and check the Apps permission (all options). Copy the token: it shows only once. It's only used to create the integration; Lar doesn't keep it."
+          }
+        }
+      }
+    },
+    "Em economia de energia" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In energy saving mode"
+          }
+        }
+      }
+    },
+    "Em repouso" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standby"
+          }
+        }
+      }
+    },
+    "Encerrada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ended"
+          }
+        }
+      }
+    },
+    "Encontrar TVs automaticamente" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Find TVs automatically"
+          }
+        }
+      }
+    },
+    "Encontrou um problema ou tem uma ideia? Abra uma issue no GitHub contando o que aconteceu, o aparelho e a versão do Lar. O relatório do Diagnóstico (nos Ajustes) ajuda e não tem nenhuma chave." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Found a problem or have an idea? Open an issue on GitHub telling what happened, the device and Lar's version. The Diagnostics report (in Settings) helps and has no keys."
+          }
+        }
+      }
+    },
+    "Entradas" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inputs"
+          }
+        }
+      }
+    },
+    "Entrar" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in"
+          }
+        }
+      }
+    },
+    "Entrar de novo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in again"
+          }
+        }
+      }
+    },
+    "Entrar de novo na Amazon" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in to Amazon again"
+          }
+        }
+      }
+    },
+    "Entrar de novo no SmartThings" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in to SmartThings again"
+          }
+        }
+      }
+    },
+    "Entrar na Amazon" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in to Amazon"
+          }
+        }
+      }
+    },
+    "Entrar na Amazon (Alexa)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in to Amazon (Alexa)"
+          }
+        }
+      }
+    },
+    "Entrar no SmartThings" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in to SmartThings"
+          }
+        }
+      }
+    },
+    "Entrar no SmartThings para o relógio" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in to SmartThings for the watch"
+          }
+        }
+      }
+    },
+    "Entrar no Xbox" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in to Xbox"
+          }
+        }
+      }
+    },
+    "Entre com a conta Microsoft do Xbox: o console aparece na lista para ligar, desligar, usar como controle, abrir jogos e apps e ver o que está passando. Integração não oficial: a Microsoft pode mudá-la." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in with the Xbox's Microsoft account: the console shows up in the list to turn on and off, use as a remote, open games and apps and see what's playing. Unofficial integration: Microsoft may change it."
+          }
+        }
+      }
+    },
+    "Entre com a sua conta Amazon: os Echos aparecem na lista (volume, não perturbe, música, falar, anunciar, pedir à Alexa e as rotinas). Integração não oficial: a Amazon pode mudá-la." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in with your Amazon account: the Echos show in the list (volume, Do Not Disturb, music, speak, announce, ask Alexa and the routines). Unofficial integration: Amazon may change it."
+          }
+        }
+      }
+    },
+    "Entre na Amazon pelo Lar do iPhone ou do Mac: a Apple TV não tem navegador para o login." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in to Amazon from Lar on the iPhone or the Mac: Apple TV has no browser for the sign-in."
+          }
+        }
+      }
+    },
+    "Entre na conta Samsung e toque em “Authorize”: o Lar cria e preenche a integração deste Mac." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in to your Samsung account and tap “Authorize”: Lar creates and fills in this Mac's integration."
+          }
+        }
+      }
+    },
+    "Entre na sua conta Samsung. O Lar cria o resto sozinho." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in to your Samsung account. Lar does the rest."
+          }
+        }
+      }
+    },
+    "Entre no iCloud nos Ajustes do aparelho para sincronizar." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in to iCloud in the device's Settings to sync."
+          }
+        }
+      }
+    },
+    "Entregando ao relógio…" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sending to the watch…"
+          }
+        }
+      }
+    },
+    "Enviado" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sent"
+          }
+        }
+      }
+    },
+    "Enviar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send"
+          }
+        }
+      }
+    },
+    "Enviar contas para o relógio" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send accounts to the watch"
+          }
+        }
+      }
+    },
+    "Enxaguando" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rinsing"
+          }
+        }
+      }
+    },
+    "Enxaguando · faltam 0:07" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rinsing · 0:07 left"
+          }
+        }
+      }
+    },
+    "Enxaguando · faltam 0:12" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rinsing · 0:12 left"
+          }
+        }
+      }
+    },
+    "Erro" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error"
+          }
+        }
+      }
+    },
+    "Escolha a cena do controle." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose the control's scene."
+          }
+        }
+      }
+    },
+    "Escolha o aparelho do controle." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose the control's device."
+          }
+        }
+      }
+    },
+    "Escolha um aparelho" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a device"
+          }
+        }
+      }
+    },
+    "Esperando você entrar…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waiting for you to sign in…"
+          }
+        }
+      }
+    },
+    "Esquece o pareamento; para usar de novo, adicione o Lar outra vez no app Casa" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forgets the pairing; to use it again, add Lar to the Home app once more"
+          }
+        }
+      }
+    },
+    "Esquecer TVs desligadas" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forget TVs that are off"
+          }
+        }
+      }
+    },
+    "Esquecer a casa" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forget home location"
+          }
+        }
+      }
+    },
+    "Esquecer iPhones" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forget iPhones"
+          }
+        }
+      }
+    },
+    "Esquecer o Mac" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forget the Mac"
+          }
+        }
+      }
+    },
+    "Essa cena não existe mais." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That scene no longer exists."
+          }
+        }
+      }
+    },
+    "Esta cópia não é assinada; baixe a nova versão na página do Lar." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This copy isn't signed; download the new version from Lar's page."
+          }
+        }
+      }
+    },
+    "Esta integração já é a do %@. Crie uma só para este aparelho." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This integration already belongs to the %@. Create one just for this device."
+          }
+        }
+      }
+    },
+    "Esta integração é a mesma do %@: os dois se desconectam a cada renovação. Crie uma só para este %@." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This integration is the same as the %@'s: both sign out on every renewal. Create one just for this %@."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Esta integração é a mesma do %1$@: os dois se desconectam a cada renovação. Crie uma só para este %2$@."
+          }
+        }
+      }
+    },
+    "Esta integração é a mesma do %@: os dois se desconectam a cada renovação. Crie uma só para este Mac." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This integration is the same as the %@'s: both sign out on every renewal. Create one just for this Mac."
+          }
+        }
+      }
+    },
+    "Esta é a integração do iPhone: o relógio precisa de uma só dele." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is the iPhone's integration: the watch needs one of its own."
+          }
+        }
+      }
+    },
+    "Este aparelho não aceita esse comando" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This device doesn't accept that command"
+          }
+        }
+      }
+    },
+    "Estou em casa: marcar aqui" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I'm home: mark it here"
+          }
+        }
+      }
+    },
+    "Europa" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Europe"
+          }
+        }
+      }
+    },
+    "Ex.: Quarto" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E.g. Bedroom"
+          }
+        }
+      }
+    },
+    "Ex.: apague a luz da sala" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E.g. turn off the living room light"
+          }
+        }
+      }
+    },
+    "Executa uma cena do Lar: vários aparelhos de uma vez." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Runs a Lar scene: several devices at once."
+          }
+        }
+      }
+    },
+    "Executa uma cena." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Runs a scene."
+          }
+        }
+      }
+    },
+    "Executar cena" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Run scene"
+          }
+        }
+      }
+    },
+    "Executar sozinha" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Run by itself"
+          }
+        }
+      }
+    },
+    "Execute as cenas do Lar com um toque." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Run Lar's scenes with one tap."
+          }
+        }
+      }
+    },
+    "Exibir" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View"
+          }
+        }
+      }
+    },
+    "Experimentar com uma casa de exemplo" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try a sample home"
+          }
+        }
+      }
+    },
+    "Falar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speak"
+          }
+        }
+      }
+    },
+    "Falar neste Echo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speak on this Echo"
+          }
+        }
+      }
+    },
+    "Falta o número do porteiro no iPhone: Ajustes → Porteiro → Salvar." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The intercom number is missing on the iPhone: Settings → Intercom → Save."
+          }
+        }
+      }
+    },
+    "Falta o token da LG" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The LG token is missing"
+          }
+        }
+      }
+    },
+    "Favorito (no topo da lista)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Favorite (top of the list)"
+          }
+        }
+      }
+    },
+    "Favoritos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Favorites"
+          }
+        }
+      }
+    },
+    "Fechar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close"
+          }
+        }
+      }
+    },
+    "Feito pela Coupled" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Made by Coupled"
+          }
+        }
+      }
+    },
+    "Filme" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Film"
+          }
+        }
+      }
+    },
+    "Fins de semana às %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weekends at %@"
+          }
+        }
+      }
+    },
+    "Fixa" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fixed"
+          }
+        }
+      }
+    },
+    "Frio" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cool"
+          }
+        }
+      }
+    },
+    "Funcionando" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Running"
+          }
+        }
+      }
+    },
+    "Geral" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "General"
+          }
+        }
+      }
+    },
+    "GitHub Sponsors" : {},
+    "Google TV" : {
+      "shouldTranslate" : false
+    },
+    "Graus" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Degrees"
+          }
+        }
+      }
+    },
+    "Guia de contribuição" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contributing guide"
+          }
+        }
+      }
+    },
+    "Guia do Xbox" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xbox guide"
+          }
+        }
+      }
+    },
+    "Hora" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time"
+          }
+        }
+      }
+    },
+    "IP da TV (opcional)" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TV IP (optional)"
+          }
+        }
+      }
+    },
+    "IP manual, só para uma TV que não aparece sozinha:" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manual IP, only for a TV that doesn't show up by itself:"
+          }
+        }
+      }
+    },
+    "Importar rotinas agora" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import routines now"
+          }
+        }
+      }
+    },
+    "Importar rotinas da Alexa como cenas" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import Alexa routines as scenes"
+          }
+        }
+      }
+    },
+    "Importar rotinas novas a cada hora" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import new routines every hour"
+          }
+        }
+      }
+    },
+    "Importar rotinas novas da Alexa a cada hora" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import new Alexa routines every hour"
+          }
+        }
+      }
+    },
+    "Instalando a versão %@…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Installing version %@…"
+          }
+        }
+      }
+    },
+    "Instalar a versão %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Install version %@"
+          }
+        }
+      }
+    },
+    "Início" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home"
+          }
+        }
+      }
+    },
+    "Jogos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Games"
+          }
+        }
+      }
+    },
+    "LG ThinQ" : {},
+    "Lar" : {},
+    "Lar %@" : {},
+    "Lar %@ · Mac" : {},
+    "Lar instalado no relógio" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lar installed on the watch"
+          }
+        }
+      }
+    },
+    "Lar · %lld aparelhos ligados" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lar · %lld devices on"
+          }
+        }
+      }
+    },
+    "Lar · %lld ligados" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lar · %lld on"
+          }
+        }
+      }
+    },
+    "Lar · 1 aparelho ligado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lar · 1 device on"
+          }
+        }
+      }
+    },
+    "Lar · 1 ligado" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lar · 1 on"
+          }
+        }
+      }
+    },
+    "Lar · tudo desligado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lar · everything off"
+          }
+        }
+      }
+    },
+    "Lavadora" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Washer"
+          }
+        }
+      }
+    },
+    "Lavanderia" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laundry"
+          }
+        }
+      }
+    },
+    "Lavando" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Washing"
+          }
+        }
+      }
+    },
+    "Ler as contas de novo" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read the accounts again"
+          }
+        }
+      }
+    },
+    "Ler de novo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read again"
+          }
+        }
+      }
+    },
+    "Liga e desliga um aparelho." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turns a device on and off."
+          }
+        }
+      }
+    },
+    "Liga o ar-condicionado, se preciso, e ajusta a temperatura." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turns the air conditioner on if needed and sets the temperature."
+          }
+        }
+      }
+    },
+    "Ligada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On"
+          }
+        }
+      }
+    },
+    "Ligado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On"
+          }
+        }
+      }
+    },
+    "Ligado hoje: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On today: %@"
+          }
+        }
+      }
+    },
+    "Ligando…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calling…"
+          }
+        }
+      }
+    },
+    "Ligar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn on"
+          }
+        }
+      }
+    },
+    "Ligar %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn on %@"
+          }
+        }
+      }
+    },
+    "Ligar a TV" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn on the TV"
+          }
+        }
+      }
+    },
+    "Ligar aparelho" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn on device"
+          }
+        }
+      }
+    },
+    "Ligar ou desligar aparelho" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn device on or off"
+          }
+        }
+      }
+    },
+    "Ligar para o porteiro" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Call the intercom"
+          }
+        }
+      }
+    },
+    "Ligue e desligue os aparelhos favoritos sem abrir o app." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn your favorite devices on and off without opening the app."
+          }
+        }
+      }
+    },
+    "Lista" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "List"
+          }
+        }
+      }
+    },
+    "Livro" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Book"
+          }
+        }
+      }
+    },
+    "Localização" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Location"
+          }
+        }
+      }
+    },
+    "Lua" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moon"
+          }
+        }
+      }
+    },
+    "Luminária" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lamp"
+          }
+        }
+      }
+    },
+    "Luz da Varanda" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Porch light"
+          }
+        }
+      }
+    },
+    "Luz da varanda" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Porch light"
+          }
+        }
+      }
+    },
+    "Luzes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lights"
+          }
+        }
+      }
+    },
+    "Luzes do Jardim" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Garden lights"
+          }
+        }
+      }
+    },
+    "Luzes, tomadas, ventiladores, interruptores, ares-condicionados, termômetros e câmeras do Lar no app Casa da Apple e na Siri, com o Mac como ponte HomeKit na rede de casa. O vídeo das câmeras passa pelo Mac, que precisa ficar ligado." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lar's lights, plugs, fans, switches, air conditioners, thermometers and cameras in Apple's Home app and Siri, with the Mac as a HomeKit bridge on your home network. Camera video goes through the Mac, which needs to stay on."
+          }
+        }
+      }
+    },
+    "Mandar os avisos para o iPhone pelo iCloud" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send alerts to the iPhone through iCloud"
+          }
+        }
+      }
+    },
+    "Manter o Lar ativo em segundo plano" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep Lar running in the background"
+          }
+        }
+      }
+    },
+    "Manter o Lar custa a anuidade de desenvolvedor da Apple (US$ 99 por ano) e muitas horas de trabalho. Qualquer contribuição ajuda." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keeping Lar going costs Apple's developer fee (US$ 99 a year) and many hours of work. Any contribution helps."
+          }
+        }
+      }
+    },
+    "Marcar de novo (estou em casa)" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mark again (I'm home)"
+          }
+        }
+      }
+    },
+    "Meio grau" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Half degree"
+          }
+        }
+      }
+    },
+    "Menu" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menu"
+          }
+        }
+      }
+    },
+    "Modo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode"
+          }
+        }
+      }
+    },
+    "Modo Eco" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eco mode"
+          }
+        }
+      }
+    },
+    "Mostrar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show"
+          }
+        }
+      }
+    },
+    "Mostrar os aparelhos no app Casa" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show the devices in the Home app"
+          }
+        }
+      }
+    },
+    "Mostrar outro código" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show another code"
+          }
+        }
+      }
+    },
+    "Mudar temperatura do ar" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change air conditioner temperature"
+          }
+        }
+      }
+    },
+    "Mudo" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mute"
+          }
+        }
+      }
+    },
+    "Muitos pedidos, tente de novo em instantes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Too many requests, try again in a moment"
+          }
+        }
+      }
+    },
+    "Máxima" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maximum"
+          }
+        }
+      }
+    },
+    "Máxima: %@°C" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maximum: %@°C"
+          }
+        }
+      }
+    },
+    "Média" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Medium"
+          }
+        }
+      }
+    },
+    "Mínima" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minimum"
+          }
+        }
+      }
+    },
+    "Mínima: %@°C" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minimum: %@°C"
+          }
+        }
+      }
+    },
+    "Nenhum Mac com o Lar aberto na rede" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Mac with Lar open on the network"
+          }
+        }
+      }
+    },
+    "Nenhum aparelho" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No devices"
+          }
+        }
+      }
+    },
+    "Nenhum aparelho nas contas conectadas." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No devices in the connected accounts."
+          }
+        }
+      }
+    },
+    "Nenhum ar-condicionado com temperatura (LG, SmartThings ou Smart Life)." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No air conditioner with temperature (LG, SmartThings or Smart Life)."
+          }
+        }
+      }
+    },
+    "Nenhum ar-condicionado nesta conta da LG" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No air conditioner in this LG account"
+          }
+        }
+      }
+    },
+    "Nenhuma conta" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No accounts"
+          }
+        }
+      }
+    },
+    "No Mac: Ajustes → iPhone → Parear um iPhone. Digite aqui o código que aparecer." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On the Mac: Settings → iPhone → Pair an iPhone. Type the code it shows here."
+          }
+        }
+      }
+    },
+    "No Xbox" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On the Xbox"
+          }
+        }
+      }
+    },
+    "No horário" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "At a time"
+          }
+        }
+      }
+    },
+    "No iPhone, o porteiro toca com o Lar aberto (com o app fechado, só com a conta paga de desenvolvedor da Apple). O Mac toca sempre. Use um ramal diferente do Mac, ou um grupo de toque no PABX, para os dois tocarem." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On the iPhone, the intercom rings with Lar open (with the app closed, only with a paid Apple developer account). The Mac always rings. Use an extension other than the Mac's, or a ring group on the PBX, so both ring."
+          }
+        }
+      }
+    },
+    "No iPhone: app Casa → + → Adicionar Acessório, e aponte para o código (ou toque em “Mais opções” e digite os números). O app avisa que o acessório não é certificado: toque em “Adicionar Mesmo Assim”." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On the iPhone: Home app → + → Add Accessory, and point at the code (or tap “More options” and type the numbers). The app warns that the accessory isn't certified: tap “Add Anyway”."
+          }
+        }
+      }
+    },
+    "Nome" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
+          }
+        }
+      }
+    },
+    "Nome (ex.: Dormir)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name (e.g. Bedtime)"
+          }
+        }
+      }
+    },
+    "Nome e cômodo…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name and room…"
+          }
+        }
+      }
+    },
+    "Nome no Lar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name in Lar"
+          }
+        }
+      }
+    },
+    "Nova cena" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New scene"
+          }
+        }
+      }
+    },
+    "Num computador, rode o comando abaixo no Terminal, trocando TOKEN_PESSOAL pelo token e NOME-DO-APARELHO por um nome sem espaços (iphone, mac, relogio). A resposta traz “oauthClientId” (o Client ID) e “oauthClientSecret” (o Client Secret): guarde os dois, o secret não aparece de novo. Pelo SmartThings CLI dá no mesmo: “smartthings apps:create”, tipo OAuth-In App, com as permissões %@ e o redirect %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On a computer, run the command below in Terminal, replacing TOKEN_PESSOAL with the token and NOME-DO-APARELHO with a name without spaces (iphone, mac, watch). The answer has “oauthClientId” (the Client ID) and “oauthClientSecret” (the Client Secret): keep both, the secret doesn't show again. The SmartThings CLI does the same: “smartthings apps:create”, type OAuth-In App, with the permissions %@ and the redirect %@."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Num computador, rode o comando abaixo no Terminal, trocando TOKEN_PESSOAL pelo token e NOME-DO-APARELHO por um nome sem espaços (iphone, mac, relogio). A resposta traz “oauthClientId” (o Client ID) e “oauthClientSecret” (o Client Secret): guarde os dois, o secret não aparece de novo. Pelo SmartThings CLI dá no mesmo: “smartthings apps:create”, tipo OAuth-In App, com as permissões %1$@ e o redirect %2$@."
+          }
+        }
+      }
+    },
+    "Não" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No"
+          }
+        }
+      }
+    },
+    "Não atende" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No answer"
+          }
+        }
+      }
+    },
+    "Não deu para abrir o vídeo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't open the video."
+          }
+        }
+      }
+    },
+    "Não deu para atualizar: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't update: %@"
+          }
+        }
+      }
+    },
+    "Não deu para guardar o token no Porta-chaves" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't save the token in the Keychain"
+          }
+        }
+      }
+    },
+    "Não deu para mudar: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't change it: %@"
+          }
+        }
+      }
+    },
+    "Não deu para saber onde o iPhone está. Permita a localização em Ajustes." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't tell where the iPhone is. Allow location in Settings."
+          }
+        }
+      }
+    },
+    "Não foi (%lld KB): %@" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Didn't go (%lld KB): %@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Não foi (%1$lld KB): %2$@"
+          }
+        }
+      }
+    },
+    "Não mexer" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leave alone"
+          }
+        }
+      }
+    },
+    "Não perturbe" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do Not Disturb"
+          }
+        }
+      }
+    },
+    "Não usar" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Don't use"
+          }
+        }
+      }
+    },
+    "Número do porteiro" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intercom number"
+          }
+        }
+      }
+    },
+    "Número não existe" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Number doesn't exist"
+          }
+        }
+      }
+    },
+    "O Lar encontra sozinho as TVs com Google TV da rede de casa, mesmo quando o IP muda. Para controlar uma TV, abra-a na lista e toque em “Parear com a TV”: ela mostra um código para digitar aqui, uma vez só. O IP manual é só para uma TV que não aparece sozinha." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lar finds the Google TVs on the home network by itself, even when the IP changes. To control a TV, open it in the list and tap “Pair with the TV”: it shows a code to type here, only once. The manual IP is only for a TV that doesn't show up by itself."
+          }
+        }
+      }
+    },
+    "O Lar encontra sozinho as TVs com Google TV da rede de casa, mesmo quando o IP muda. Para controlar uma TV, abra-a na lista e toque em “Parear”: ela mostra um código para digitar aqui, uma vez só. Com a depuração USB ligada na TV, o Lar também usa o ADB (lista todos os apps) e pede “Permitir depuração USB?” na primeira vez." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lar finds the Google TVs on the home network by itself, even when the IP changes. To control a TV, open it in the list and click “Pair”: it shows a code to type here, only once. With USB debugging on in the TV, Lar also uses ADB (lists every app) and asks “Allow USB debugging?” the first time."
+          }
+        }
+      }
+    },
+    "O Lar é gratuito e de código aberto (licença MIT): sem servidor, sem conta e sem coleta de dados." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lar is free and open source (MIT license): no server, no account and no data collection."
+          }
+        }
+      }
+    },
+    "O Mac não respondeu" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Mac didn't answer"
+          }
+        }
+      }
+    },
+    "O Mac parou de responder" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Mac stopped answering"
+          }
+        }
+      }
+    },
+    "O Xbox não respondeu: confira se está em Suspensão, com os recursos remotos ligados e na internet." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Xbox didn't respond: check that it's in Sleep mode, with remote features on and online."
+          }
+        }
+      }
+    },
+    "O Xbox recusou o comando (%@)." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Xbox refused the command (%@)."
+          }
+        }
+      }
+    },
+    "O acesso foi recusado na página da Microsoft." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Access was declined on Microsoft's page."
+          }
+        }
+      }
+    },
+    "O aparelho está offline" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The device is offline"
+          }
+        }
+      }
+    },
+    "O aparelho indica um erro" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The device reports an error"
+          }
+        }
+      }
+    },
+    "O ar, as TVs, as luzes e as câmeras abrem aqui." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The air conditioner, TVs, lights and cameras open here."
+          }
+        }
+      }
+    },
+    "O ciclo terminou." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The cycle is done."
+          }
+        }
+      }
+    },
+    "O código do Lar está no GitHub. Faça um fork, crie um branch com a mudança e mande um pull request; o guia de contribuição explica como." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lar's code is on GitHub. Fork it, create a branch with your change and send a pull request; the contributing guide explains how."
+          }
+        }
+      }
+    },
+    "O código expirou: peça outro." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The code expired: request a new one."
+          }
+        }
+      }
+    },
+    "O histórico aparece depois de algumas leituras (o Lar guarda uma a cada 5 min)." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The history shows after a few readings (Lar keeps one every 5 min)."
+          }
+        }
+      }
+    },
+    "O horário roda no Mac (com o Lar aberto); chegar e sair, no iPhone." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Times run on the Mac (with Lar open); arriving and leaving, on the iPhone."
+          }
+        }
+      }
+    },
+    "O horário é executado pelo Mac (pareado em Ajustes → Mac, com o Lar aberto). Chegar e sair usam a localização deste iPhone; marque a casa em Ajustes → Casa." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Times are run by the Mac (paired in Settings → Mac, with Lar open). Arriving and leaving use this iPhone's location; mark your home in Settings → Home."
+          }
+        }
+      }
+    },
+    "O outro lado desligou" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The other side hung up"
+          }
+        }
+      }
+    },
+    "O que dizer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What to say"
+          }
+        }
+      }
+    },
+    "O relógio recebe as contas deste iPhone e fala com a LG, a Tuya e o SmartThings sozinho. As TVs passam pelo iPhone." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The watch gets this iPhone's accounts and talks to LG, Tuya and SmartThings by itself. The TVs go through the iPhone."
+          }
+        }
+      }
+    },
+    "O relógio tem a sua própria integração" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The watch has its own integration"
+          }
+        }
+      }
+    },
+    "O token da LG foi recusado" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The LG token was refused"
+          }
+        }
+      }
+    },
+    "OK" : {},
+    "Obrigado pela gorjeta! Ela ajuda o Lar a continuar gratuito." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thanks for the tip! It helps keep Lar free."
+          }
+        }
+      }
+    },
+    "Ocultar da lista" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide from the list"
+          }
+        }
+      }
+    },
+    "Ocupado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Busy"
+          }
+        }
+      }
+    },
+    "Offline" : {},
+    "Opcional" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Optional"
+          }
+        }
+      }
+    },
+    "Os Echos aparecem na lista: volume, não perturbe, música, falar, anunciar, pedir à Alexa e as rotinas. As rotinas viram cenas: os passos com aparelhos que o Lar também tem viram comandos; os outros a Alexa faz num Echo. Com um Mac pareado, é ele que importa as novas a cada hora. O relógio recebe a conta do iPhone. Integração não oficial: a Amazon pode mudá-la." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Echos show in the list: volume, Do Not Disturb, music, speak, announce, ask Alexa and the routines. Routines become scenes: steps with devices Lar also has become commands; Alexa does the others on an Echo. With a paired Mac, the Mac imports new ones every hour. The watch gets the iPhone's account. Unofficial integration: Amazon may change it."
+          }
+        }
+      }
+    },
+    "Os iPhones pareados param de sincronizar até parear de novo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paired iPhones stop syncing until they pair again"
+          }
+        }
+      }
+    },
+    "Os passos com aparelhos que o Lar também tem (pelo nome) viram comandos da cena; os outros (falar, música, clima…) a Alexa faz num Echo quando a cena roda." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Steps with devices Lar also has (by name) become the scene's commands; Alexa does the others (speaking, music, weather…) on an Echo when the scene runs."
+          }
+        }
+      }
+    },
+    "Os passos da rotina que só a Alexa faz (falar, música, clima) rodam neste Echo." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The routine's steps only Alexa does (speaking, music, weather) run on this Echo."
+          }
+        }
+      }
+    },
+    "Os servidores da LG estão com problemas" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LG's servers are having problems"
+          }
+        }
+      }
+    },
+    "Oscilar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Swing"
+          }
+        }
+      }
+    },
+    "Ou use uma integração que você já criou para este Mac:" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Or use an integration you already created for this Mac:"
+          }
+        }
+      }
+    },
+    "Outros" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other"
+          }
+        }
+      }
+    },
+    "PIX (CNPJ da Coupled)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PIX (Coupled's CNPJ, Brazil)"
+          }
+        }
+      }
+    },
+    "PORTEIRO (VOIP)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "INTERCOM (VOIP)"
+          }
+        }
+      }
+    },
+    "Para a direita" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Right"
+          }
+        }
+      }
+    },
+    "Para a esquerda" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Left"
+          }
+        }
+      }
+    },
+    "Para a estimativa de consumo no histórico do ar (Enter para salvar)." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "For the energy estimate in the air conditioner's history (Return to save)."
+          }
+        }
+      }
+    },
+    "Para baixo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Down"
+          }
+        }
+      }
+    },
+    "Para cima" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Up"
+          }
+        }
+      }
+    },
+    "Parada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stopped"
+          }
+        }
+      }
+    },
+    "Pareado" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paired"
+          }
+        }
+      }
+    },
+    "Pareando com o código que a TV mostra, o Lar usa o controle do Google TV e a depuração pode ser desligada." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pairing with the code the TV shows, Lar uses the Google TV remote and debugging can be turned off."
+          }
+        }
+      }
+    },
+    "Parear" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pair"
+          }
+        }
+      }
+    },
+    "Parear com a TV" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pair with the TV"
+          }
+        }
+      }
+    },
+    "Parear com o Mac" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pair with the Mac"
+          }
+        }
+      }
+    },
+    "Parear sem depuração" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pair without debugging"
+          }
+        }
+      }
+    },
+    "Parear um iPhone" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pair an iPhone"
+          }
+        }
+      }
+    },
+    "Pareie a TV com o código que aparece nela" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pair the TV with the code it shows"
+          }
+        }
+      }
+    },
+    "Pareie com o código da TV" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pair with the TV's code"
+          }
+        }
+      }
+    },
+    "Pareie este iPhone com o Mac" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pair this iPhone with the Mac"
+          }
+        }
+      }
+    },
+    "Parte da Alexa" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alexa part"
+          }
+        }
+      }
+    },
+    "Parte da Alexa em" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alexa part on"
+          }
+        }
+      }
+    },
+    "Pausada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paused"
+          }
+        }
+      }
+    },
+    "Pausar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pause"
+          }
+        }
+      }
+    },
+    "Pedir Face ID para abrir os Ajustes" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Require Face ID to open Settings"
+          }
+        }
+      }
+    },
+    "Pedir Touch ID ou senha para abrir os Ajustes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Require Touch ID or password to open Settings"
+          }
+        }
+      }
+    },
+    "Pedir à Alexa" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask Alexa"
+          }
+        }
+      }
+    },
+    "Pelo iCloud, as cenas e a lista ficam iguais também fora de casa, com o iPhone e o iPad da mesma conta Apple. Os avisos (lavadora pronta, porteiro) chegam no iPhone mesmo com o Lar fechado." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Through iCloud, the scenes and the list stay the same away from home too, with the iPhone and iPad on the same Apple Account. Alerts (washer done, intercom) reach the iPhone even with Lar closed."
+          }
+        }
+      }
+    },
+    "Permita o microfone para o Lar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow Lar to use the microphone"
+          }
+        }
+      }
+    },
+    "Permitir a localização “Sempre”" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow location “Always”"
+          }
+        }
+      }
+    },
+    "Permitir em Ajustes do Sistema → Itens de Início" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow in System Settings → Login Items"
+          }
+        }
+      }
+    },
+    "Porta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Door"
+          }
+        }
+      }
+    },
+    "Porta (5060)" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Port (5060)"
+          }
+        }
+      }
+    },
+    "Porta-chaves compartilhado" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shared Keychain"
+          }
+        }
+      }
+    },
+    "Porteiro" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intercom"
+          }
+        }
+      }
+    },
+    "Porteiro (VoIP)" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intercom (VoIP)"
+          }
+        }
+      }
+    },
+    "Porteiro chamando" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intercom calling"
+          }
+        }
+      }
+    },
+    "Potência do ar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Air conditioner power"
+          }
+        }
+      }
+    },
+    "Potência do ar (W)" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Air conditioner power (W)"
+          }
+        }
+      }
+    },
+    "Primeiro Echo no ar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "First Echo online"
+          }
+        }
+      }
+    },
+    "Problemas e ideias" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problems and ideas"
+          }
+        }
+      }
+    },
+    "Procurar atualização" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check for updates"
+          }
+        }
+      }
+    },
+    "Pronta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ready"
+          }
+        }
+      }
+    },
+    "Pronto." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done."
+          }
+        }
+      }
+    },
+    "Próxima" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next"
+          }
+        }
+      }
+    },
+    "Próxima página" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next page"
+          }
+        }
+      }
+    },
+    "Próximo canal" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next channel"
+          }
+        }
+      }
+    },
+    "Página abaixo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page down"
+          }
+        }
+      }
+    },
+    "Página acima" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page up"
+          }
+        }
+      }
+    },
+    "Página anterior" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previous page"
+          }
+        }
+      }
+    },
+    "Quantos aparelhos estão ligados." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How many devices are on."
+          }
+        }
+      }
+    },
+    "Recursos remotos desligados no Xbox" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remote features off on the Xbox"
+          }
+        }
+      }
+    },
+    "Recusada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Declined"
+          }
+        }
+      }
+    },
+    "Refeição" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meal"
+          }
+        }
+      }
+    },
+    "Refresh token (opcional)" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refresh token (optional)"
+          }
+        }
+      }
+    },
+    "Registrado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registered"
+          }
+        }
+      }
+    },
+    "Registrando…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registering…"
+          }
+        }
+      }
+    },
+    "Região" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Region"
+          }
+        }
+      }
+    },
+    "Remover" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove"
+          }
+        }
+      }
+    },
+    "Remover IP" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove IP"
+          }
+        }
+      }
+    },
+    "Remover da Casa" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove from Home"
+          }
+        }
+      }
+    },
+    "Resfriando" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cooling"
+          }
+        }
+      }
+    },
+    "Resfriando até %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cooling to %@"
+          }
+        }
+      }
+    },
+    "Resposta inesperada da LG" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unexpected answer from LG"
+          }
+        }
+      }
+    },
+    "Resposta inesperada da Tuya" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unexpected answer from Tuya"
+          }
+        }
+      }
+    },
+    "Rode o comando abaixo com o Client ID, o Client Secret e o código (CODIGO). A resposta traz o “refresh_token”." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Run the command below with the Client ID, the Client Secret and the code (CODIGO). The answer has the “refresh_token”."
+          }
+        }
+      }
+    },
+    "Rotinas" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Routines"
+          }
+        }
+      }
+    },
+    "Rotinas da Alexa (%lld)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alexa routines (%lld)"
+          }
+        }
+      }
+    },
+    "Sair da conta da Alexa" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign out of Alexa"
+          }
+        }
+      }
+    },
+    "Sair de casa" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leaving home"
+          }
+        }
+      }
+    },
+    "Sair do Lar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quit Lar"
+          }
+        }
+      }
+    },
+    "Salvar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save"
+          }
+        }
+      }
+    },
+    "Salvar IP" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save IP"
+          }
+        }
+      }
+    },
+    "Se ele não responder, reinicie o console: segure o botão Xbox por 10 segundos e ligue de novo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If it doesn't respond, restart the console: hold the Xbox button for 10 seconds and turn it on again."
+          }
+        }
+      }
+    },
+    "Secando" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drying"
+          }
+        }
+      }
+    },
+    "Seco" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dry"
+          }
+        }
+      }
+    },
+    "Segundo plano" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Background"
+          }
+        }
+      }
+    },
+    "Sem ADB: pareie com o código da TV" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No ADB: pair with the TV's code"
+          }
+        }
+      }
+    },
+    "Sem TVs no iPhone" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No TVs on the iPhone"
+          }
+        }
+      }
+    },
+    "Sem acesso ao microfone ou ao alto-falante" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No access to the microphone or speaker"
+          }
+        }
+      }
+    },
+    "Sem cenas" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No scenes"
+          }
+        }
+      }
+    },
+    "Sem chamada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No call"
+          }
+        }
+      }
+    },
+    "Sem cômodo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No room"
+          }
+        }
+      }
+    },
+    "Sem integração própria, o relógio usa um acesso de 24 h renovado pelo iPhone. Com uma integração só dele (diferente da do iPhone e da do Mac), ele renova sozinho e o SmartThings funciona longe do iPhone." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Without its own integration, the watch uses a 24-hour access renewed by the iPhone. With one of its own (other than the iPhone's and the Mac's), it renews by itself and SmartThings works away from the iPhone."
+          }
+        }
+      }
+    },
+    "Sem localização" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No location"
+          }
+        }
+      }
+    },
+    "Sem resposta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No answer"
+          }
+        }
+      }
+    },
+    "Sem resposta da Amazon" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No answer from Amazon"
+          }
+        }
+      }
+    },
+    "Sem som" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mute"
+          }
+        }
+      }
+    },
+    "Sem áudio compatível" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No compatible audio"
+          }
+        }
+      }
+    },
+    "Senha" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Password"
+          }
+        }
+      }
+    },
+    "Senha recusada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Password refused"
+          }
+        }
+      }
+    },
+    "Senha · salva" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Password · saved"
+          }
+        }
+      }
+    },
+    "Sensor da sala" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Living room sensor"
+          }
+        }
+      }
+    },
+    "Sensores" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sensors"
+          }
+        }
+      }
+    },
+    "Servidor" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Server"
+          }
+        }
+      }
+    },
+    "Servidor (sip.provedor.com.br)" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Server (sip.provider.com)"
+          }
+        }
+      }
+    },
+    "Servidor não responde" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The server doesn't answer"
+          }
+        }
+      }
+    },
+    "Setas" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrows"
+          }
+        }
+      }
+    },
+    "Sim" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yes"
+          }
+        }
+      }
+    },
+    "Sincronizar agora" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sync now"
+          }
+        }
+      }
+    },
+    "Smart Life (Tuya)" : {},
+    "SmartThings" : {},
+    "SmartThings desconectado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SmartThings disconnected"
+          }
+        }
+      }
+    },
+    "SmartThings no relógio" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SmartThings on the watch"
+          }
+        }
+      }
+    },
+    "SmartThings não autorizou" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SmartThings didn't authorize it"
+          }
+        }
+      }
+    },
+    "SmartThings não autorizou o %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SmartThings didn't authorize the %@"
+          }
+        }
+      }
+    },
+    "SmartThings não criou a integração: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SmartThings didn't create the integration: %@"
+          }
+        }
+      }
+    },
+    "SmartThings não mandou o client ID" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SmartThings didn't send the client ID"
+          }
+        }
+      }
+    },
+    "SmartThings → Usar OAuth: cole o Client ID, o Client Secret e o refresh token e toque em Salvar. Sem o refresh token, toque em “Entrar no SmartThings” e o Lar faz os passos 3 e 4 sozinho. No relógio, use a seção “SmartThings no relógio” do iPhone. Uma integração para cada aparelho (iPhone, Mac, relógio, TV): com a mesma, um desconecta o outro, porque o refresh token muda a cada renovação (o Lar guarda o novo sozinho)." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SmartThings → Use OAuth: paste the Client ID, the Client Secret and the refresh token and tap Save. Without the refresh token, tap “Sign in to SmartThings” and Lar does steps 3 and 4 by itself. For the watch, use the iPhone's “SmartThings on the watch” section. One integration per device (iPhone, Mac, watch, TV): sharing one, each logs the other out, because the refresh token changes at every renewal (Lar keeps the new one by itself)."
+          }
+        }
+      }
+    },
+    "SmartThings: sem resposta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SmartThings: no answer"
+          }
+        }
+      }
+    },
+    "Sobre o Lar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About Lar"
+          }
+        }
+      }
+    },
+    "Sol" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sun"
+          }
+        }
+      }
+    },
+    "Som" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio"
+          }
+        }
+      }
+    },
+    "Suas cenas; toque para abrir o Lar." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your scenes; tap to open Lar."
+          }
+        }
+      }
+    },
+    "Só ventilação" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fan only"
+          }
+        }
+      }
+    },
+    "TV" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TV"
+          }
+        }
+      }
+    },
+    "TV da Sala" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Living room TV"
+          }
+        }
+      }
+    },
+    "TV do Quarto" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bedroom TV"
+          }
+        }
+      }
+    },
+    "TV não responde (%@)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The TV doesn't answer (%@)"
+          }
+        }
+      }
+    },
+    "TV: %@" : {},
+    "TVs" : {},
+    "TVs pareadas" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paired TVs"
+          }
+        }
+      }
+    },
+    "TVs pareadas pelo controle do Google TV: %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TVs paired through the Google TV remote: %lld"
+          }
+        }
+      }
+    },
+    "Tarifa (%@/kWh)" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rate (%@/kWh)"
+          }
+        }
+      }
+    },
+    "Tarifa de energia" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Energy rate"
+          }
+        }
+      }
+    },
+    "Teclas que abrem o portão (ex.: *1)" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keys that open the gate (e.g. *1)"
+          }
+        }
+      }
+    },
+    "Telefone" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phone"
+          }
+        }
+      }
+    },
+    "Telefone e porteiro" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phone and intercom"
+          }
+        }
+      }
+    },
+    "Temperatura" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temperature"
+          }
+        }
+      }
+    },
+    "Temperatura ajustada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Target temperature"
+          }
+        }
+      }
+    },
+    "Temperatura ajustada em %@ graus" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Target temperature %@ degrees"
+          }
+        }
+      }
+    },
+    "Temperatura do ambiente, a ajustada, ligar e − / +." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Room temperature, target, power and − / +."
+          }
+        }
+      }
+    },
+    "Temperatura do ar" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Air conditioner temperature"
+          }
+        }
+      }
+    },
+    "Temperatura do ar na barra de menus" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Air conditioner temperature in the menu bar"
+          }
+        }
+      }
+    },
+    "Tentar de novo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try again"
+          }
+        }
+      }
+    },
+    "Terminou" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
+          }
+        }
+      }
+    },
+    "Tipo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kind"
+          }
+        }
+      }
+    },
+    "Tira da lista as TVs que não estão na rede agora; as ligadas voltam sozinhas" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Removes the TVs not on the network now; the ones that are on come back by themselves"
+          }
+        }
+      }
+    },
+    "Tirar dos favoritos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove from Favorites"
+          }
+        }
+      }
+    },
+    "Tocando…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ringing…"
+          }
+        }
+      }
+    },
+    "Tocar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play"
+          }
+        }
+      }
+    },
+    "Tocar ou pausar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play or pause"
+          }
+        }
+      }
+    },
+    "Todas as câmeras" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All cameras"
+          }
+        }
+      }
+    },
+    "Todas as câmeras ao vivo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All cameras live"
+          }
+        }
+      }
+    },
+    "Todo dia às %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every day at %@"
+          }
+        }
+      }
+    },
+    "Token da LG recusado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LG token refused"
+          }
+        }
+      }
+    },
+    "Token inválido ou expirado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid or expired token"
+          }
+        }
+      }
+    },
+    "Token pessoal" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personal token"
+          }
+        }
+      }
+    },
+    "Token pessoal (os novos valem 24 h, bom para testar) ou, para não expirar, uma integração OAuth." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personal token (new ones last 24 h, good for testing) or, so it doesn't expire, an OAuth integration."
+          }
+        }
+      }
+    },
+    "Token pessoal (só para criar)" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personal token (only to create)"
+          }
+        }
+      }
+    },
+    "Token pessoal da sua conta LG. Ar-condicionado, lavadora, geladeira e outros aparelhos." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personal token of your LG account. Air conditioner, washer, fridge and other devices."
+          }
+        }
+      }
+    },
+    "Token pessoal da sua conta LG: ar-condicionado, lavadora, geladeira e outros aparelhos." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personal token of your LG account: air conditioner, washer, fridge and other devices."
+          }
+        }
+      }
+    },
+    "Token recusado: crie um com a permissão de apps (Apps)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Token refused: create one with the apps permission (Apps)"
+          }
+        }
+      }
+    },
+    "Tomadas e interruptores" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plugs and switches"
+          }
+        }
+      }
+    },
+    "Toque e segure um aparelho na lista para favoritar, mudar o nome, o cômodo ou ocultar." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Touch and hold a device in the list to favorite it, change its name or room, or hide it."
+          }
+        }
+      }
+    },
+    "Toque em “Authorize” para liberar o Lar no %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap “Authorize” to allow Lar on the %@."
+          }
+        }
+      }
+    },
+    "Toque na engrenagem e configure a LG, o Smart Life ou o SmartThings." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap the gear and set up LG, Smart Life or SmartThings."
+          }
+        }
+      }
+    },
+    "Toque para executar; toque e segure para editar." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap to run; touch and hold to edit."
+          }
+        }
+      }
+    },
+    "Tudo desligado" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Everything off"
+          }
+        }
+      }
+    },
+    "Tuya: sem token" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tuya: no token"
+          }
+        }
+      }
+    },
+    "Um café" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A coffee"
+          }
+        }
+      }
+    },
+    "Um jantar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A dinner"
+          }
+        }
+      }
+    },
+    "Um lanche" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A snack"
+          }
+        }
+      }
+    },
+    "Uma integração para cada aparelho (Mac, iPhone, TV): com a mesma, um desconecta o outro." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "One integration per device (Mac, iPhone, TV): sharing one, each signs the other out."
+          }
+        }
+      }
+    },
+    "Uma luz ligada guarda o brilho que tem agora." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A light that's on keeps its current brightness."
+          }
+        }
+      }
+    },
+    "Usada só pelas cenas “Ao chegar em casa” e “Ao sair de casa” (uns 150 m em volta). A localização fica neste iPhone." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Used only by the “When arriving home” and “When leaving home” scenes (about 150 m around). The location stays on this iPhone."
+          }
+        }
+      }
+    },
+    "Usados" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Used"
+          }
+        }
+      }
+    },
+    "Usar OAuth" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use OAuth"
+          }
+        }
+      }
+    },
+    "Usar OAuth (não expira)" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use OAuth (doesn't expire)"
+          }
+        }
+      }
+    },
+    "Usar o estado atual" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use the current state"
+          }
+        }
+      }
+    },
+    "Usuário" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "User"
+          }
+        }
+      }
+    },
+    "Usuário ou ramal" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "User or extension"
+          }
+        }
+      }
+    },
+    "Usuário ou senha recusados" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "User or password refused"
+          }
+        }
+      }
+    },
+    "Ventilador" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fan"
+          }
+        }
+      }
+    },
+    "Ventilar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fan"
+          }
+        }
+      }
+    },
+    "Ventilação" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fan"
+          }
+        }
+      }
+    },
+    "Ver o código no GitHub" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "See the code on GitHub"
+          }
+        }
+      }
+    },
+    "Versão" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version"
+          }
+        }
+      }
+    },
+    "Versão %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version %@"
+          }
+        }
+      }
+    },
+    "Voltar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back"
+          }
+        }
+      }
+    },
+    "Voltar a usar a do iPhone" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go back to the iPhone's"
+          }
+        }
+      }
+    },
+    "Volume %@ de %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volume %@ of %@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Volume %1$@ de %2$@"
+          }
+        }
+      }
+    },
+    "Volume %lld" : {},
+    "W" : {},
+    "X" : {},
+    "Xbox" : {},
+    "Xbox: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xbox: %@"
+          }
+        }
+      }
+    },
+    "Xbox: erro %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xbox: error %lld"
+          }
+        }
+      }
+    },
+    "Y" : {},
+    "a TV fechou a conexão" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "the TV closed the connection"
+          }
+        }
+      }
+    },
+    "a TV pediu TLS (depuração sem fio); use a depuração USB pela rede" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "the TV asked for TLS (wireless debugging); use USB debugging over the network"
+          }
+        }
+      }
+    },
+    "a TV recusou o comando" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "the TV refused the command"
+          }
+        }
+      }
+    },
+    "a TV recusou o pareamento (%llu)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "the TV refused the pairing (%llu)"
+          }
+        }
+      }
+    },
+    "a TV recusou um comando" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "the TV refused a command"
+          }
+        }
+      }
+    },
+    "a assinatura da nova versão não confere" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "the new version's signature doesn't match"
+          }
+        }
+      }
+    },
+    "abrir os Ajustes do Lar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "open Lar's Settings"
+          }
+        }
+      }
+    },
+    "ajustado em %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "set to %@"
+          }
+        }
+      }
+    },
+    "certificado da TV ilegível" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "unreadable TV certificate"
+          }
+        }
+      }
+    },
+    "certificado inválido" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "invalid certificate"
+          }
+        }
+      }
+    },
+    "chave guardada ilegível" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "unreadable saved key"
+          }
+        }
+      }
+    },
+    "chave ilegível" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "unreadable key"
+          }
+        }
+      }
+    },
+    "chave pública ilegível" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "unreadable public key"
+          }
+        }
+      }
+    },
+    "chave recusada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "key refused"
+          }
+        }
+      }
+    },
+    "comece o pareamento de novo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "start pairing again"
+          }
+        }
+      }
+    },
+    "conectada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "connected"
+          }
+        }
+      }
+    },
+    "conectando" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "connecting"
+          }
+        }
+      }
+    },
+    "conectando…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "connecting…"
+          }
+        }
+      }
+    },
+    "conexão encerrada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "connection closed"
+          }
+        }
+      }
+    },
+    "coupled.com.br" : {},
+    "desliga em %lld min" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "turns off in %lld min"
+          }
+        }
+      }
+    },
+    "dom" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sun"
+          }
+        }
+      }
+    },
+    "faltam %lld:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld:%@ left"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "faltam %1$lld:%2$@"
+          }
+        }
+      }
+    },
+    "iCloud" : {},
+    "iPhone" : {},
+    "iPhone fora de alcance" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iPhone out of reach"
+          }
+        }
+      }
+    },
+    "indisponível com o aparelho bloqueado; desbloqueie e tente de novo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "unavailable while the device is locked; unlock it and try again"
+          }
+        }
+      }
+    },
+    "mensagem inválida" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "invalid message"
+          }
+        }
+      }
+    },
+    "não configurada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "not set up"
+          }
+        }
+      }
+    },
+    "não deu para guardar a chave" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "couldn't save the key"
+          }
+        }
+      }
+    },
+    "não deu para guardar o certificado (%d)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "couldn't save the certificate (%d)"
+          }
+        }
+      }
+    },
+    "número inválido" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "invalid number"
+          }
+        }
+      }
+    },
+    "número ou ramal do porteiro" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "intercom number or extension"
+          }
+        }
+      }
+    },
+    "o Porta-chaves não montou o certificado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "the Keychain didn't build the certificate"
+          }
+        }
+      }
+    },
+    "o arquivo baixado não confere" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "the downloaded file doesn't match"
+          }
+        }
+      }
+    },
+    "opcional (se diferente do servidor)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "optional (if different from the server)"
+          }
+        }
+      }
+    },
+    "pedido inválido" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "invalid request"
+          }
+        }
+      }
+    },
+    "porta inválida" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "invalid port"
+          }
+        }
+      }
+    },
+    "qua" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wed"
+          }
+        }
+      }
+    },
+    "qui" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thu"
+          }
+        }
+      }
+    },
+    "ramal ou usuário" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "extension or user"
+          }
+        }
+      }
+    },
+    "resposta inválida" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "invalid answer"
+          }
+        }
+      }
+    },
+    "seg" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mon"
+          }
+        }
+      }
+    },
+    "sem chave pública" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "no public key"
+          }
+        }
+      }
+    },
+    "sem conexão" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "no connection"
+          }
+        }
+      }
+    },
+    "sem dados" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "no data"
+          }
+        }
+      }
+    },
+    "sem resposta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "no answer"
+          }
+        }
+      }
+    },
+    "senha" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "password"
+          }
+        }
+      }
+    },
+    "sex" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fri"
+          }
+        }
+      }
+    },
+    "sip.provedor.com.br" : {},
+    "sáb" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sat"
+          }
+        }
+      }
+    },
+    "teclas que abrem o portão, ex.: *1" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "keys that open the gate, e.g. *1"
+          }
+        }
+      }
+    },
+    "ter" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tue"
+          }
+        }
+      }
+    },
+    "°C" : {},
+    "· %lld ligados" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "· %lld on"
+          }
+        }
+      }
+    },
+    "· 1 ligado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "· 1 on"
+          }
+        }
+      }
+    },
+    "Índia" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "India"
+          }
+        }
+      }
+    },
+    "Última vez" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last time"
+          }
+        }
+      }
+    },
+    "Últimas 24 horas" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last 24 hours"
+          }
+        }
+      }
+    },
+    "Último erro %@: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last error %@: %@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Último erro %1$@: %2$@"
+          }
+        }
+      }
+    },
+    "—" : {},
+    "•••••• salva" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "•••••• saved"
+          }
+        }
+      }
+    },
+    "•••••• salvo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "•••••• saved"
+          }
+        }
+      }
+    },
+    "Digitar no Xbox" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type on the Xbox"
+          }
+        }
+      }
+    },
+    "Abra a busca ou um campo de texto no Xbox e digite aqui." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open the search or a text field on the Xbox and type here."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
