@@ -1,0 +1,10 @@
+.build/
+build/
+.DS_Store
+.swiftpm/
+*.dmg
+snapshots/
+
+# Extensions kept only on the owner's Mac (built with LAR_PRIVATE when present).
+Sources/*/Private/
+Tests/*/Private/

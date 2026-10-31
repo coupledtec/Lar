@@ -1,0 +1,40 @@
+{
+  "sourceLanguage": "pt-BR",
+  "strings": {
+    "NSLocalNetworkUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lar finds and controls the Google TVs and Roomba robots on your network."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O Lar procura e controla as TVs com Google TV e os robôs Roomba da sua rede."
+          }
+        }
+      }
+    },
+    "NSMicrophoneUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lar uses the microphone for calls with the intercom."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O Lar usa o microfone nas chamadas com o porteiro."
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}
