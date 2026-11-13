@@ -20,7 +20,8 @@ public enum DemoHome {
 
     static let devices: [HomeDevice] = [
         HomeDevice(provider: .lg, rawID: "ac", name: tr("Ar da sala"), kind: .airConditioner, isOn: true,
-                   detail: tr("Ambiente 26° · ajustado em 22°")),
+                   detail: tr("Ambiente 26° · ajustado em 22°"),
+                   controls: ["targetTemperature": "22", "roomTemperatureValue": "26"]),
         HomeDevice(provider: .lg, rawID: "washer", name: tr("Lavadora"), kind: .laundry, isOn: true,
                    detail: tr("Enxaguando · faltam 0:12")),
         HomeDevice(provider: .tuya, rawID: "lamp", name: tr("Luminária"), kind: .light, isOn: true, brightness: 0.6,
@@ -92,6 +93,7 @@ public enum DemoHome {
                 devices[index].isOn = value > 0
             case .color(let color): devices[index].color = color
             case .temperature(let value):
+                devices[index].controls["targetTemperature"] = String(Int(value.rounded()))
                 devices[index].detail = tr("Ambiente 26° · ajustado em \(Int(value.rounded()))°")
             }
         }

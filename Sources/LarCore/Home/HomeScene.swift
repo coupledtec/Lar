@@ -109,8 +109,12 @@ public final class SceneStore {
         settings.markSyncChange()
     }
 
-    /// After the scenes changed elsewhere (the watch receiving the iPhone's).
-    public func reload() { scenes = settings.scenes }
+    /// After the scenes changed elsewhere (the watch receiving the iPhone's). The sample home keeps its sample
+    /// scenes while nothing real replaced them.
+    public func reload() {
+        guard !(DemoHome.isOn && settings.scenes.isEmpty) else { return }
+        scenes = settings.scenes
+    }
 }
 
 extension HomeStore {
