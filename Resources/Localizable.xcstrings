@@ -113,7 +113,16 @@
         }
       }
     },
-    "%@/kWh" : {},
+    "%@/kWh" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/kWh"
+          }
+        }
+      }
+    },
     "%@: %@ fora do ar" : {
       "localizations" : {
         "en" : {
@@ -160,9 +169,36 @@
         }
       }
     },
-    "%@C" : {},
-    "%@°" : {},
-    "%@°C" : {},
+    "%@C" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@C"
+          }
+        }
+      }
+    },
+    "%@°" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@°"
+          }
+        }
+      }
+    },
+    "%@°C" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@°C"
+          }
+        }
+      }
+    },
     "%lld aparelhos" : {
       "localizations" : {
         "en" : {
@@ -223,6 +259,12 @@
             "state" : "new",
             "value" : "%1$lld h%2$@"
           }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld h%@"
+          }
         }
       }
     },
@@ -237,9 +279,36 @@
         }
       }
     },
-    "%lld min" : {},
-    "%lld%%" : {},
-    ".5" : {},
+    "%lld min" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld min"
+          }
+        }
+      }
+    },
+    "%lld%%" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        }
+      }
+    },
+    ".5" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ".5"
+          }
+        }
+      }
+    },
     "1 aparelho" : {
       "localizations" : {
         "en" : {
@@ -256,6 +325,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "1. Settings → Devices & connections → Remote features: check \"Enable remote features\"."
+          }
+        }
+      }
+    },
+    "1. Entre na sua conta em playstation.com no navegador. 2. Na mesma janela, abra ca.account.sony.com/api/v1/ssocookie. 3. Copie o valor de \"npsso\" (64 letras e números) e cole aqui. O PS5 e o PS4 aparecem em Jogos, com o jogo do momento." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1. Sign in to your account at playstation.com in the browser. 2. In the same window, open ca.account.sony.com/api/v1/ssocookie. 3. Copy the value of \"npsso\" (64 letters and numbers) and paste it here. Your PS5 and PS4 show up in Games, with the game being played."
           }
         }
       }
@@ -360,7 +439,16 @@
         }
       }
     },
-    "5060" : {},
+    "5060" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "5060"
+          }
+        }
+      }
+    },
     "A Amazon não autorizou" : {
       "localizations" : {
         "en" : {
@@ -447,6 +535,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Microsoft didn't provide a sign-in code."
+          }
+        }
+      }
+    },
+    "A Sony não aceitou o token. Pegue um npsso novo (ele vale por pouco tempo) e tente de novo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sony didn't accept the token. Get a new npsso (it's only valid for a short time) and try again."
+          }
+        }
+      }
+    },
+    "A Sony não devolveu a conta." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sony didn't return the account."
+          }
+        }
+      }
+    },
+    "A Sony não devolveu o acesso." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sony didn't return the access."
           }
         }
       }
@@ -849,7 +967,16 @@
         }
       }
     },
-    "Access ID" : {},
+    "Access ID" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Access ID"
+          }
+        }
+      }
+    },
     "Access ID e Access Secret de um projeto Cloud em iot.tuya.com com a conta do Smart Life vinculada. O passo a passo está no README do Lar." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1015,7 +1142,16 @@
         }
       }
     },
-    "Alexa (Echo)" : {},
+    "Alexa (Echo)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alexa (Echo)"
+          }
+        }
+      }
+    },
     "Alta" : {
       "localizations" : {
         "en" : {
@@ -1274,7 +1410,16 @@
         }
       }
     },
-    "Apps" : {},
+    "Apps" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apps"
+          }
+        }
+      }
+    },
     "Aquecendo até %@" : {
       "localizations" : {
         "en" : {
@@ -1511,7 +1656,16 @@
         }
       }
     },
-    "Auto" : {},
+    "Auto" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto"
+          }
+        }
+      }
+    },
     "Avisar quando a lavadora terminar" : {
       "localizations" : {
         "en" : {
@@ -1623,7 +1777,16 @@
         }
       }
     },
-    "Buy Me a Coffee" : {},
+    "Buy Me a Coffee" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buy Me a Coffee"
+          }
+        }
+      }
+    },
     "CENAS" : {
       "localizations" : {
         "en" : {
@@ -1634,7 +1797,16 @@
         }
       }
     },
-    "CH" : {},
+    "CH" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CH"
+          }
+        }
+      }
+    },
     "Cada aparelho com a sua integração (o iPhone, o Mac, o relógio, a TV): o refresh token muda a cada renovação, e dois com a mesma se desconectam. Para criar, um token pessoal com a permissão de apps (account.smartthings.com/tokens): o Lar cria a integração e abre o login." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1961,7 +2133,16 @@
         }
       }
     },
-    "Client ID" : {},
+    "Client ID" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Client ID"
+          }
+        }
+      }
+    },
     "Client ID da integração do relógio" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1989,6 +2170,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Paste"
+          }
+        }
+      }
+    },
+    "Cole o valor de \"npsso\" inteiro." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paste the whole \"npsso\" value."
           }
         }
       }
@@ -2603,6 +2794,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Off"
+          }
+        }
+      }
+    },
+    "Desligado ou em repouso" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Off or in rest mode"
           }
         }
       }
@@ -3827,7 +4028,16 @@
         }
       }
     },
-    "GitHub Sponsors" : {},
+    "GitHub Sponsors" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GitHub Sponsors"
+          }
+        }
+      }
+    },
     "Google TV" : {
       "shouldTranslate" : false
     },
@@ -3955,7 +4165,26 @@
         }
       }
     },
-    "Intelbras" : {},
+    "Integração não oficial: a marca pode mudá-la. O token não fica guardado: só a chave que a marca devolve, no Porta-chaves." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unofficial integration: the brand may change it. The token isn't kept: only the key the brand returns, in the Keychain."
+          }
+        }
+      }
+    },
+    "Intelbras" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intelbras"
+          }
+        }
+      }
+    },
     "Início" : {
       "localizations" : {
         "en" : {
@@ -3976,8 +4205,26 @@
         }
       }
     },
-    "LG ThinQ" : {},
-    "Lar" : {},
+    "LG ThinQ" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LG ThinQ"
+          }
+        }
+      }
+    },
+    "Lar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lar"
+          }
+        }
+      }
+    },
     "Lar %@" : {
       "localizations" : {
         "en" : {
@@ -3988,7 +4235,16 @@
         }
       }
     },
-    "Lar %@ · Mac" : {},
+    "Lar %@ · Mac" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lar %@ · Mac"
+          }
+        }
+      }
+    },
     "Lar instalado no relógio" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -5000,6 +5256,16 @@
         }
       }
     },
+    "O PS5 e o PS4 pela conta PlayStation, e robôs aspiradores e fechaduras das marcas com app próprio. Os do Smart Life, do SmartThings e da LG já vêm por essas contas. Integrações não oficiais: a marca pode mudá-las." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PS5 and PS4 through the PlayStation account, and robot vacuums and locks from brands with their own app. Those in Smart Life, SmartThings and LG already come through those accounts. Unofficial integrations: the brand may change them."
+          }
+        }
+      }
+    },
     "O Roomba não foi encontrado na rede (este aparelho está em casa?)" : {
       "localizations" : {
         "en" : {
@@ -5295,7 +5561,16 @@
         }
       }
     },
-    "OK" : {},
+    "OK" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        }
+      }
+    },
     "Obrigado pela gorjeta! Ela ajuda o Lar a continuar gratuito." : {
       "localizations" : {
         "en" : {
@@ -5326,7 +5601,16 @@
         }
       }
     },
-    "Offline" : {},
+    "Offline" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offline"
+          }
+        }
+      }
+    },
     "Opcional" : {
       "localizations" : {
         "en" : {
@@ -5751,6 +6035,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Allow in System Settings → Login Items"
+          }
+        }
+      }
+    },
+    "PlayStation, robôs e fechaduras" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PlayStation, robots and locks"
           }
         }
       }
@@ -6223,6 +6517,7 @@
       }
     },
     "Robôs aspiradores e fechaduras das marcas com app próprio. Os do Smart Life, do SmartThings e da LG já vêm por essas contas. Integrações não oficiais: a marca pode mudá-las." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -6233,6 +6528,7 @@
       }
     },
     "Robôs e fechaduras" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -6273,6 +6569,17 @@
         }
       }
     },
+    "Sair da conta %@" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign out of %@"
+          }
+        }
+      }
+    },
     "Sair da conta da Alexa" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -6300,6 +6607,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Quit Lar"
+          }
+        }
+      }
+    },
+    "Sair do Lar (⌘Q)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quit Lar (⌘Q)"
           }
         }
       }
@@ -6652,8 +6969,26 @@
         }
       }
     },
-    "Smart Life (Tuya)" : {},
-    "SmartThings" : {},
+    "Smart Life (Tuya)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Smart Life (Tuya)"
+          }
+        }
+      }
+    },
+    "SmartThings" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SmartThings"
+          }
+        }
+      }
+    },
     "SmartThings desconectado" : {
       "localizations" : {
         "en" : {
@@ -6826,8 +7161,26 @@
         }
       }
     },
-    "TV: %@" : {},
-    "TVs" : {},
+    "TV: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TV: %@"
+          }
+        }
+      }
+    },
+    "TVs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TVs"
+          }
+        }
+      }
+    },
     "TVs pareadas" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -7089,6 +7442,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Invalid or expired token"
+          }
+        }
+      }
+    },
+    "Token npsso" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "npsso token"
           }
         }
       }
@@ -7482,10 +7845,46 @@
         }
       }
     },
-    "Volume %lld" : {},
-    "W" : {},
-    "X" : {},
-    "Xbox" : {},
+    "Volume %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volume %lld"
+          }
+        }
+      }
+    },
+    "W" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "W"
+          }
+        }
+      }
+    },
+    "X" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "X"
+          }
+        }
+      }
+    },
+    "Xbox" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xbox"
+          }
+        }
+      }
+    },
     "Xbox: %@" : {
       "localizations" : {
         "en" : {
@@ -7506,7 +7905,16 @@
         }
       }
     },
-    "Y" : {},
+    "Y" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Y"
+          }
+        }
+      }
+    },
     "a TV fechou a conexão" : {
       "localizations" : {
         "en" : {
@@ -7727,7 +8135,16 @@
         }
       }
     },
-    "coupled.com.br" : {},
+    "coupled.com.br" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "coupled.com.br"
+          }
+        }
+      }
+    },
     "desliga em %lld min" : {
       "localizations" : {
         "en" : {
@@ -7764,8 +8181,26 @@
         }
       }
     },
-    "iCloud" : {},
-    "iPhone" : {},
+    "iCloud" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud"
+          }
+        }
+      }
+    },
+    "iPhone" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iPhone"
+          }
+        }
+      }
+    },
     "iPhone fora de alcance" : {
       "localizations" : {
         "en" : {
@@ -8006,7 +8441,16 @@
         }
       }
     },
-    "sip.provedor.com.br" : {},
+    "sip.provedor.com.br" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sip.provedor.com.br"
+          }
+        }
+      }
+    },
     "sáb" : {
       "localizations" : {
         "en" : {
@@ -8047,7 +8491,16 @@
         }
       }
     },
-    "°C" : {},
+    "°C" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "°C"
+          }
+        }
+      }
+    },
     "· %lld ligados" : {
       "localizations" : {
         "en" : {
@@ -8117,7 +8570,16 @@
         }
       }
     },
-    "—" : {},
+    "—" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "—"
+          }
+        }
+      }
+    },
     "•••••• salva" : {
       "localizations" : {
         "en" : {
@@ -8134,26 +8596,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "•••••• saved"
-          }
-        }
-      }
-    },
-    "Sair da conta %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sign out of %@"
-          }
-        }
-      }
-    },
-    "Sair do Lar (⌘Q)" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Quit Lar (⌘Q)"
           }
         }
       }

@@ -63,6 +63,9 @@ To try it without any account: **"Try a sample home"** on the first screen (or S
   (from Sleep) and off, the controller (arrows, A, B, X, Y, Menu, View and the Xbox button), volume, typing,
   opening games and apps and seeing what's playing. Unofficial integration (the same cloud the Xbox app uses):
   Microsoft may change it.
+- **PlayStation:** sign in with your PlayStation account (Settings → PlayStation, robots and locks) and your PS5 and
+  PS4 show up in Games, on or not and with the game being played. Read only for now: turning them on and off takes
+  Remote Play pairing. Unofficial integration (the same cloud the PlayStation app uses): Sony may change it.
 - **Alexa and Echos:** sign in with your Amazon account (Settings → Alexa, on Amazon's own page). The Echos join the
   list with volume, Do Not Disturb, music, speak, announce on all of them, "ask Alexa" (works for anything Alexa
   controls) and routines. The Mac announces the intercom and alerts (washer done) on the Echos. Alexa routines become
@@ -257,6 +260,17 @@ it's your Mac, and turn debugging off if you stop using Lar with the TV.
 If the Xbox doesn't respond, restart the console: hold the Xbox button for 10 seconds and turn it on again. The same
 steps are in Settings → Xbox → **How to set up the Xbox**.
 
+### PlayStation
+
+Sony has no sign-in for other apps, so Lar uses the browser session's token (the same way Home Assistant does):
+
+1. In the browser, sign in to your account at [playstation.com](https://www.playstation.com).
+2. In the same window, open [ca.account.sony.com/api/v1/ssocookie](https://ca.account.sony.com/api/v1/ssocookie).
+3. Copy the `npsso` value and paste it in Settings → PlayStation, robots and locks → PlayStation → **Sign in**.
+
+The token isn't kept: Lar trades it for a key that renews itself for about two months. After that, just repeat the
+steps.
+
 ### Robots and locks (Roborock, Xiaomi, Dreame, Ecovacs, iRobot, Eufy, Yale)
 
 In Lar: Settings → **Robots and locks** → **Sign in** to the brand. Each one uses its app's account, and the devices
@@ -326,10 +340,12 @@ The robot and lock integrations follow what [python-roborock](https://github.com
 Lar rewrites each protocol from scratch, in Swift.
 The Xbox integration follows the protocol documented by
 [xbox-webapi-python](https://github.com/OpenXbox/xbox-webapi-python) (OpenXbox, MIT), the same one Home Assistant
+The PlayStation integration follows what [psn-api](https://github.com/achievements-app/psn-api) (MIT) and
+[PSNAWP](https://github.com/isFakeAccount/psnawp) (MIT) document.
 uses. The Alexa integration follows what [aioamazondevices](https://github.com/chemelli74/aioamazondevices) (Simone
 Chemelli and contributors, Apache-2.0) and [alexa-remote](https://github.com/Apollon77/alexa-remote) (Apollon77, MIT)
 do. LG air conditioner control comes from [Celsius](https://github.com/gbvillarinho/celsius), by Gabriel Villarinho
 (MIT license). Lar adds the other accounts, the TVs and the rest.
 
-[MIT](LICENSE) license. Lar isn't affiliated with LG, Tuya, Samsung, Amazon, Microsoft, Google, Roborock, Xiaomi,
+[MIT](LICENSE) license. Lar isn't affiliated with LG, Tuya, Samsung, Amazon, Microsoft, Sony, Google, Roborock, Xiaomi,
 Dreame, Ecovacs, iRobot, Anker (Eufy), Yale (ASSA ABLOY) or Intelbras; the names are trademarks of their owners.

@@ -283,8 +283,8 @@ struct SettingsView: View {
 
     /// Robot vacuums and locks of brands with clouds of their own: one row per brand.
     private var brandsSection: some View {
-        section("Robôs e fechaduras") {
-            hint("Robôs aspiradores e fechaduras das marcas com app próprio. Os do Smart Life, do SmartThings e da LG já vêm por essas contas. Integrações não oficiais: a marca pode mudá-las.")
+        section("PlayStation, robôs e fechaduras") {
+            hint("O PS5 e o PS4 pela conta PlayStation, e robôs aspiradores e fechaduras das marcas com app próprio. Os do Smart Life, do SmartThings e da LG já vêm por essas contas. Integrações não oficiais: a marca pode mudá-las.")
             ForEach(Provider.brands.filter { $0.signIn != nil }, id: \.self) { brand in
                 HStack {
                     Text(brand.name).font(.system(size: 12))

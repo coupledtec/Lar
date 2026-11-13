@@ -7,6 +7,8 @@ public enum Provider: String, Sendable, CaseIterable, Codable {
     case homeKit
     /// Xbox consoles, through Xbox network's cloud.
     case xbox
+    /// PlayStation consoles, through PlayStation Network (unofficial, read only: see `Brands/PlayStationClient`).
+    case playstation
     /// Robot vacuums and door locks of brands with clouds of their own (unofficial: see `Brands/`).
     case roborock, xiaomi, dreame, ecovacs, irobot, eufy, yale, intelbras
 
@@ -19,6 +21,7 @@ public enum Provider: String, Sendable, CaseIterable, Codable {
         case .alexa: "Alexa"
         case .homeKit: tr("Casa (Apple)")
         case .xbox: "Xbox"
+        case .playstation: "PlayStation"
         case .roborock: "Roborock"
         case .xiaomi: "Xiaomi"
         case .dreame: "Dreame"
@@ -30,8 +33,8 @@ public enum Provider: String, Sendable, CaseIterable, Codable {
         }
     }
 
-    /// The robot and lock brands, each with its own sign-in (Ajustes → Robôs e fechaduras).
-    public static let brands: [Provider] = [.roborock, .xiaomi, .dreame, .ecovacs, .irobot, .eufy, .yale, .intelbras]
+    /// The brands with a sign-in of their own (Ajustes → Outras marcas): PlayStation, robots and locks.
+    public static let brands: [Provider] = [.playstation, .roborock, .xiaomi, .dreame, .ecovacs, .irobot, .eufy, .yale, .intelbras]
 
     public var isBrand: Bool { Self.brands.contains(self) }
 

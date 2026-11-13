@@ -35,6 +35,19 @@ public enum BrandSignInStep: Sendable {
     case code(hint: String, finish: @Sendable (String) async throws -> BrandAccount)
 }
 
+/// A brand that signs in with a token copied from its site instead of the e-mail and password (PlayStation).
+public struct BrandToken: Sendable {
+    /// The field's name ("Token npsso").
+    public var label: String
+    /// Where to get it.
+    public var link: String
+
+    public init(label: String, link: String) {
+        self.label = label
+        self.link = link
+    }
+}
+
 /// What each brand's sign-in asks and does.
 public struct BrandSignIn: Sendable {
     public var provider: Provider
@@ -45,15 +58,18 @@ public struct BrandSignIn: Sendable {
     public var appName: String
     /// The brand has no renewal token: the password stays in the keychain to sign in again (Eufy).
     public var keepsPassword = false
+    /// Signs in with this token (passed as the password, with no e-mail) instead.
+    public var token: BrandToken?
     public var start: @Sendable (_ email: String, _ password: String) async throws -> BrandSignInStep
 
     public init(provider: Provider, hint: String, needsPassword: Bool, appName: String, keepsPassword: Bool = false,
-                start: @escaping @Sendable (_ email: String, _ password: String) async throws -> BrandSignInStep) {
+                token: BrandToken? = nil, start: @escaping @Sendable (_ email: String, _ password: String) async throws -> BrandSignInStep) {
         self.provider = provider
         self.hint = hint
         self.needsPassword = needsPassword
         self.appName = appName
         self.keepsPassword = keepsPassword
+        self.token = token
         self.start = start
     }
 }
@@ -69,6 +85,7 @@ extension Provider {
         case .yale: YaleClient.signIn
         case .irobot: IRobotClient.signIn
         case .eufy: EufyClient.signIn
+        case .playstation: PlayStationClient.signIn
         default: nil
         }
     }
@@ -83,6 +100,7 @@ extension Provider {
         case .yale: YaleProvider(client: YaleClient(account: account, save: save))
         case .irobot: IRobotProvider(client: IRobotClient(account: account, save: save))
         case .eufy: EufyProvider(client: EufyClient(account: account, save: save))
+        case .playstation: PlayStationProvider(client: PlayStationClient(account: account, save: save))
         default: nil
         }
     }

@@ -221,3 +221,38 @@ import Testing
         #expect(ClientIdentity.pkcs8Inner(pkcs8) == Data([0x30, 0x03, 0x02, 0x01, 0x05]))
     }
 }
+
+@Suite struct PlayStationTests {
+    @Test func codeComesFromTheRedirect() {
+        let location = "com.scee.psxandroid.scecompcall://redirect/?code=v3.AbC123&cid=1234-abcd"
+        #expect(PlayStationClient.code(fromRedirect: location) == "v3.AbC123")
+        #expect(PlayStationClient.code(fromRedirect: "https://my.account.sony.com/central/signin/?error=login_required") == nil)
+    }
+
+    @Test func consolesAreThePS5AndPS4() {
+        let answer: [String: Any] = ["accountId": "1", "accountDevices": [
+            ["deviceId": "a", "deviceType": "PS5"], ["deviceId": "b", "deviceType": "PSVita"], ["deviceId": "c", "deviceType": "PS4"],
+        ]]
+        #expect(PlayStationClient.consoles(answer) == [.init(id: "a", type: "PS5"), .init(id: "c", type: "PS4")])
+    }
+
+    @Test func presenceSaysTheGame() {
+        let playing: [String: Any] = ["basicPresence": [
+            "availability": "availableToPlay",
+            "primaryPlatformInfo": ["onlineStatus": "online", "platform": "ps5"],
+            "gameTitleInfoList": [["npTitleId": "PPSA01", "titleName": "Astro Bot", "format": "PS5"]],
+        ]]
+        #expect(PlayStationClient.presence(playing) == .init(online: true, platform: "PS5", game: "Astro Bot"))
+        let away: [String: Any] = ["basicPresence": ["primaryPlatformInfo": ["onlineStatus": "offline", "platform": "PS5"]]]
+        #expect(PlayStationClient.presence(away).online == false)
+    }
+
+    @Test func theConsoleInUseShowsTheGame() {
+        let consoles: [PlayStationClient.Console] = [.init(id: "a", type: "PS5"), .init(id: "b", type: "PS4")]
+        let devices = PlayStationProvider.devices(consoles, presence: .init(online: true, platform: "PS5", game: "Astro Bot"))
+        #expect(devices.map(\.name) == ["PS5", "PS4"])
+        #expect(devices[0].detail == "Astro Bot")
+        #expect(devices[0].kind == .gameConsole)
+        #expect(devices[1].controls["playing"] == "0")
+    }
+}

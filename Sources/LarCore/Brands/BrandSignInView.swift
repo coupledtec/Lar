@@ -38,6 +38,14 @@ public struct BrandSignInView: View {
                     .textContentType(.oneTimeCode)
                     .onSubmit(finish)
                 button("Entrar", disabled: code.trimmingCharacters(in: .whitespaces).isEmpty, action: finish)
+            } else if let token = signIn.token {
+                if let url = URL(string: token.link) {
+                    Link(destination: url) { Label(token.link.replacingOccurrences(of: "https://", with: ""), systemImage: "safari") }
+                        .font(.footnote)
+                }
+                SecureField(token.label, text: $password)
+                    .onSubmit(start)
+                button("Entrar", disabled: password.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, action: start)
             } else {
                 TextField("E-mail", text: $email)
                     .textContentType(.username)
@@ -57,7 +65,9 @@ public struct BrandSignInView: View {
             if let error {
                 Text(error).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
             }
-            Text(signIn.keepsPassword
+            Text(signIn.token != nil
+                 ? "Integração não oficial: a marca pode mudá-la. O token não fica guardado: só a chave que a marca devolve, no Porta-chaves."
+                 : signIn.keepsPassword
                  ? "Os aparelhos precisam já estar no app \(signIn.appName). Integração não oficial: a marca pode mudá-la. A senha fica no Porta-chaves deste aparelho, porque a marca não renova a sessão sozinha."
                  : "Os aparelhos precisam já estar no app \(signIn.appName). Integração não oficial: a marca pode mudá-la. A senha não fica guardada: só a chave que a marca devolve, no Porta-chaves.")
                 .font(.footnote)
