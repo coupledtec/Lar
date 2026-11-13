@@ -116,6 +116,8 @@ public struct HomeDevice: Sendable, Equatable, Identifiable, Codable {
     /// LG's air conditioners have the full screen (modes, fan, airflow: ThinQ's ACStore); the others (SmartThings,
     /// Smart Life), power and temperature on the plain one.
     public var hasLGPanel: Bool { kind == .airConditioner && provider == .lg }
+    /// A lock's state, when its brand says it ("Trancada"/"Destrancada"); nil for anything else or unknown.
+    public var isLocked: Bool? { kind == .lock ? controls["locked"].map { $0 == "1" } : nil }
     public var acceptsTemperature: Bool { kind == .airConditioner && controls["targetTemperature"] != nil }
     public var targetTemperature: Double? { controls["targetTemperature"].flatMap(Double.init) }
     public var roomTemperature: Double? { controls["roomTemperatureValue"].flatMap(Double.init) }

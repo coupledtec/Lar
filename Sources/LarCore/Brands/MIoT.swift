@@ -81,9 +81,12 @@ struct MIoTMap: Codable, Sendable, Equatable {
             parts.append(Self.vacuumText(english))
             isOn = Self.isCleaning(english)
         }
+        var controls: [String: String] = [:]
         if kind == .lock {
             if let lockState, let value = values[lockState]?.int {
-                parts.append(Self.lockText(lockNames[value] ?? "", value: value))
+                let text = Self.lockText(lockNames[value] ?? "", value: value)
+                parts.append(text)
+                controls["locked"] = text == tr("Trancada") ? "1" : "0"
             }
             if let doorState, let value = values[doorState] {
                 let english = value.int.flatMap { doorNames[$0] } ?? (value == .bool(true) ? "Open" : "Closed")
@@ -92,7 +95,7 @@ struct MIoTMap: Codable, Sendable, Equatable {
         }
         if let battery, let level = values[battery]?.int { parts.append(tr("bateria \(level)%")) }
         return HomeDevice(provider: provider, rawID: id, name: name, kind: kind, isOnline: online, isOn: isOn,
-                          detail: parts.joined(separator: " · "))
+                          detail: parts.joined(separator: " · "), controls: controls)
     }
 
     static func isCleaning(_ english: String) -> Bool {

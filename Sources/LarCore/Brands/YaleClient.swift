@@ -141,7 +141,8 @@ public struct YaleProvider: DeviceProvider {
         if let open = lock.doorOpen { parts.append(open ? tr("Porta aberta") : tr("Porta fechada")) }
         if let battery = lock.battery { parts.append(tr("bateria \(battery)%")) }
         return HomeDevice(provider: .yale, rawID: lock.id, name: lock.name, kind: .lock, isOnline: lock.online,
-                          detail: parts.joined(separator: " · "))
+                          detail: parts.joined(separator: " · "),
+                          controls: lock.locked.map { ["locked": $0 ? "1" : "0"] } ?? [:])
     }
 
     public func send(_ command: HomeCommand, to device: HomeDevice) async throws {

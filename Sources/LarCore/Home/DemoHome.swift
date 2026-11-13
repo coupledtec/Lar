@@ -35,7 +35,8 @@ public enum DemoHome {
         HomeDevice(provider: .tuya, rawID: "robot", name: tr("Robô aspirador"), kind: .vacuum, isOn: false,
                    detail: tr("Carregado") + " · " + tr("bateria \(100)%")),
         HomeDevice(provider: .tuya, rawID: "door", name: tr("Porta da frente"), kind: .lock,
-                   detail: tr("Porta fechada") + " · " + tr("bateria \(88)%")),
+                   detail: tr("Trancada") + " · " + tr("Porta fechada") + " · " + tr("bateria \(88)%"),
+                   controls: ["locked": "1"]),
     ]
 
     /// The sample home's LG air conditioner: its full panel, answering in memory.
