@@ -25,7 +25,7 @@ public struct LocalTVLinkView: View {
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
             HStack(spacing: 6) {
-                TextField("Endereço da TV (ex.: 192.168.0.30)", text: $host)
+                TextField("IP da TV, ex.: 192.168.0.30", text: $host)
                     #if os(iOS) || os(visionOS) || os(tvOS)
                     .keyboardType(.numbersAndPunctuation)
                     #endif

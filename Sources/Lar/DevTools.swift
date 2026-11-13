@@ -23,6 +23,18 @@ enum DevTools {
         HomeDevice(provider: .tuya, rawID: "c1", name: String(localized: "Câmera do portão"), kind: .camera),
         HomeDevice(provider: .tuya, rawID: "s1", name: String(localized: "Sensor da sala"), kind: .climateSensor, detail: "24° · 61%"),
         HomeDevice(provider: .xbox, rawID: "console", name: "Xbox", kind: .gameConsole, isOn: true, detail: "Minecraft"),
+        HomeDevice(provider: .playstation, rawID: "ps5", name: "PS5", kind: .gameConsole, isOn: true, detail: "Astro Bot",
+                   controls: ["paired": "1", "playing": "1", "game": "Astro Bot", "since": "799996400", "trophies": "167|2|34|74|408"]),
+        HomeDevice(provider: .roborock, rawID: "robot", name: String(localized: "Robô"), kind: .vacuum, isOn: true,
+                   detail: String(localized: "Limpando") + " · " + String(localized: "bateria \(80)%"),
+                   controls: ["pausable": "1", "opt:suction": "101|102|103|104", "optv:suction": "102", "opt:room": "16=Sala|17=Cozinha"]),
+        HomeDevice(provider: .smartThings, rawID: "ac2", name: String(localized: "Ar do Quarto"), kind: .airConditioner, isOn: true,
+                   detail: String(localized: "Ambiente 26° · ajustado em 22°"),
+                   controls: ["targetTemperature": "22", "roomTemperatureValue": "26", "opt:airConditionerMode": "cool|dry|wind|auto",
+                              "optv:airConditionerMode": "cool", "opt:fanMode": "auto|low|high", "optv:fanMode": "auto"]),
+        HomeDevice(provider: .smartThings, rawID: "door", name: String(localized: "Porta"), kind: .lock, isOn: true,
+                   detail: String(localized: "Trancada"), controls: ["lockable": "1", "locked": "1"]),
+        HomeDevice(provider: .lg, rawID: "lgtv", name: "TV LG", kind: .tv, isOn: true),
     ] }
 
     static func renderSnapshots(to directory: URL) {
@@ -43,6 +55,10 @@ enum DevTools {
         write(HomeView(model: model, fixedDate: date, initialRoute: .tv(id: "androidTV:SERIAL1")), "tv", to: directory)
         write(HomeView(model: model, fixedDate: date, initialRoute: .tv(id: "xbox:console")), "xbox", to: directory)
         write(HomeView(model: model, fixedDate: date, initialRoute: .about), "about", to: directory)
+        write(HomeView(model: model, fixedDate: date, initialRoute: .gamepad(id: "playstation:ps5")), "ps5", to: directory)
+        write(HomeView(model: model, fixedDate: date, initialRoute: .light(id: "roborock:robot")), "robot", to: directory)
+        write(HomeView(model: model, fixedDate: date, initialRoute: .light(id: "smartThings:ac2")), "ac-smartthings", to: directory)
+        write(HomeView(model: model, fixedDate: date, initialRoute: .tv(id: "lg:lgtv")), "tv-lg-link", to: directory)
 
         let failing = HomeStore(previewDevices: sampleDevices, accounts: [.lg: .connected, .tuya: .unauthorized])
         write(HomeView(model: AppModel(preview: failing), fixedDate: date), "account-problem", to: directory)

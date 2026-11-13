@@ -10,12 +10,12 @@ public struct PlayStationInfoView: View {
     }
 
     public static func shows(_ device: HomeDevice) -> Bool {
-        device.controls["playing"] == "1" || device.controls["trophies"] != nil
+        device.controls["game"] != nil || device.controls["trophies"] != nil
     }
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            if device.controls["playing"] == "1" {
+            if let game = device.controls["game"] {
                 HStack(spacing: 12) {
                     if let art = device.controls["art"].flatMap(URL.init(string:)) {
                         AsyncImage(url: art) { image in
@@ -27,7 +27,7 @@ public struct PlayStationInfoView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                     }
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(device.detail).font(.headline).lineLimit(2)
+                        Text(game).font(.headline).lineLimit(2)
                         if let since = device.controls["since"].flatMap(Double.init).map(Date.init(timeIntervalSince1970:)) {
                             Text("Jogando há \(Text(since, style: .relative))").font(.footnote).foregroundStyle(.secondary)
                         }

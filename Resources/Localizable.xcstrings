@@ -1715,6 +1715,16 @@
         }
       }
     },
+    "Ar do Quarto" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bedroom AC"
+          }
+        }
+      }
+    },
     "Ar-condicionado" : {
       "localizations" : {
         "en" : {
@@ -3738,6 +3748,7 @@
       }
     },
     "Endereço da TV (ex.: 192.168.0.30)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -4749,6 +4760,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "TV IP (optional)"
+          }
+        }
+      }
+    },
+    "IP da TV, ex.: 192.168.0.30" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TV IP, e.g. 192.168.0.30"
           }
         }
       }
@@ -7860,6 +7881,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unexpected answer from the server"
+          }
+        }
+      }
+    },
+    "Robô" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Robot"
           }
         }
       }

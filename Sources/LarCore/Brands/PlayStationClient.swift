@@ -254,7 +254,8 @@ public struct PlayStationProvider: DeviceProvider {
         return Self.devices(consoles, presence: presence, pairing: pairing, state: state, local: local).map { device in
             var device = device
             // The game's art and time, and the account's trophies, for the console's screen.
-            if device.controls["playing"] == "1" {
+            if device.controls["playing"] == "1", let game = presence.game {
+                device.controls["game"] = game
                 if let art = presence.art { device.controls["art"] = art }
                 if let since { device.controls["since"] = String(Int(since.timeIntervalSince1970)) }
             }

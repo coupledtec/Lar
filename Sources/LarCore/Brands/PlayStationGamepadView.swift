@@ -108,6 +108,16 @@ public final class PlayStationGamepad: ObservableObject {
 /// touchpad and both sticks (dragged; tapped for L3/R3). Buttons hold while touched.
 public struct PlayStationGamepadView: View {
     let name: String
+    /// A button's side: smaller in the Mac's menu bar panel (320 points wide).
+    #if os(macOS)
+    static let unit: CGFloat = 30
+    static let stick: CGFloat = 70
+    static let margin: CGFloat = 2
+    #else
+    static let unit: CGFloat = 40
+    static let stick: CGFloat = 92
+    static let margin: CGFloat = 14
+    #endif
     @ObservedObject private var gamepad = PlayStationGamepad.shared
     @State private var left = CGPoint.zero
     @State private var right = CGPoint.zero
@@ -136,7 +146,7 @@ public struct PlayStationGamepadView: View {
                 .disabled(gamepad.phase != .ready)
                 .opacity(gamepad.phase == .ready ? 1 : 0.45)
         }
-        .padding(14)
+        .padding(Self.margin)
         .onChange(of: left) { _, _ in gamepad.sticks(left: left, right: right) }
         .onChange(of: right) { _, _ in gamepad.sticks(left: left, right: right) }
         .onAppear { gamepad.check() }
@@ -146,32 +156,32 @@ public struct PlayStationGamepadView: View {
     private var controls: some View {
         VStack(spacing: 14) {
             HStack {
-                pad(.l2, "L2", width: 52)
-                pad(.l1, "L1", width: 52)
+                pad(.l2, "L2", width: Self.unit + 12)
+                pad(.l1, "L1", width: Self.unit + 12)
                 Spacer()
-                pad(.r1, "R1", width: 52)
-                pad(.r2, "R2", width: 52)
+                pad(.r1, "R1", width: Self.unit + 12)
+                pad(.r2, "R2", width: Self.unit + 12)
             }
             HStack(spacing: 10) {
-                pad(.create, Image(systemName: "square.and.arrow.up"), width: 40)
+                pad(.create, Image(systemName: "square.and.arrow.up"), width: Self.unit)
                 pad(.touchpad, Text("Touchpad").font(.caption), width: nil)
-                pad(.options, Image(systemName: "line.3.horizontal"), width: 40)
+                pad(.options, Image(systemName: "line.3.horizontal"), width: Self.unit)
             }
             HStack(alignment: .center) {
                 cross(up: .up, down: .down, left: .left, right: .right) { button in
                     Image(systemName: "arrowtriangle.\(direction(button)).fill")
                 }
                 Spacer(minLength: 8)
-                pad(.ps, Image(systemName: "playstation.logo").font(.title3), width: 46, round: true)
+                pad(.ps, Image(systemName: "playstation.logo").font(.title3), width: Self.unit + 6, round: true)
                 Spacer(minLength: 8)
                 cross(up: .triangle, down: .cross, left: .square, right: .circle) { button in
                     Image(systemName: faceSymbol(button)).foregroundStyle(faceColor(button))
                 }
             }
             HStack {
-                StickView(value: $left, onTap: { tap(.l3) })
+                StickView(value: $left, size: Self.stick, onTap: { tap(.l3) })
                 Spacer()
-                StickView(value: $right, onTap: { tap(.r3) })
+                StickView(value: $right, size: Self.stick, onTap: { tap(.r3) })
             }
         }
     }
@@ -250,19 +260,19 @@ public struct PlayStationGamepadView: View {
                        right: PlayStationRemotePlay.Button, @ViewBuilder label: @escaping (PlayStationRemotePlay.Button) -> some View) -> some View {
         Grid(horizontalSpacing: 4, verticalSpacing: 4) {
             GridRow {
-                Color.clear.frame(width: 40, height: 40)
-                pad(up, label(up), width: 40, round: true)
-                Color.clear.frame(width: 40, height: 40)
+                Color.clear.frame(width: Self.unit, height: Self.unit)
+                pad(up, label(up), width: Self.unit, round: true)
+                Color.clear.frame(width: Self.unit, height: Self.unit)
             }
             GridRow {
-                pad(left, label(left), width: 40, round: true)
-                Color.clear.frame(width: 40, height: 40)
-                pad(right, label(right), width: 40, round: true)
+                pad(left, label(left), width: Self.unit, round: true)
+                Color.clear.frame(width: Self.unit, height: Self.unit)
+                pad(right, label(right), width: Self.unit, round: true)
             }
             GridRow {
-                Color.clear.frame(width: 40, height: 40)
-                pad(down, label(down), width: 40, round: true)
-                Color.clear.frame(width: 40, height: 40)
+                Color.clear.frame(width: Self.unit, height: Self.unit)
+                pad(down, label(down), width: Self.unit, round: true)
+                Color.clear.frame(width: Self.unit, height: Self.unit)
             }
         }
     }
@@ -286,7 +296,7 @@ private struct PadButton<Label: View>: View {
 
     var body: some View {
         label
-            .frame(width: width, height: round ? width : 32)
+            .frame(width: width, height: round ? width : PlayStationGamepadView.unit - 6)
             .frame(maxWidth: width == nil ? .infinity : nil)
             .background(
                 RoundedRectangle(cornerRadius: round ? (width ?? 40) / 2 : 9, style: .continuous)
@@ -314,8 +324,8 @@ private struct PadButton<Label: View>: View {
 /// without moving presses it (L3/R3).
 private struct StickView: View {
     @Binding var value: CGPoint
+    let size: CGFloat
     let onTap: () -> Void
-    private let size: CGFloat = 92
 
     var body: some View {
         ZStack {
