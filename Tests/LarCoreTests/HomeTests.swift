@@ -109,9 +109,10 @@ import Testing
         var lock = try #require(make("lock"))
         #expect(lock.kind == .lock)
         lock = SmartThingsClient.applyStatus(["lock": ["lock": ["value": "locked"]], "battery": ["battery": ["value": 90]]], to: lock)
-        #expect(lock.isOn == nil)
+        // Locked is on: it locks and unlocks through the lock capability.
+        #expect(lock.isOn == true && lock.canLock)
         #expect(lock.detail == "Trancada · bateria 90%")
-        #expect(throws: ProviderError.unsupported) { try SmartThingsClient.command(for: .power(true), device: lock) }
+        #expect(try SmartThingsClient.command(for: .power(false), device: lock)["command"] == "unlock")
     }
 
     /// A Smart Life air conditioner: set point in tenths (240 = 24 °C), sent back the same way.

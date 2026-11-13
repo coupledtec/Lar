@@ -33,10 +33,10 @@ public enum DemoHome {
         HomeDevice(provider: .androidTV, rawID: "tv", name: "TV", kind: .tv, isOn: true, detail: "YouTube"),
         HomeDevice(provider: .xbox, rawID: "console", name: "Xbox", kind: .gameConsole, isOn: true, detail: "Minecraft"),
         HomeDevice(provider: .tuya, rawID: "robot", name: tr("Robô aspirador"), kind: .vacuum, isOn: false,
-                   detail: tr("Carregado") + " · " + tr("bateria \(100)%")),
-        HomeDevice(provider: .tuya, rawID: "door", name: tr("Porta da frente"), kind: .lock,
+                   detail: tr("Carregado") + " · " + tr("bateria \(100)%"), controls: ["pausable": "1"]),
+        HomeDevice(provider: .tuya, rawID: "door", name: tr("Porta da frente"), kind: .lock, isOn: true,
                    detail: tr("Trancada") + " · " + tr("Porta fechada") + " · " + tr("bateria \(88)%"),
-                   controls: ["locked": "1"]),
+                   controls: ["locked": "1", "lockable": "1"]),
     ]
 
     /// The sample home's LG air conditioner: its full panel, answering in memory.
@@ -86,6 +86,10 @@ public enum DemoHome {
             switch command {
             case .power(let on):
                 devices[index].isOn = on
+                if devices[index].kind == .lock {
+                    devices[index].controls["locked"] = on ? "1" : "0"
+                    devices[index].detail = (on ? tr("Trancada") : tr("Destrancada")) + " · " + tr("Porta fechada") + " · " + tr("bateria \(88)%")
+                }
                 if devices[index].kind == .vacuum {
                     devices[index].detail = (on ? tr("Limpando") : tr("Voltando à base")) + " · " + tr("bateria \(100)%")
                 }
@@ -93,6 +97,13 @@ public enum DemoHome {
                 devices[index].brightness = value
                 devices[index].isOn = value > 0
             case .color(let color): devices[index].color = color
+            case .option(let name, let value):
+                devices[index].controls["optv:" + name] = value
+            case .whiteTemperature(let value):
+                devices[index].controls["ct"] = String(value)
+            case .pause:
+                devices[index].isOn = false
+                devices[index].detail = tr("Pausado") + " · " + tr("bateria \(100)%")
             case .temperature(let value):
                 devices[index].controls["targetTemperature"] = String(Int(value.rounded()))
                 devices[index].detail = tr("Ambiente 26° · ajustado em \(Int(value.rounded()))°")

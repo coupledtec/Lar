@@ -21,6 +21,7 @@ struct MIoTMap: Codable, Sendable, Equatable {
     var battery: Property?
     var start: Action?
     var dock: Action?
+    var pause: Action?
     /// A lock: locked or not, and the door open or closed.
     var lockState: Property?
     var lockNames: [Int: String] = [:]
@@ -59,7 +60,7 @@ struct MIoTMap: Codable, Sendable, Equatable {
             let dock = action(service(["battery"]), ["start-charge"]) ?? action(vacuum, ["stop-and-gocharge", "return-to-dock", "go-charging"])
             return MIoTMap(kind: .vacuum, status: status?.0, statusNames: status?.1 ?? [:], battery: battery,
                            start: action(vacuum, ["start-sweep", "start-clean", "start-sweep-mop", "start-mop"]) ?? action(service(["vacuum-extend"]), ["start-clean"]),
-                           dock: dock)
+                           dock: dock, pause: action(vacuum, ["pause-sweeping", "pause", "pause-clean"]))
         }
         if let lock = service(["lock", "door-lock", "physical-controls-locked"]) {
             let state = property(lock, ["lock-state", "status", "locked-state"])
@@ -82,6 +83,7 @@ struct MIoTMap: Codable, Sendable, Equatable {
             isOn = Self.isCleaning(english)
         }
         var controls: [String: String] = [:]
+        if kind == .vacuum, pause != nil { controls["pausable"] = "1" }
         if kind == .lock {
             if let lockState, let value = values[lockState]?.int {
                 let text = Self.lockText(lockNames[value] ?? "", value: value)

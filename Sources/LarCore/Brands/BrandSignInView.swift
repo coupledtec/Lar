@@ -12,6 +12,7 @@ public struct BrandSignInView: View {
     @State private var codeStep: (hint: String, finish: @Sendable (String) async throws -> BrandAccount)?
     @State private var busy = false
     @State private var error: String?
+    @State private var showWeb = false
 
     public init(signIn: BrandSignIn, onFinish: @escaping (BrandAccount?) -> Void) {
         self.signIn = signIn
@@ -39,13 +40,17 @@ public struct BrandSignInView: View {
                     .onSubmit(finish)
                 button("Entrar", disabled: code.trimmingCharacters(in: .whitespaces).isEmpty, action: finish)
             } else if let token = signIn.token {
-                if let url = URL(string: token.link) {
-                    Link(destination: url) { Label(token.link.replacingOccurrences(of: "https://", with: ""), systemImage: "safari") }
+                #if !os(tvOS) && !os(watchOS)
+                if token.web != nil {
+                    button("Entrar com a conta \(signIn.appName)", disabled: false) { showWeb = true }
+                    DisclosureGroup("Ou cole o \(token.label)") { pasteToken(token) }
                         .font(.footnote)
+                } else {
+                    pasteToken(token)
                 }
-                SecureField(token.label, text: $password)
-                    .onSubmit(start)
-                button("Entrar", disabled: password.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, action: start)
+                #else
+                pasteToken(token)
+                #endif
             } else {
                 TextField("E-mail", text: $email)
                     .textContentType(.username)
@@ -82,6 +87,41 @@ public struct BrandSignInView: View {
         .frame(width: 420)
         #endif
         .disabled(busy)
+        #if !os(tvOS) && !os(watchOS)
+        .sheet(isPresented: $showWeb) {
+            if let web = signIn.token?.web {
+                BrandWebSignIn(web: web, onCode: { code in
+                    showWeb = false
+                    finishWeb(web, code: code)
+                }, onCancel: { showWeb = false })
+            }
+        }
+        #endif
+    }
+
+    /// The token copied from the brand's site, for where there's no web view (the Apple TV) or as a fallback.
+    @ViewBuilder private func pasteToken(_ token: BrandToken) -> some View {
+        Text(token.steps).font(.footnote).fixedSize(horizontal: false, vertical: true)
+        if let url = URL(string: token.link) {
+            Link(destination: url) { Label(token.link.replacingOccurrences(of: "https://", with: ""), systemImage: "safari") }
+                .font(.footnote)
+        }
+        SecureField(token.label, text: $password)
+            .onSubmit(start)
+        button("Entrar", disabled: password.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, action: start)
+    }
+
+    private func finishWeb(_ web: BrandToken.Web, code: String) {
+        Task {
+            busy = true
+            error = nil
+            do {
+                onFinish(try await web.finish(code))
+            } catch {
+                self.error = (error as? ProviderError)?.message ?? error.localizedDescription
+            }
+            busy = false
+        }
     }
 
     private func button(_ title: LocalizedStringKey, disabled: Bool, action: @escaping () -> Void) -> some View {

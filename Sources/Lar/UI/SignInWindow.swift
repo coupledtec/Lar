@@ -57,6 +57,23 @@ enum SignInWindow {
         NSApp.activate()
     }
 
+    /// Pairing the PS5 with Remote Play, to turn it on from the Lar.
+    static func showPlayStationPairing(onFinish: @escaping (PlayStationRemotePlay.Pairing?) -> Void) {
+        window?.close()
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 460, height: 520), styleMask: [.titled, .closable],
+                              backing: .buffered, defer: false)
+        window.title = "PlayStation"
+        window.isReleasedWhenClosed = false
+        window.contentView = NSHostingView(rootView: PlayStationPairView { pairing in
+            close()
+            onFinish(pairing)
+        })
+        window.center()
+        self.window = window
+        window.makeKeyAndOrderFront(nil)
+        NSApp.activate()
+    }
+
     /// Amazon's sign-in, for the Echos.
     static func showAlexa(onFinish: @escaping (Result<AlexaAccount, Error>?) -> Void) {
         window?.close()

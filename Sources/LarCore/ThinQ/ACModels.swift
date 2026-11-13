@@ -53,6 +53,10 @@ public struct ACStatus: Sendable, Equatable {
     public var eco: Bool?
     /// Minutes until the sleep timer turns the unit off; `nil` when the timer is off.
     public var sleepMinutesLeft: Int?
+    /// Minutes until the timer turns the unit on; `nil` when there's none.
+    public var startMinutesLeft: Int?
+    /// The filter's life left, 0–100, when the unit tells.
+    public var filterPercentLeft: Int?
     public var hasError: Bool
 
     public init(
@@ -96,6 +100,22 @@ public struct ACStatus: Sendable, Equatable {
             sleepMinutesLeft = hours * 60 + minutes > 0 ? hours * 60 + minutes : nil
         }
 
+        let timer = json["timer"]
+        if timer?["relativeStartTimer"]?.string == "UNSET" {
+            startMinutesLeft = nil
+        } else {
+            let hours = Int(timer?["relativeHourToStart"]?.double ?? 0)
+            let minutes = Int(timer?["relativeMinuteToStart"]?.double ?? 0)
+            startMinutesLeft = hours * 60 + minutes > 0 ? hours * 60 + minutes : nil
+        }
+        // Hours used of the filter's lifetime (some units give the percent left directly).
+        let filter = json["filterInfo"]
+        if let percent = filter?["filterRemainPercent"]?.double {
+            filterPercentLeft = Int(percent)
+        } else if let used = filter?["usedTime"]?.double, let lifetime = filter?["filterLifetime"]?.double, lifetime > 0 {
+            filterPercentLeft = max(0, min(100, Int(((lifetime - used) / lifetime * 100).rounded())))
+        }
+
         hasError = json["runState"]?["currentState"]?.string == "ERROR"
     }
 
@@ -116,6 +136,8 @@ public struct ACStatus: Sendable, Equatable {
         case .fanSpeed(let speed): copy.fanSpeed = speed
         case .swing(let on): copy.swing = on
         case .eco(let on): copy.eco = on
+        case .start(let hours):
+            copy.startMinutesLeft = hours == 0 ? nil : hours * 60
         case .sleep(let hours):
             // A running timer within the requested hour already confirms the command.
             if hours == 0 {
@@ -153,6 +175,8 @@ public struct ACCapabilities: Sendable, Equatable {
     public var supportsEco: Bool
     public var supportsSwing: Bool
     public var supportsSleep: Bool
+    /// The timer that turns the unit on.
+    public var supportsStart: Bool = false
 
     /// Whether the popover's row of round toggles has anything to show. Add new toggles here.
     public var hasToggles: Bool { supportsEco }
@@ -212,6 +236,7 @@ public struct ACCapabilities: Sendable, Equatable {
         supportsEco = hasProfile ? writable("powerSave", "powerSaveEnabled") != nil : fallback.supportsEco
         supportsSwing = hasProfile ? writable("windDirection", "rotateUpDown") != nil : fallback.supportsSwing
         supportsSleep = hasProfile ? writable("sleepTimer", "relativeHourToStop") != nil : fallback.supportsSleep
+        supportsStart = hasProfile && writable("timer", "relativeHourToStart") != nil
     }
 
     /// Narrows the temperature range and step to the user's limits, never beyond what the device accepts.

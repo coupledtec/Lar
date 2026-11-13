@@ -9,6 +9,8 @@ public enum Provider: String, Sendable, CaseIterable, Codable {
     case xbox
     /// PlayStation consoles, through PlayStation Network (unofficial, read only: see `Brands/PlayStationClient`).
     case playstation
+    /// LG (webOS) and Samsung (Tizen) TVs on the home network, with their full remote (see `TV/LocalTVs`).
+    case lgTV, samsungTV
     /// Robot vacuums and door locks of brands with clouds of their own (unofficial: see `Brands/`).
     case roborock, xiaomi, dreame, ecovacs, irobot, eufy, yale, intelbras
 
@@ -22,6 +24,8 @@ public enum Provider: String, Sendable, CaseIterable, Codable {
         case .homeKit: tr("Casa (Apple)")
         case .xbox: "Xbox"
         case .playstation: "PlayStation"
+        case .lgTV: tr("TV LG")
+        case .samsungTV: tr("TV Samsung")
         case .roborock: "Roborock"
         case .xiaomi: "Xiaomi"
         case .dreame: "Dreame"
@@ -119,6 +123,15 @@ public struct HomeDevice: Sendable, Equatable, Identifiable, Codable {
     /// LG's air conditioners have the full screen (modes, fan, airflow: ThinQ's ACStore); the others (SmartThings,
     /// Smart Life), power and temperature on the plain one.
     public var hasLGPanel: Bool { kind == .airConditioner && provider == .lg }
+    /// A lock the Lar can lock and unlock (its brand allows it): then `isOn` is "locked", so it switches like the
+    /// rest everywhere, and unlocking always asks for Face ID, Touch ID or the passcode (`HomeStore.unlock`).
+    /// A light's white from warm (0) to cold (1), when it can change it.
+    public var whiteTemperature: Double? { kind == .light ? controls["ct"].flatMap(Double.init) : nil }
+    /// A robot vacuum whose brand takes "pause" (beside clean and back to the dock).
+    public var canPause: Bool { kind == .vacuum && controls["pausable"] == "1" }
+    public var canLock: Bool { kind == .lock && controls["lockable"] == "1" }
+    /// On in the sense of "something running": a locked door isn't.
+    public var countsAsOn: Bool { isOn == true && isOnline && kind != .camera && kind != .lock }
     /// A lock's state, when its brand says it ("Trancada"/"Destrancada"); nil for anything else or unknown.
     public var isLocked: Bool? { kind == .lock ? controls["locked"].map { $0 == "1" } : nil }
     public var acceptsTemperature: Bool { kind == .airConditioner && controls["targetTemperature"] != nil }
@@ -131,12 +144,27 @@ public struct HomeDevice: Sendable, Equatable, Identifiable, Codable {
     /// A remote screen: an Android TV, an Xbox, or a Samsung TV or soundbar with SmartThings' remote capabilities.
     public var hasRemote: Bool {
         (kind == .tv || kind == .speaker || kind == .gameConsole)
-            && (provider == .androidTV || provider == .xbox || controls["st.volume"] != nil || controls["st.keys"] != nil)
+            && (provider == .androidTV || provider == .xbox || provider == .lgTV || provider == .samsungTV
+                || controls["localTV"] != nil || controls["ir"] == "remote" || controls["st.volume"] != nil || controls["st.keys"] != nil)
     }
-    public var hasDirectionalPad: Bool { provider == .androidTV || provider == .xbox || controls["st.keys"] != nil }
-    public var hasChannels: Bool { provider == .androidTV || controls["st.channel"] != nil }
-    /// Typing into the TV's search: Android TVs and the Xbox.
-    public var canType: Bool { provider == .androidTV || provider == .xbox }
+    /// A PS5 paired with Remote Play: the Lar is its controller.
+    public var hasGamepad: Bool { provider == .playstation && controls["paired"] == "1" }
+    public var hasDirectionalPad: Bool {
+        provider == .androidTV || provider == .xbox || provider == .lgTV || provider == .samsungTV
+            || controls["localTV"] != nil || controls["ir"] == "remote" || controls["st.keys"] != nil
+    }
+    public var hasChannels: Bool {
+        provider == .androidTV || provider == .lgTV || provider == .samsungTV || controls["localTV"] != nil || controls["ir"] == "remote"
+            || controls["st.channel"] != nil
+    }
+    /// Typing into the TV's search: Android, LG and Samsung TVs and the Xbox.
+    public var canType: Bool { provider == .androidTV || provider == .xbox || provider == .lgTV || provider == .samsungTV || controls["localTV"] != nil }
+    /// A list of apps (and inputs) to open on it.
+    public var hasApps: Bool { provider == .androidTV || provider == .xbox || provider == .lgTV || provider == .samsungTV || controls["localTV"] != nil }
+    /// An LG (ThinQ) or Samsung (SmartThings) TV that can get its full remote over the network.
+    public var canLinkLocalTV: Bool {
+        kind == .tv && controls["localTV"] == nil && (provider == .lg || provider == .smartThings)
+    }
     /// The Xbox controller's own buttons (X, Y, Menu, View, the guide) on the remote.
     public var isXbox: Bool { provider == .xbox }
 
@@ -144,7 +172,9 @@ public struct HomeDevice: Sendable, Equatable, Identifiable, Codable {
     public func applying(_ command: HomeCommand) -> HomeDevice {
         var copy = self
         switch command {
-        case .power(let on): copy.isOn = on
+        case .power(let on):
+            copy.isOn = on
+            if kind == .lock { copy.controls["locked"] = on ? "1" : "0" }
         case .brightness(let value):
             copy.brightness = value
             // Dimming a light that's off turns it on in every app.
@@ -154,6 +184,14 @@ public struct HomeDevice: Sendable, Equatable, Identifiable, Codable {
             if copy.isOn == false { copy.isOn = true }
         case .temperature(let value):
             copy.controls["targetTemperature"] = HomeText.number(value)
+        case .pause:
+            copy.isOn = false
+            copy.controls["paused"] = "1"
+        case .option(let name, let value):
+            copy.controls["optv:" + name] = value
+        case .whiteTemperature(let value):
+            copy.controls["ct"] = HomeText.number(value)
+            if copy.isOn == false { copy.isOn = true }
         }
         return copy
     }
@@ -161,7 +199,8 @@ public struct HomeDevice: Sendable, Equatable, Identifiable, Codable {
 
 /// The piece of a device's state a command changes. Commands for the same field replace each other.
 public enum HomeField: Hashable, Sendable {
-    case power, brightness, color, temperature
+    case power, brightness, color, temperature, whiteTemperature
+    case option(String)
 }
 
 public enum HomeCommand: Sendable, Equatable, Hashable, Codable {
@@ -171,10 +210,18 @@ public enum HomeCommand: Sendable, Equatable, Hashable, Codable {
     case color(LightColor)
     /// An air conditioner's target, in °C.
     case temperature(Double)
+    /// A robot vacuum stops where it is (cleaning resumes with `.power(true)`).
+    case pause
+    /// One of the device's `options` (name, choice).
+    case option(String, String)
+    /// A light's white, 0 warm … 1 cold.
+    case whiteTemperature(Double)
 
     public var field: HomeField {
         switch self {
-        case .power: .power
+        case .power, .pause: .power
+        case .option(let name, _): .option(name)
+        case .whiteTemperature: .whiteTemperature
         case .brightness: .brightness
         case .color: .color
         case .temperature: .temperature

@@ -38,11 +38,17 @@ public actor RoborockClient {
         /// State and battery as the home's data last had them (121 and 122).
         var state: Int?
         var battery: Int?
+        /// The home's rooms (their id → name), for cleaning one.
+        var rooms: [String: String]?
     }
 
     struct Status: Sendable, Equatable {
         var state: Int
         var battery: Int?
+        /// The suction (101 quiet … 104 max), when the robot says it.
+        var fanPower: Int?
+        /// What went wrong (0: nothing).
+        var error: Int = 0
     }
 
     private var account: BrandAccount
@@ -112,6 +118,10 @@ public actor RoborockClient {
         let products = Dictionary(result.list("products").compactMap { product -> (String, [String: Any])? in
             product.string("id").map { ($0, product) }
         }, uniquingKeysWith: { first, _ in first })
+        let rooms = Dictionary(result.list("rooms").compactMap { room -> (String, String)? in
+            guard let id = room["id"].map({ "\($0)" }), let name = room.string("name") else { return nil }
+            return (id, name)
+        }, uniquingKeysWith: { first, _ in first })
         return (result.list("devices") + result.list("receivedDevices")).compactMap { device in
             guard let duid = device.string("duid"), let key = device.string("localKey") else { return nil }
             let product = device.string("productId").flatMap { products[$0] }
@@ -120,7 +130,8 @@ public actor RoborockClient {
             let status = device.dict("deviceStatus") ?? [:]
             return Robot(duid: duid, name: device.string("name") ?? "Roborock", localKey: key,
                          version: device.string("pv") ?? "1.0", model: product?.string("model"),
-                         online: device["online"] as? Bool ?? true, state: status.int("121"), battery: status.int("122"))
+                         online: device["online"] as? Bool ?? true, state: status.int("121"), battery: status.int("122"),
+                         rooms: rooms.isEmpty ? nil : rooms)
         }
     }
 
@@ -130,12 +141,42 @@ public actor RoborockClient {
         let result = try await call("get_status", on: robot)
         let first = (result as? [[String: Any]])?.first ?? (result as? [String: Any]) ?? [:]
         guard let state = first.int("state") else { throw ProviderError.api(tr("Estado do robô ilegível")) }
-        return Status(state: state, battery: first.int("battery"))
+        return Status(state: state, battery: first.int("battery"), fanPower: first.int("fan_power"), error: first.int("error_code") ?? 0)
+    }
+
+    /// The robot's map segments with their room's name ("17=Sala"), for cleaning one.
+    func segments(of robot: Robot) async -> [String] {
+        guard let mapping = try? await call("get_room_mapping", on: robot) as? [[Any]] else { return [] }
+        return mapping.compactMap { entry in
+            guard let segment = entry.first.flatMap({ $0 as? Int ?? Int("\($0)") }) else { return nil }
+            let room = entry.count > 1 ? "\(entry[1])" : ""
+            return "\(segment)=\(robot.rooms?[room] ?? tr("Cômodo \(segment)"))"
+        }
+    }
+
+    /// The robot's error, in words (the common ones; the rest by number).
+    static func errorText(_ code: Int) -> String? {
+        switch code {
+        case 0: nil
+        case 2: tr("Para-choque preso")
+        case 3, 4: tr("Rodas no ar ou sensor de queda")
+        case 5: tr("Escova principal travada")
+        case 6: tr("Escova lateral travada")
+        case 7: tr("Rodas travadas")
+        case 8: tr("Robô preso")
+        case 9: tr("Sem o reservatório de pó")
+        case 12: tr("Bateria fraca")
+        case 13: tr("Não está carregando")
+        case 34, 35: tr("Base cheia: esvazie o saco de pó")
+        case 38: tr("Tanque de água limpa vazio")
+        case 39: tr("Tanque de água suja cheio")
+        default: tr("Robô com problema (erro \(code))")
+        }
     }
 
     /// app_start (clean), app_pause, app_charge (back to the dock).
-    func command(_ method: String, on robot: Robot) async throws {
-        _ = try await call(method, on: robot)
+    func command(_ method: String, params: Any = [Any](), on robot: Robot) async throws {
+        _ = try await call(method, params: params, on: robot)
     }
 
     private func call(_ method: String, params: Any = [Any](), on robot: Robot) async throws -> Any {

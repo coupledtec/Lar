@@ -12,6 +12,8 @@ enum HAPRole: Equatable {
     case temperatureSensor(humidity: Bool)
     /// Live video and stills (the Mac re-encodes the camera's stream).
     case camera
+    /// A door lock: the Home app asks the owner before it unlocks.
+    case lock
 
     init?(_ device: HomeDevice) {
         switch device.kind {
@@ -26,6 +28,8 @@ enum HAPRole: Equatable {
         case .plug where device.isOn != nil: self = .outlet
         case .fan where device.isOn != nil: self = .fan
         case .airConditioner where device.isOn != nil && device.acceptsTemperature: self = .thermostat
+        case .lock where device.canLock && device.isOn != nil: self = .lock
+        case .lock: return nil
         case .climateSensor where device.controls["temperatureValue"] != nil:
             self = .temperatureSensor(humidity: device.controls["humidityValue"] != nil)
         default:
@@ -43,6 +47,7 @@ enum HAPRole: Equatable {
         case .thermostat: 9
         case .temperatureSensor: 10
         case .camera: 17
+        case .lock: 6
         }
     }
 
@@ -56,6 +61,7 @@ enum HAPRole: Equatable {
         case .thermostat: "t"
         case .temperatureSensor(let humidity): "h\(humidity ? 1 : 0)"
         case .camera: "c"
+        case .lock: "k"
         }
     }
 }
@@ -109,6 +115,7 @@ enum HAPAccessories {
         case .thermostat: "4A"
         case .temperatureSensor: "8A"
         case .camera: "110"
+        case .lock: "45"
         }
     }
 
@@ -145,6 +152,12 @@ enum HAPAccessories {
             ]
         case .temperatureSensor:
             return [HAPCharacteristic(iid: 9, type: "11", format: "float", unit: "celsius", range: (-50, 100, 0.1))]
+        case .lock:
+            // Current state (0 unsecured, 1 secured), target state (the same, written).
+            return [
+                HAPCharacteristic(iid: 9, type: "1D", format: "uint8", validValues: [0, 1, 2, 3]),
+                HAPCharacteristic(iid: 10, type: "1E", format: "uint8", perms: HAPCharacteristic.readWrite, validValues: [0, 1]),
+            ]
         case .camera:
             #if os(macOS)
             return HAPCameras.characteristics
@@ -164,6 +177,7 @@ enum HAPAccessories {
         case (.thermostat, 11): return device.roomTemperature ?? device.targetTemperature ?? 0
         case (.thermostat, 12): return min(30, max(16, device.targetTemperature ?? 24))
         case (.thermostat, 13): return 0
+        case (.lock, 9), (.lock, 10): return device.isOn == true ? 1 : 0
         case (.temperatureSensor, 9): return device.controls["temperatureValue"].flatMap(Double.init) ?? 0
         case (.temperatureSensor, 21): return device.controls["humidityValue"].flatMap(Double.init) ?? 0
         case (_, 9): return device.isOn == true
@@ -187,6 +201,11 @@ enum HAPAccessories {
             return .some(.temperature((number * 2).rounded() / 2))
         case (.thermostat, 13):
             return .some(nil)
+        case (.lock, 10):
+            guard let number else { return nil }
+            return .some(.power(number != 0))
+        case (.lock, 9):
+            return nil
         case (_, 9) where role != .thermostat:
             guard let number else { return nil }
             return .some(.power(number != 0))

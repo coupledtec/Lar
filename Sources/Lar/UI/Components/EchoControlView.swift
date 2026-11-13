@@ -13,6 +13,9 @@ struct EchoControlView: View {
     @State private var routinePage = 0
     @State private var routineSearch = ""
     @State private var status: String?
+    @State private var notifications: [AlexaNotification] = []
+    @State private var timer = ""
+    @State private var item = ""
     @State private var working = false
 
     private var device: HomeDevice? { home.device(id: deviceID) }
@@ -55,6 +58,57 @@ struct EchoControlView: View {
                     #endif
                 }
                 Section {
+                    ForEach(notifications.filter { $0.serial == echo.serial }) { note in
+                        Label(note.text, systemImage: note.kind == .timer ? "timer" : note.kind == .alarm ? "alarm" : "bell")
+                    }
+                    TextField("Ex.: 10 minutos, 7 da manhã", text: $timer)
+                    HStack {
+                        Button("Timer") {
+                            let text = String(localized: "timer de \(timer)")
+                            act(alexa) { try await $0.command(text, on: echo) }
+                            timer = ""
+                        }
+                        Spacer()
+                        Button("Alarme") {
+                            let text = String(localized: "alarme para \(timer)")
+                            act(alexa) { try await $0.command(text, on: echo) }
+                            timer = ""
+                        }
+                        Spacer()
+                        Button("Cancelar timers") {
+                            act(alexa) { try await $0.command(String(localized: "cancele todos os timers"), on: echo) }
+                        }
+                    }
+                    .disabled(working)
+                    #if os(iOS) || os(visionOS)
+                    .buttonStyle(.borderless)
+                    #endif
+                } header: {
+                    Text("Timers e alarmes")
+                }
+                Section {
+                    TextField("Ex.: café", text: $item)
+                    HStack {
+                        Button("Lista de compras") {
+                            let text = String(localized: "adicione \(item) à lista de compras")
+                            act(alexa) { try await $0.command(text, on: echo) }
+                            item = ""
+                        }
+                        Spacer()
+                        Button("Lista de tarefas") {
+                            let text = String(localized: "adicione \(item) à lista de tarefas")
+                            act(alexa) { try await $0.command(text, on: echo) }
+                            item = ""
+                        }
+                    }
+                    .disabled(item.trimmingCharacters(in: .whitespaces).isEmpty || working)
+                    #if os(iOS) || os(visionOS)
+                    .buttonStyle(.borderless)
+                    #endif
+                } header: {
+                    Text("Listas da Alexa")
+                }
+                Section {
                     TextField("Ex.: apague a luz da sala", text: $ask)
                     Button("Pedir à Alexa") {
                         let text = ask
@@ -94,6 +148,7 @@ struct EchoControlView: View {
         .task {
             guard let alexa = home.alexa else { return }
             routines = (try? await alexa.routines()) ?? []
+            notifications = (try? await alexa.notifications()) ?? []
         }
     }
 
@@ -115,6 +170,9 @@ struct EchoControlView: View {
                 try await call(alexa)
                 status = "Enviado."
                 home.refreshSoon()
+                // A new timer or alarm shows once Alexa has it.
+                try? await Task.sleep(for: .seconds(2))
+                notifications = (try? await alexa.notifications()) ?? notifications
             } catch {
                 status = (error as? ProviderError)?.message ?? error.localizedDescription
                 shown = .seconds(8)

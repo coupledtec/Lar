@@ -62,9 +62,9 @@ Casa de exemplo).
 - **Xbox:** entre com a conta Microsoft (Ajustes → Xbox) e o console aparece na lista: ligar (da Suspensão) e
   desligar, o controle (setas, A, B, X, Y, Menu, Exibir e o botão Xbox), volume, digitar, abrir jogos e apps e ver o
   que está passando. Integração não oficial (a mesma nuvem que o app Xbox usa): a Microsoft pode mudá-la.
-- **PlayStation:** entre com a conta PlayStation (Ajustes → PlayStation, robôs e fechaduras) e o PS5 e o PS4 aparecem
-  em Jogos, ligados ou não e com o jogo do momento. Só leitura por enquanto: ligar e desligar exigem o pareamento do
-  Remote Play. Integração não oficial (a mesma nuvem que o app PlayStation usa): a Sony pode mudá-la.
+- **PlayStation:** entre com a conta PlayStation (Ajustes → Jogos) e o PS5 e o PS4 aparecem
+  em Jogos, ligados ou não e com o jogo do momento. Pareando o PS5 uma vez com o código do Remote Play, o Lar liga o
+  console e o põe em Modo de repouso. Integração não oficial (a mesma nuvem que o app PlayStation usa): a Sony pode mudá-la.
 - **Alexa e Echos:** entre com a conta Amazon (Ajustes → Alexa, pela página da própria Amazon). Os Echos entram na
   lista com volume, não perturbe, música, falar, anunciar em todos, "pedir à Alexa" (vale para tudo o que a Alexa
   controla) e as rotinas. O Mac anuncia o porteiro e os avisos (a lavadora pronta) nos Echos. As rotinas da Alexa
@@ -262,12 +262,13 @@ passo está em Ajustes → Xbox → **Como preparar o Xbox**.
 
 ### PlayStation
 
-A Sony não tem login para outros apps, então o Lar usa o token da sessão do navegador (o mesmo caminho do Home
+Em Ajustes → Jogos → PlayStation → **Entrar com a conta PlayStation**, a página da Sony abre dentro do Lar. Na
+Apple TV (ou se preferir), use o token da sessão do navegador (o mesmo caminho do Home
 Assistant):
 
 1. No navegador, entre na sua conta em [playstation.com](https://www.playstation.com).
 2. Na mesma janela, abra [ca.account.sony.com/api/v1/ssocookie](https://ca.account.sony.com/api/v1/ssocookie).
-3. Copie o valor de `npsso` e cole em Ajustes → PlayStation, robôs e fechaduras → PlayStation → **Entrar**.
+3. Copie o valor de `npsso` e cole em Ajustes → Jogos → PlayStation → **Entrar**.
 
 O token não fica guardado: o Lar troca por uma chave que se renova sozinha por cerca de dois meses. Depois disso, é
 só repetir os passos.
@@ -344,7 +345,8 @@ reescreve cada protocolo do zero, em Swift.
 A integração com o Xbox segue o protocolo documentado pelo [xbox-webapi-python](https://github.com/OpenXbox/xbox-webapi-python)
 (OpenXbox, MIT), o mesmo que o Home Assistant usa.
 A integração com o PlayStation segue o que documentam o [psn-api](https://github.com/achievements-app/psn-api) (MIT) e o
-[PSNAWP](https://github.com/isFakeAccount/psnawp) (MIT).
+[PSNAWP](https://github.com/isFakeAccount/psnawp) (MIT); o pareamento e o ligar do PS5 seguem o protocolo do Remote Play
+documentado pelo [chiaki-ng](https://github.com/streetpea/chiaki-ng) (AGPL-3.0), reescrito do zero em Swift.
 A integração com a Alexa segue o que fazem o [aioamazondevices](https://github.com/chemelli74/aioamazondevices)
 (Simone Chemelli e colaboradores, Apache-2.0) e o [alexa-remote](https://github.com/Apollon77/alexa-remote) (Apollon77, MIT).
 O controle do ar-condicionado LG vem do [Celsius](https://github.com/gbvillarinho/celsius), de Gabriel Villarinho

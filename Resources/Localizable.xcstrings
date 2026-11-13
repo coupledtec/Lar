@@ -22,6 +22,22 @@
         }
       }
     },
+    "%@ (%@) agora liga e entra em Modo de repouso pela lista do Lar." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ (%2$@) now turns on and goes into Rest Mode from Lar's list."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ (%2$@) agora liga e entra em Modo de repouso pela lista do Lar."
+          }
+        }
+      }
+    },
     "%@ em %@." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -29,6 +45,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ at %@."
+          }
+        }
+      }
+    },
+    "%@ em repouso" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ in rest mode"
           }
         }
       }
@@ -54,6 +80,16 @@
         }
       }
     },
+    "%@ ligado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ on"
+          }
+        }
+      }
+    },
     "%@ não aceita temperatura." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -65,6 +101,16 @@
         }
       }
     },
+    "%@ não confirmou." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ didn't confirm."
+          }
+        }
+      }
+    },
     "%@ não foi encontrado." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -72,6 +118,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ wasn't found."
+          }
+        }
+      }
+    },
+    "%@ pareada." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ paired."
+          }
+        }
+      }
+    },
+    "%@ · %@" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · %2$@"
           }
         }
       }
@@ -159,6 +233,16 @@
         }
       }
     },
+    "%@: destrancar pede Face ID ou Touch ID. Abra o Lar e toque na fechadura." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: unlocking needs Face ID or Touch ID. Open Lar and tap the lock."
+          }
+        }
+      }
+    },
     "%@: nenhum Echo no ar, a parte da Alexa não rodou" : {
       "localizations" : {
         "en" : {
@@ -195,6 +279,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@°C"
+          }
+        }
+      }
+    },
+    "%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
           }
         }
       }
@@ -252,18 +346,28 @@
         }
       }
     },
+    "%lld h" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld h"
+          }
+        }
+      }
+    },
     "%lld h%@" : {
       "localizations" : {
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld h%2$@"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld h%@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld h%2$@"
           }
         }
       }
@@ -299,6 +403,16 @@
         }
       }
     },
+    "%lld%% · hora de limpar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%% · time to clean"
+          }
+        }
+      }
+    },
     ".5" : {
       "localizations" : {
         "en" : {
@@ -329,7 +443,18 @@
         }
       }
     },
+    "1. Configurações → Sistema → Reprodução remota: ative Ativar Reprodução remota." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1. Settings → System → Remote Play: turn on Enable Remote Play."
+          }
+        }
+      }
+    },
     "1. Entre na sua conta em playstation.com no navegador. 2. Na mesma janela, abra ca.account.sony.com/api/v1/ssocookie. 3. Copie o valor de \"npsso\" (64 letras e números) e cole aqui. O PS5 e o PS4 aparecem em Jogos, com o jogo do momento." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -369,6 +494,16 @@
         }
       }
     },
+    "2. Configurações → Sistema → Economia de energia → Recursos disponíveis no Modo de repouso: ative Permanecer conectado à internet e Ativar a ligação do PS5 pela rede." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2. Settings → System → Power Saving → Features Available in Rest Mode: turn on Stay Connected to the Internet and Enable Turning On PS5 from Network."
+          }
+        }
+      }
+    },
     "2. Na mesma tela, em Preferências do app Xbox: \"Permitir conexões de qualquer dispositivo\"." : {
       "localizations" : {
         "en" : {
@@ -395,6 +530,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "3. Settings → General → Power options: choose \"Sleep\". In \"Energy saving\" the Xbox can't be turned on from Lar."
+          }
+        }
+      }
+    },
+    "3. Configurações → Sistema → Reprodução remota → Vincular dispositivo: aparece um código de 8 números." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3. Settings → System → Remote Play → Link Device: an 8-digit code shows up."
           }
         }
       }
@@ -569,6 +714,76 @@
         }
       }
     },
+    "A TV LG não abriu o controle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The LG TV didn't open the remote"
+          }
+        }
+      }
+    },
+    "A TV LG não devolveu a chave" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The LG TV didn't return the key"
+          }
+        }
+      }
+    },
+    "A TV LG não respondeu" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The LG TV didn't respond"
+          }
+        }
+      }
+    },
+    "A TV LG recusou o Lar. Aceite o pedido que aparece na tela." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The LG TV refused Lar. Accept the request shown on the screen."
+          }
+        }
+      }
+    },
+    "A TV LG recusou o comando" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The LG TV refused the command"
+          }
+        }
+      }
+    },
+    "A TV Samsung não respondeu" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Samsung TV didn't respond"
+          }
+        }
+      }
+    },
+    "A TV Samsung recusou o Lar. Permita o acesso no aviso que aparece na tela." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Samsung TV refused Lar. Allow access in the notice shown on the screen."
+          }
+        }
+      }
+    },
     "A TV não foi encontrada pelo iPhone" : {
       "localizations" : {
         "en" : {
@@ -585,6 +800,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The TV didn't turn on over the network; use the remote"
+          }
+        }
+      }
+    },
+    "A TV não respondeu" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The TV didn't respond"
           }
         }
       }
@@ -1020,6 +1245,16 @@
         }
       }
     },
+    "Aceite o pedido do Lar na tela da TV." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accept Lar's request on the TV screen."
+          }
+        }
+      }
+    },
     "Aceite os termos de uso no app Roborock e tente de novo." : {
       "localizations" : {
         "en" : {
@@ -1090,6 +1325,16 @@
         }
       }
     },
+    "Aguardando a TV…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waiting for the TV…"
+          }
+        }
+      }
+    },
     "Ajude o Lar a continuar gratuito" : {
       "localizations" : {
         "en" : {
@@ -1138,6 +1383,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Settings"
+          }
+        }
+      }
+    },
+    "Alarme" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm"
           }
         }
       }
@@ -1304,6 +1559,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "When arriving home"
+          }
+        }
+      }
+    },
+    "Ao ligar pelo Lar, o PS5 já entra com a conta PlayStation do Lar. Se ela tiver senha de acesso no console, o Lar a digita (fica só no Porta-chaves)." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When turned on from Lar, the PS5 signs in to Lar's PlayStation account right away. If it has a passcode on the console, Lar types it (it stays in the Keychain only)."
           }
         }
       }
@@ -1573,6 +1838,16 @@
         }
       }
     },
+    "Ativar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn on"
+          }
+        }
+      }
+    },
     "Atualizado para a versão %@." : {
       "localizations" : {
         "en" : {
@@ -1666,6 +1941,16 @@
         }
       }
     },
+    "Automático" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto"
+          }
+        }
+      }
+    },
     "Avisar quando a lavadora terminar" : {
       "localizations" : {
         "en" : {
@@ -1682,6 +1967,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Low"
+          }
+        }
+      }
+    },
+    "Base cheia: esvazie o saco de pó" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dock full: empty the dust bag"
+          }
+        }
+      }
+    },
+    "Bateria fraca" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Low battery"
           }
         }
       }
@@ -1722,6 +2027,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Right-click a device: favorite (goes to the top), name, room or hide."
+          }
+        }
+      }
+    },
+    "Branco" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "White"
           }
         }
       }
@@ -1894,6 +2209,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancel timer"
+          }
+        }
+      }
+    },
+    "Cancelar timers" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel timers"
           }
         }
       }
@@ -2123,6 +2448,16 @@
         }
       }
     },
+    "Ciclo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cycle"
+          }
+        }
+      }
+    },
     "Cinema" : {
       "localizations" : {
         "en" : {
@@ -2277,6 +2612,16 @@
         }
       }
     },
+    "Conectando ao %@…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connecting to %@…"
+          }
+        }
+      }
+    },
     "Conectando à câmera…" : {
       "localizations" : {
         "en" : {
@@ -2293,6 +2638,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Connecting…"
+          }
+        }
+      }
+    },
+    "Conectar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connect"
           }
         }
       }
@@ -2410,12 +2765,53 @@
         }
       }
     },
+    "Controle completo pela rede" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Full remote over the network"
+          }
+        }
+      }
+    },
+    "Controle completo pela rede de casa: setas, OK, voltar, início, volume, canais, entradas, apps e digitar. Na primeira vez, a TV pergunta na tela se aceita o Lar." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Full remote over the home network: arrows, OK, back, home, volume, channels, inputs, apps and typing. The first time, the TV asks on screen whether to accept Lar."
+          }
+        }
+      }
+    },
+    "Controle conectado ao %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Controller connected to %@"
+          }
+        }
+      }
+    },
     "Controle da TV: %@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "TV remote: %@"
+          }
+        }
+      }
+    },
+    "Controle por infravermelho" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Infrared remote"
           }
         }
       }
@@ -2675,6 +3071,16 @@
         }
       }
     },
+    "Código de 8 números" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "8-digit code"
+          }
+        }
+      }
+    },
     "Código errado. Confira o e-mail e tente de novo." : {
       "localizations" : {
         "en" : {
@@ -2736,6 +3142,16 @@
         }
       }
     },
+    "Cômodo %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Room %lld"
+          }
+        }
+      }
+    },
     "Definir temperatura" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -2764,6 +3180,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Leave the name empty to use the account's. Hidden devices are in Settings → List."
+          }
+        }
+      }
+    },
+    "Depois de pareado, o PS5 liga e entra em Modo de repouso pela lista do Lar. Desligar por completo só pelo próprio console: a Sony não deixa de fora. Integração não oficial: a Sony pode mudá-la." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Once paired, the PS5 turns on and goes into Rest Mode from Lar's list. Shutting it down completely is only on the console itself: Sony doesn't allow it from outside. Unofficial integration: Sony may change it."
+          }
+        }
+      }
+    },
+    "Desconectado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disconnected"
+          }
+        }
+      }
+    },
+    "Desconectar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disconnect"
           }
         }
       }
@@ -2838,6 +3284,17 @@
         }
       }
     },
+    "Desligar ainda é pelo controle (botão PS → Energia → Modo de repouso): a Sony só deixa pelo Remote Play completo. Integração não oficial: a Sony pode mudá-la." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turning it off is still from the controller (PS button → Power → Rest Mode): Sony only allows it through full Remote Play. Unofficial integration: Sony may change it."
+          }
+        }
+      }
+    },
     "Desligar aparelho" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -2855,6 +3312,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Turn off in"
+          }
+        }
+      }
+    },
+    "Desligar o PS5 pelo Lar ainda não dá: no controle, segure o botão PS → Energia → Entrar no Modo de repouso." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lar can't turn the PS5 off yet: on the controller, hold the PS button → Power → Enter Rest Mode."
           }
         }
       }
@@ -2886,6 +3354,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Drying the air"
+          }
+        }
+      }
+    },
+    "Desumidificar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dry"
           }
         }
       }
@@ -3137,6 +3615,16 @@
         }
       }
     },
+    "Econômico" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eco"
+          }
+        }
+      }
+    },
     "Editar" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -3164,6 +3652,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Edit…"
+          }
+        }
+      }
+    },
+    "Efeito" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effect"
           }
         }
       }
@@ -3228,6 +3726,47 @@
         }
       }
     },
+    "Endereço (ex.: 192.168.0.30)" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Address (e.g. 192.168.0.30)"
+          }
+        }
+      }
+    },
+    "Endereço da TV (ex.: 192.168.0.30)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TV address (e.g. 192.168.0.30)"
+          }
+        }
+      }
+    },
+    "Endereço do PS5 (ex.: 192.168.0.20)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PS5 address (e.g. 192.168.0.20)"
+          }
+        }
+      }
+    },
+    "Endereço inválido: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid address: %@"
+          }
+        }
+      }
+    },
     "Entradas" : {
       "localizations" : {
         "en" : {
@@ -3244,6 +3783,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sign in"
+          }
+        }
+      }
+    },
+    "Entrar com a conta %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in with the %@ account"
           }
         }
       }
@@ -3351,6 +3900,27 @@
         }
       }
     },
+    "Entre com a conta PlayStation: o PS5 e o PS4 aparecem em Jogos, ligados ou não e com o jogo do momento. Ligar e desligar ainda não: a Sony só deixa pelo Remote Play. Integração não oficial: a Sony pode mudá-la." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in with your PlayStation account: your PS5 and PS4 show up in Games, on or not and with the game being played. Turning them on and off isn't there yet: Sony only allows it through Remote Play. Unofficial integration: Sony may change it."
+          }
+        }
+      }
+    },
+    "Entre com a conta PlayStation: o PS5 e o PS4 aparecem em Jogos, ligados ou não e com o jogo do momento. Pareando o PS5 uma vez, ele liga e entra em Modo de repouso pelo Lar. Integração não oficial: a Sony pode mudá-la." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in with your PlayStation account: your PS5 and PS4 show up in Games, on or not and with the game being played. Pairing the PS5 once, it turns on and goes into Rest Mode from Lar. Unofficial integration: Sony may change it."
+          }
+        }
+      }
+    },
     "Entre com a conta do app Dreamehome. Os robôs aparecem na lista para limpar, voltar à base e ver o estado e a bateria. Os Dreame que estão no Mi Home vêm pela conta Xiaomi." : {
       "localizations" : {
         "en" : {
@@ -3427,6 +3997,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sign in with your Roborock app account's e-mail: Lar gets a code by e-mail. The robots show up in the list to clean, go back to the dock and see their state and battery."
+          }
+        }
+      }
+    },
+    "Entre de novo na conta PlayStation." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in to the PlayStation account again."
           }
         }
       }
@@ -3588,6 +4168,26 @@
         }
       }
     },
+    "Escova lateral travada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Side brush jammed"
+          }
+        }
+      }
+    },
+    "Escova principal travada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Main brush jammed"
+          }
+        }
+      }
+    },
     "Esperando você entrar…" : {
       "localizations" : {
         "en" : {
@@ -3657,6 +4257,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "That scene no longer exists."
+          }
+        }
+      }
+    },
+    "Esse controle não tem a tecla Power" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This remote has no Power key"
+          }
+        }
+      }
+    },
+    "Esse controle não tem essa tecla" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This remote doesn't have that key"
           }
         }
       }
@@ -3771,6 +4391,16 @@
         }
       }
     },
+    "Ex.: 10 minutos, 7 da manhã" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E.g. 10 minutes, 7 am"
+          }
+        }
+      }
+    },
     "Ex.: Quarto" : {
       "localizations" : {
         "en" : {
@@ -3787,6 +4417,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "E.g. turn off the living room light"
+          }
+        }
+      }
+    },
+    "Ex.: café" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E.g. coffee"
           }
         }
       }
@@ -3968,6 +4608,16 @@
         }
       }
     },
+    "Filtro" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filter"
+          }
+        }
+      }
+    },
     "Fins de semana às %@" : {
       "localizations" : {
         "en" : {
@@ -4082,6 +4732,16 @@
         }
       }
     },
+    "Horizontal" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Horizontal"
+          }
+        }
+      }
+    },
     "IP da TV (opcional)" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -4145,6 +4805,16 @@
         }
       }
     },
+    "Infravermelho" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Infrared"
+          }
+        }
+      }
+    },
     "Instalando a versão %@…" : {
       "localizations" : {
         "en" : {
@@ -4195,12 +4865,33 @@
         }
       }
     },
+    "Jogando há %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playing for %@"
+          }
+        }
+      }
+    },
     "Jogos" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Games"
+          }
+        }
+      }
+    },
+    "LG" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LG"
           }
         }
       }
@@ -4348,6 +5039,16 @@
         }
       }
     },
+    "Lembrete" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reminder"
+          }
+        }
+      }
+    },
     "Ler as contas de novo" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -4391,6 +5092,22 @@
         }
       }
     },
+    "Liga pelo Lar: %@ (%@)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turns on from Lar: %1$@ (%2$@)"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Liga pelo Lar: %1$@ (%2$@)"
+          }
+        }
+      }
+    },
     "Ligada" : {
       "localizations" : {
         "en" : {
@@ -4417,6 +5134,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "On today: %@"
+          }
+        }
+      }
+    },
+    "Ligado por infravermelho" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On through infrared"
+          }
+        }
+      }
+    },
+    "Ligando o %@…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turning on %@…"
           }
         }
       }
@@ -4472,6 +5209,36 @@
         }
       }
     },
+    "Ligar e conectar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn on and connect"
+          }
+        }
+      }
+    },
+    "Ligar em" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn on in"
+          }
+        }
+      }
+    },
+    "Ligar o PS5 pelo Lar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn the PS5 on from Lar"
+          }
+        }
+      }
+    },
     "Ligar ou desligar aparelho" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -4514,6 +5281,16 @@
         }
       }
     },
+    "Limpar cômodo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clean a room"
+          }
+        }
+      }
+    },
     "Limpeza" : {
       "localizations" : {
         "en" : {
@@ -4530,6 +5307,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "List"
+          }
+        }
+      }
+    },
+    "Lista de compras" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shopping list"
+          }
+        }
+      }
+    },
+    "Lista de tarefas" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To-do list"
+          }
+        }
+      }
+    },
+    "Listas da Alexa" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alexa lists"
           }
         }
       }
@@ -4656,6 +5463,26 @@
         }
       }
     },
+    "Manual" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manual"
+          }
+        }
+      }
+    },
+    "Mapa" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Map"
+          }
+        }
+      }
+    },
     "Marcar de novo (estou em casa)" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -4768,6 +5595,16 @@
         }
       }
     },
+    "Movimento detectado. Toque para ver ao vivo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Motion detected. Tap to watch live."
+          }
+        }
+      }
+    },
     "Mudar temperatura do ar" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -4852,12 +5689,32 @@
         }
       }
     },
+    "Música" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Music"
+          }
+        }
+      }
+    },
     "Nenhum Mac com o Lar aberto na rede" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No Mac with Lar open on the network"
+          }
+        }
+      }
+    },
+    "Nenhum PS5 respondeu. Ele está ligado ou em repouso, na mesma rede?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No PS5 answered. Is it on or in rest mode, on the same network?"
           }
         }
       }
@@ -4946,6 +5803,16 @@
         }
       }
     },
+    "No PS5, uma vez só:" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On the PS5, just once:"
+          }
+        }
+      }
+    },
     "No Xbox" : {
       "localizations" : {
         "en" : {
@@ -4983,6 +5850,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "On the iPhone: Home app → + → Add Accessory, and point at the code (or tap “More options” and type the numbers). The app warns that the accessory isn't certified: tap “Add Anyway”."
+          }
+        }
+      }
+    },
+    "No navegador, entre na sua conta em playstation.com. Na mesma janela, abra o endereço abaixo e copie o valor de \"npsso\" (64 letras e números)." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In the browser, sign in to your account at playstation.com. In the same window, open the address below and copy the value of \"npsso\" (64 letters and numbers)."
           }
         }
       }
@@ -5053,8 +5930,17 @@
         }
       }
     },
+    "Nunca" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Never"
+          }
+        }
+      }
+    },
     "Não" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -5094,6 +5980,26 @@
         }
       }
     },
+    "Não deu para falar com %@. Confira o código na tela e se os dois estão na mesma rede." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't reach %@. Check the code on the screen and that both are on the same network."
+          }
+        }
+      }
+    },
+    "Não deu para falar com o PS5 em %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't reach the PS5 at %@"
+          }
+        }
+      }
+    },
     "Não deu para guardar o token no Porta-chaves" : {
       "localizations" : {
         "en" : {
@@ -5110,6 +6016,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Couldn't change it: %@"
+          }
+        }
+      }
+    },
+    "Não deu para parear" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't pair"
           }
         }
       }
@@ -5131,6 +6047,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Couldn't use Eufy's certificate on this device"
+          }
+        }
+      }
+    },
+    "Não está carregando" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not charging"
           }
         }
       }
@@ -5180,6 +6106,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Don't use"
+          }
+        }
+      }
+    },
+    "Nível %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Level %lld"
           }
         }
       }
@@ -5256,12 +6192,203 @@
         }
       }
     },
+    "O PS5 e o PS4 aparecem em Jogos, com o jogo do momento. A senha fica na página da Sony: não passa pelo Lar." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your PS5 and PS4 show up in Games, with the game being played. The password stays on Sony's page: it never goes through Lar."
+          }
+        }
+      }
+    },
     "O PS5 e o PS4 pela conta PlayStation, e robôs aspiradores e fechaduras das marcas com app próprio. Os do Smart Life, do SmartThings e da LG já vêm por essas contas. Integrações não oficiais: a marca pode mudá-las." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "PS5 and PS4 through the PlayStation account, and robot vacuums and locks from brands with their own app. Those in Smart Life, SmartThings and LG already come through those accounts. Unofficial integrations: the brand may change them."
+          }
+        }
+      }
+    },
+    "O PS5 encerrou a sessão" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The PS5 ended the session"
+          }
+        }
+      }
+    },
+    "O PS5 não abriu a sessão" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The PS5 didn't open the session"
+          }
+        }
+      }
+    },
+    "O PS5 não abriu o canal do controle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The PS5 didn't open the controller channel"
+          }
+        }
+      }
+    },
+    "O PS5 não aceitou o controle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The PS5 didn't accept the controller"
+          }
+        }
+      }
+    },
+    "O PS5 não devolveu a chave" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The PS5 didn't return the key"
+          }
+        }
+      }
+    },
+    "O PS5 não ligou" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The PS5 didn't turn on"
+          }
+        }
+      }
+    },
+    "O PS5 não respondeu" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The PS5 didn't answer"
+          }
+        }
+      }
+    },
+    "O PS5 não respondeu ao pareamento" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The PS5 didn't answer the pairing"
+          }
+        }
+      }
+    },
+    "O PS5 não respondeu em %@. Ele precisa estar ligado (fora do repouso) e na mesma rede." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The PS5 didn't answer at %@. It must be on (out of rest mode) and on the same network."
+          }
+        }
+      }
+    },
+    "O PS5 parou de responder" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The PS5 stopped responding"
+          }
+        }
+      }
+    },
+    "O PS5 pediu a senha de acesso da conta. Informe-a em Ajustes → Jogos → PlayStation." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The PS5 asked for the account's passcode. Enter it in Settings → Games → PlayStation."
+          }
+        }
+      }
+    },
+    "O PS5 recusou a sessão%@. Pareie de novo em Ajustes → Jogos." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The PS5 refused the session%@. Pair again in Settings → Games."
+          }
+        }
+      }
+    },
+    "O PS5 recusou a troca de chaves" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The PS5 refused the key exchange"
+          }
+        }
+      }
+    },
+    "O PS5 recusou o comando%@. Ele pode estar com outra sessão de Remote Play aberta." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The PS5 refused the command%@. It may have another Remote Play session open."
+          }
+        }
+      }
+    },
+    "O PS5 recusou o controle%@. Feche o Remote Play em outro aparelho e tente de novo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The PS5 refused the controller%@. Close Remote Play on another device and try again."
+          }
+        }
+      }
+    },
+    "O PS5 recusou o pareamento (%@). Gere um código novo e tente de novo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The PS5 refused the pairing (%@). Get a new code and try again."
+          }
+        }
+      }
+    },
+    "O PS5 recusou o pareamento. Confira o código e tente de novo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The PS5 refused the pairing. Check the code and try again."
+          }
+        }
+      }
+    },
+    "O PS5 respondeu de um jeito inesperado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The PS5 answered in an unexpected way"
           }
         }
       }
@@ -5387,12 +6514,52 @@
         }
       }
     },
+    "O código do PS5 tem 8 números." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The PS5's code has 8 digits."
+          }
+        }
+      }
+    },
     "O código expirou: peça outro." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "The code expired: request a new one."
+          }
+        }
+      }
+    },
+    "O código tem 4 números." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The code has 4 digits."
+          }
+        }
+      }
+    },
+    "O endereço está na TV em Configurações → Geral → Rede → Conexão (Wi-Fi ou cabo) → Configurações avançadas." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The address is on the TV under Settings → General → Network → Connection (Wi-Fi or wired) → Advanced settings."
+          }
+        }
+      }
+    },
+    "O endereço está na TV em Configurações → Geral → Rede → Status da rede → Configurações de IP." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The address is on the TV under Settings → General → Network → Network status → IP settings."
           }
         }
       }
@@ -5693,12 +6860,32 @@
         }
       }
     },
+    "Oscilando" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Swinging"
+          }
+        }
+      }
+    },
     "Oscilar" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Swing"
+          }
+        }
+      }
+    },
+    "Ou cole o %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Or paste the %@"
           }
         }
       }
@@ -5739,6 +6926,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "INTERCOM (VOIP)"
+          }
+        }
+      }
+    },
+    "PS5 pareado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PS5 paired"
           }
         }
       }
@@ -5793,6 +6990,26 @@
         }
       }
     },
+    "Para ligar o PS5 pelo Lar, pareie uma vez." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To turn the PS5 on from Lar, pair it once."
+          }
+        }
+      }
+    },
+    "Para-choque preso" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bumper stuck"
+          }
+        }
+      }
+    },
     "Parada" : {
       "localizations" : {
         "en" : {
@@ -5835,7 +7052,6 @@
       }
     },
     "Parear" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -5862,6 +7078,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pair with the Mac"
+          }
+        }
+      }
+    },
+    "Parear de novo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pair again"
+          }
+        }
+      }
+    },
+    "Parear o PS5" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pair the PS5"
           }
         }
       }
@@ -5906,12 +7142,52 @@
         }
       }
     },
+    "Pareie de novo para o Modo de repouso" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pair again for Rest Mode"
+          }
+        }
+      }
+    },
     "Pareie este iPhone com o Mac" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pair this iPhone with the Mac"
+          }
+        }
+      }
+    },
+    "Pareie o PS5 de novo (Ajustes → Jogos) para usar o Modo de repouso." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pair the PS5 again (Settings → Games) to use Rest Mode."
+          }
+        }
+      }
+    },
+    "Pareie o PS5 de novo (Ajustes → Jogos) para usar o controle." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pair the PS5 again (Settings → Games) to use the controller."
+          }
+        }
+      }
+    },
+    "Pareie o PS5 em Ajustes → Jogos → PlayStation para usar o controle." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pair the PS5 in Settings → Games → PlayStation to use the controller."
           }
         }
       }
@@ -6039,7 +7315,18 @@
         }
       }
     },
+    "PlayStation" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PlayStation"
+          }
+        }
+      }
+    },
     "PlayStation, robôs e fechaduras" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -6142,6 +7429,16 @@
         }
       }
     },
+    "Potência" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Power"
+          }
+        }
+      }
+    },
     "Potência do ar" : {
       "localizations" : {
         "en" : {
@@ -6183,12 +7480,32 @@
         }
       }
     },
+    "Procurando…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Searching…"
+          }
+        }
+      }
+    },
     "Procurar atualização" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Check for updates"
+          }
+        }
+      }
+    },
+    "Procurar na rede" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search the network"
           }
         }
       }
@@ -6280,6 +7597,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "How many devices are on."
+          }
+        }
+      }
+    },
+    "Quente" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heat"
           }
         }
       }
@@ -6392,6 +7719,37 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Remove from Home"
+          }
+        }
+      }
+    },
+    "Repetir" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repeat"
+          }
+        }
+      }
+    },
+    "Repouso" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rest Mode"
+          }
+        }
+      }
+    },
+    "Reservatório cheio: esvazie" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bin full: empty it"
           }
         }
       }
@@ -6516,8 +7874,47 @@
         }
       }
     },
+    "Robô com problema (código %lld)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Robot needs help (code %lld)"
+          }
+        }
+      }
+    },
+    "Robô com problema (erro %lld)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Robot needs help (error %lld)"
+          }
+        }
+      }
+    },
+    "Robô preso" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Robot stuck"
+          }
+        }
+      }
+    },
+    "Robô preso ou com problema" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Robot stuck or needs help"
+          }
+        }
+      }
+    },
     "Robôs aspiradores e fechaduras das marcas com app próprio. Os do Smart Life, do SmartThings e da LG já vêm por essas contas. Integrações não oficiais: a marca pode mudá-las." : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -6528,12 +7925,41 @@
       }
     },
     "Robôs e fechaduras" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Robots and locks"
+          }
+        }
+      }
+    },
+    "Rodando" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Running"
+          }
+        }
+      }
+    },
+    "Rodas no ar ou sensor de queda" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wheels lifted or cliff sensor"
+          }
+        }
+      }
+    },
+    "Rodas travadas" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wheels jammed"
           }
         }
       }
@@ -6638,6 +8064,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Save IP"
+          }
+        }
+      }
+    },
+    "Samsung" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Samsung"
           }
         }
       }
@@ -6795,6 +8232,16 @@
         }
       }
     },
+    "Sem o reservatório de pó" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dust bin missing"
+          }
+        }
+      }
+    },
     "Sem resposta" : {
       "localizations" : {
         "en" : {
@@ -6851,6 +8298,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Password"
+          }
+        }
+      }
+    },
+    "Senha de acesso da conta no PS5 (se tiver)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The account's passcode on the PS5 (if any)"
           }
         }
       }
@@ -6948,8 +8405,17 @@
         }
       }
     },
+    "Setas, OK, voltar, início, volume, canais, entradas, apps e digitar, direto na TV. Na primeira vez, a TV pergunta na tela se aceita o Lar." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrows, OK, back, home, volume, channels, inputs, apps and typing, straight to the TV. The first time, the TV asks on screen whether to accept Lar."
+          }
+        }
+      }
+    },
     "Sim" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -7131,6 +8597,46 @@
         }
       }
     },
+    "TV LG" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LG TV"
+          }
+        }
+      }
+    },
+    "TV LG (webOS)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LG TV (webOS)"
+          }
+        }
+      }
+    },
+    "TV Samsung" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Samsung TV"
+          }
+        }
+      }
+    },
+    "TV Samsung (Tizen)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Samsung TV (Tizen)"
+          }
+        }
+      }
+    },
     "TV da Sala" : {
       "localizations" : {
         "en" : {
@@ -7181,6 +8687,17 @@
         }
       }
     },
+    "TVs LG e Samsung" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LG and Samsung TVs"
+          }
+        }
+      }
+    },
     "TVs pareadas" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -7198,6 +8715,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "TVs paired through the Google TV remote: %lld"
+          }
+        }
+      }
+    },
+    "Tanque de água limpa vazio" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clean water tank empty"
+          }
+        }
+      }
+    },
+    "Tanque de água suja cheio" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dirty water tank full"
           }
         }
       }
@@ -7332,6 +8869,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Done"
+          }
+        }
+      }
+    },
+    "Texto para o PS5" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text for the PS5"
+          }
+        }
+      }
+    },
+    "Timer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Timer"
+          }
+        }
+      }
+    },
+    "Timers e alarmes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Timers and alarms"
           }
         }
       }
@@ -7572,6 +9139,16 @@
         }
       }
     },
+    "Touchpad" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Touchpad"
+          }
+        }
+      }
+    },
     "Trancada" : {
       "localizations" : {
         "en" : {
@@ -7798,6 +9375,16 @@
         }
       }
     },
+    "Vertical" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vertical"
+          }
+        }
+      }
+    },
     "Voltando à base" : {
       "localizations" : {
         "en" : {
@@ -7985,12 +9572,42 @@
         }
       }
     },
+    "adicione %@ à lista de compras" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "add %@ to my shopping list"
+          }
+        }
+      }
+    },
+    "adicione %@ à lista de tarefas" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "add %@ to my to-do list"
+          }
+        }
+      }
+    },
     "ajustado em %@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "set to %@"
+          }
+        }
+      }
+    },
+    "alarme para %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "set an alarm for %@"
           }
         }
       }
@@ -8021,6 +9638,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "battery low"
+          }
+        }
+      }
+    },
+    "cancele todos os timers" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "cancel all timers"
           }
         }
       }
@@ -8155,12 +9782,32 @@
         }
       }
     },
+    "destrancar %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "unlock %@"
+          }
+        }
+      }
+    },
     "dom" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sun"
+          }
+        }
+      }
+    },
+    "em repouso" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "in rest mode"
           }
         }
       }
@@ -8491,6 +10138,16 @@
         }
       }
     },
+    "timer de %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "set a timer for %@"
+          }
+        }
+      }
+    },
     "°C" : {
       "localizations" : {
         "en" : {
@@ -8517,6 +10174,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "· 1 on"
+          }
+        }
+      }
+    },
+    "Água do pano" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mop water"
+          }
+        }
+      }
+    },
+    "Área" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Area"
           }
         }
       }

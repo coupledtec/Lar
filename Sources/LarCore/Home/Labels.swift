@@ -107,7 +107,7 @@ public enum Labels {
         case .tv: on ? "tv.fill" : "tv"
         case .gameConsole: on ? "gamecontroller.fill" : "gamecontroller"
         case .vacuum: on ? "robotic.vacuum.fill" : "robotic.vacuum"
-        case .lock: "lock.fill"
+        case .lock: on ? "lock.fill" : "lock.open.fill"
         case .speaker: on ? "hifispeaker.fill" : "hifispeaker"
         case .airConditioner: on ? "air.conditioner.horizontal.fill" : "air.conditioner.horizontal"
         case .light: on ? "lightbulb.fill" : "lightbulb"

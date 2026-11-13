@@ -265,6 +265,14 @@ public actor EcovacsClient {
         }
     }
 
+    func pause(_ robot: Robot) async throws {
+        do {
+            _ = try await command("clean_V2", ["act": "pause"], on: robot)
+        } catch {
+            _ = try await command("clean", ["act": "pause"], on: robot)
+        }
+    }
+
     func dock(_ robot: Robot) async throws {
         _ = try await command("charge", ["act": "go"], on: robot)
     }
@@ -306,13 +314,15 @@ public struct EcovacsProvider: DeviceProvider {
             if let battery = status.battery { parts.append(tr("bateria \(battery)%")) }
         }
         return HomeDevice(provider: .ecovacs, rawID: robot.did, name: robot.name, kind: .vacuum, isOnline: robot.online,
-                          isOn: status.map { $0.state == "clean" }, detail: parts.joined(separator: " · "))
+                          isOn: status.map { $0.state == "clean" }, detail: parts.joined(separator: " · "), controls: ["pausable": "1"])
     }
 
     public func send(_ command: HomeCommand, to device: HomeDevice) async throws {
-        guard case .power(let on) = command, let robot = try await client.robots().first(where: { $0.did == device.rawID }) else {
-            throw ProviderError.unsupported
+        guard let robot = try await client.robots().first(where: { $0.did == device.rawID }) else { throw ProviderError.unsupported }
+        switch command {
+        case .power(let on): if on { try await client.clean(robot) } else { try await client.dock(robot) }
+        case .pause: try await client.pause(robot)
+        default: throw ProviderError.unsupported
         }
-        if on { try await client.clean(robot) } else { try await client.dock(robot) }
     }
 }

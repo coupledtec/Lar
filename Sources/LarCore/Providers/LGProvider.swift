@@ -74,6 +74,13 @@ public struct LGProvider: DeviceProvider {
                 device.controls["remainMinutes"] = String(hours * 60 + minutes)
             }
         }
+        // Washer and dryer: start and pause, only with "remote start" turned on at the machine (LG's rule).
+        if device.kind == .laundry, device.controls["operation"] != nil,
+           state["remoteControlEnable"]?["remoteControlEnabled"]?.bool == true {
+            let running = ["RUNNING", "RINSING", "SPINNING", "DRYING", "STEAM_SOFTENING", "COOLING", "WASHING"]
+                .contains(device.controls["runState"] ?? "")
+            device.setOption("run", values: ["START", "STOP"], current: running ? "START" : "STOP")
+        }
         let status = ACStatus(json: state)
         if device.kind == .airConditioner {
             if let room = status.currentTemperature {
@@ -97,6 +104,14 @@ public struct LGProvider: DeviceProvider {
                 // LG units take 16–30 °C in half degrees.
                 let target = (min(max(value, 16), 30) * 2).rounded() / 2
                 try await client.control(deviceID: device.rawID, payload: ACCommand.targetTemperature(target).payload)
+            } catch let error as ThinQError {
+                throw Self.providerError(error)
+            }
+            return
+        }
+        if case .option("run", let value) = command, let key = device.controls["operation"] {
+            do {
+                try await client.control(deviceID: device.rawID, payload: ["operation": [key: .string(value)]])
             } catch let error as ThinQError {
                 throw Self.providerError(error)
             }

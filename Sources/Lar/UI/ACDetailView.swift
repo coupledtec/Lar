@@ -47,6 +47,11 @@ struct ACDetailView: View {
             if caps.hasToggles {
                 toggleRows
             }
+            if ACTimersView.shows(store) {
+                ACTimersView(store: store)
+                    .font(.system(size: 12))
+                    .pickerStyle(.menu)
+            }
             Divider()
             ACHistoryView(deviceID: deviceID, compact: true)
         }

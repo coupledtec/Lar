@@ -41,10 +41,23 @@ public struct BrandToken: Sendable {
     public var label: String
     /// Where to get it.
     public var link: String
+    /// How to get it there.
+    public var steps: String
+    /// The brand's own sign-in page, shown in the app instead (where there's a web view): it ends by sending the
+    /// browser to `redirect` with a one-time `code`, which `finish` turns into the account.
+    public var web: Web?
 
-    public init(label: String, link: String) {
+    public struct Web: Sendable {
+        public var url: URL
+        public var redirect: String
+        public var finish: @Sendable (_ code: String) async throws -> BrandAccount
+    }
+
+    public init(label: String, link: String, steps: String, web: Web? = nil) {
         self.label = label
         self.link = link
+        self.steps = steps
+        self.web = web
     }
 }
 
@@ -134,7 +147,10 @@ extension AppSettings {
 
     /// What a brand renewed, kept only while the account is still there (not after signing out meanwhile).
     static func renewBrandAccount(_ account: BrandAccount, for provider: Provider) {
-        guard brandAccount(provider)?.email == account.email else { return }
+        guard let saved = brandAccount(provider), saved.email == account.email else { return }
+        var account = account
+        // What the settings added meanwhile (the PS5's Remote Play pairing) stays.
+        for (key, value) in saved.values where key.hasPrefix("rp.") && account[key] == nil { account[key] = value }
         setBrandAccount(account, for: provider)
     }
 }

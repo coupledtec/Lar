@@ -13,7 +13,13 @@ public struct RoborockProvider: DeviceProvider {
                 group.addTask {
                     var status = robot.state.map { RoborockClient.Status(state: $0, battery: robot.battery) }
                     if robot.online, let live = try? await client.status(of: robot) { status = live }
-                    return Self.device(robot, status: status)
+                    var device = Self.device(robot, status: status)
+                    // The rooms it can clean one by one.
+                    if robot.version == "1.0", robot.online {
+                        let segments = await client.segments(of: robot)
+                        device.setOption("room", values: segments, current: nil)
+                    }
+                    return device
                 }
             }
             var out: [HomeDevice] = []
@@ -29,16 +35,28 @@ public struct RoborockProvider: DeviceProvider {
             if let battery = status.battery { parts.append(tr("bateria \(battery)%")) }
         }
         if robot.version != "1.0" { parts.append(tr("só o estado (modelo sem controle no Lar)")) }
-        return HomeDevice(provider: .roborock, rawID: robot.duid, name: robot.name, kind: .vacuum,
-                          isOnline: robot.online, isOn: status.map { RoborockClient.isCleaning($0.state) },
-                          detail: parts.joined(separator: " · "))
+        var device = HomeDevice(provider: .roborock, rawID: robot.duid, name: robot.name, kind: .vacuum,
+                                isOnline: robot.online, isOn: status.map { RoborockClient.isCleaning($0.state) },
+                                detail: parts.joined(separator: " · "), controls: robot.version == "1.0" ? ["pausable": "1"] : [:])
+        if let status, let problem = RoborockClient.errorText(status.error) { device.controls["problem"] = problem }
+        if robot.version == "1.0", let power = status?.fanPower {
+            device.setOption("suction", values: ["101", "102", "103", "104"], current: String(power))
+        }
+        return device
     }
 
     public func send(_ command: HomeCommand, to device: HomeDevice) async throws {
-        guard case .power(let on) = command,
-              let robot = try await client.robots().first(where: { $0.duid == device.rawID }) else {
-            throw ProviderError.unsupported
+        guard let robot = try await client.robots().first(where: { $0.duid == device.rawID }) else { throw ProviderError.unsupported }
+        switch command {
+        case .power(let on): try await client.command(on ? "app_start" : "app_charge", on: robot)
+        case .pause: try await client.command("app_pause", on: robot)
+        case .option("room", let value):
+            guard let segment = Int(value.split(separator: "=").first ?? "") else { throw ProviderError.unsupported }
+            try await client.command("app_segment_clean", params: [["segments": [segment], "repeat": 1]], on: robot)
+        case .option("suction", let value):
+            guard let power = Int(value) else { throw ProviderError.unsupported }
+            try await client.command("set_custom_mode", params: [power], on: robot)
+        default: throw ProviderError.unsupported
         }
-        try await client.command(on ? "app_start" : "app_charge", on: robot)
     }
 }

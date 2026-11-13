@@ -19,6 +19,7 @@ public actor IRobotClient {
     struct Status: Sendable, Equatable {
         var phase: String?
         var battery: Int?
+        var binFull = false
     }
 
     private var account: BrandAccount
@@ -114,6 +115,7 @@ public actor IRobotClient {
               let reported = object.dict("state")?.dict("reported") else { return }
         if let phase = reported.dict("cleanMissionStatus")?.string("phase") { status.phase = phase }
         if let battery = reported.int("batPct") { status.battery = battery }
+        if let full = reported.dict("bin")?["full"] as? Bool { status.binFull = full }
     }
 
     /// start, stop, pause, resume or dock.
@@ -223,14 +225,20 @@ public struct IRobotProvider: DeviceProvider {
         }
         var parts = [IRobotClient.phaseText(status.phase)]
         if let battery = status.battery { parts.append(tr("bateria \(battery)%")) }
+        var controls = ["pausable": "1"]
+        if status.phase == "stuck" { controls["problem"] = tr("Robô preso") }
+        else if status.binFull { controls["problem"] = tr("Reservatório cheio: esvazie") }
         return HomeDevice(provider: .irobot, rawID: robot.blid, name: robot.name, kind: .vacuum,
-                          isOn: status.phase == "run", detail: parts.joined(separator: " · "))
+                          isOn: status.phase == "run", detail: parts.joined(separator: " · "), controls: controls)
     }
 
     public func send(_ command: HomeCommand, to device: HomeDevice) async throws {
-        guard case .power(let on) = command, let robot = await client.robots.first(where: { $0.blid == device.rawID }) else {
-            throw ProviderError.unsupported
+        guard let robot = await client.robots.first(where: { $0.blid == device.rawID }) else { throw ProviderError.unsupported }
+        if command == .pause {
+            try await client.command("pause", on: robot)
+            return
         }
+        guard case .power(let on) = command else { throw ProviderError.unsupported }
         if on {
             try await client.command("start", on: robot)
         } else {

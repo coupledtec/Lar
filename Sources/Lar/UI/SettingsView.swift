@@ -252,8 +252,14 @@ struct SettingsView: View {
         }
     }
 
+    /// Xbox and PlayStation, together like the list's "Jogos".
     private var xboxSection: some View {
-        section("Xbox", provider: .xbox) {
+        section("Jogos") {
+            HStack {
+                Text("Xbox").font(.system(size: 12, weight: .semibold))
+                Spacer()
+                accountBadge(.xbox)
+            }
             hint("Entre com a conta Microsoft do Xbox: o console aparece na lista para ligar, desligar, usar como controle, abrir jogos e apps e ver o que está passando. Integração não oficial: a Microsoft pode mudá-la.")
             HStack {
                 if let xboxError {
@@ -278,31 +284,65 @@ struct SettingsView: View {
                 XboxConsoleSetup().padding(.top, 4)
             }
             .font(.system(size: 12))
+            Divider()
+            HStack {
+                Text("PlayStation").font(.system(size: 12, weight: .semibold))
+                Spacer()
+                accountBadge(.playstation)
+            }
+            hint("Entre com a conta PlayStation: o PS5 e o PS4 aparecem em Jogos, ligados ou não e com o jogo do momento. Pareando o PS5 uma vez, ele liga e entra em Modo de repouso pelo Lar. Integração não oficial: a Sony pode mudá-la.")
+            brandRow(.playstation)
+            if AppSettings.brandAccount(.playstation) != nil {
+                HStack {
+                    if let pairing = PlayStationClient.savedPairing {
+                        Text(pairing.canSleep ? "Liga pelo Lar: \(pairing.nickname ?? "PS5") (\(pairing.host))"
+                                              : "Pareie de novo para o Modo de repouso")
+                            .font(.system(size: 11)).foregroundStyle(pairing.canSleep ? Theme.secondaryText : Theme.warning).lineLimit(1)
+                    } else {
+                        Text("Para ligar o PS5 pelo Lar, pareie uma vez.").font(.system(size: 11)).foregroundStyle(Theme.secondaryText)
+                    }
+                    Spacer()
+                    Button(PlayStationClient.savedPairing == nil ? "Parear o PS5" : "Parear de novo") {
+                        SignInWindow.showPlayStationPairing { pairing in
+                            if let pairing { save { PlayStationClient.save(pairing) } }
+                        }
+                    }
+                    .font(.system(size: 11))
+                    if PlayStationClient.savedPairing != nil {
+                        removeButton { PlayStationClient.save(nil) }
+                    }
+                }
+            }
+        }
+    }
+
+    /// A brand's account: who's signed in, and signing in or out.
+    private func brandRow(_ brand: Provider) -> some View {
+        HStack {
+            Text(brand.name).font(.system(size: 12))
+            if let account = AppSettings.brandAccount(brand) {
+                Text(account.email).font(.system(size: 11)).foregroundStyle(Theme.secondaryText).lineLimit(1)
+            }
+            Spacer()
+            Button(AppSettings.brandAccount(brand) == nil ? "Entrar" : "Entrar de novo") {
+                guard let signIn = brand.signIn else { return }
+                SignInWindow.showBrand(signIn) { account in
+                    if let account { save { AppSettings.setBrandAccount(account, for: brand) } }
+                }
+            }
+            .font(.system(size: 11))
+            if AppSettings.brandAccount(brand) != nil {
+                removeButton { AppSettings.setBrandAccount(nil, for: brand) }
+            }
         }
     }
 
     /// Robot vacuums and locks of brands with clouds of their own: one row per brand.
     private var brandsSection: some View {
-        section("PlayStation, robôs e fechaduras") {
-            hint("O PS5 e o PS4 pela conta PlayStation, e robôs aspiradores e fechaduras das marcas com app próprio. Os do Smart Life, do SmartThings e da LG já vêm por essas contas. Integrações não oficiais: a marca pode mudá-las.")
-            ForEach(Provider.brands.filter { $0.signIn != nil }, id: \.self) { brand in
-                HStack {
-                    Text(brand.name).font(.system(size: 12))
-                    if let account = AppSettings.brandAccount(brand) {
-                        Text(account.email).font(.system(size: 11)).foregroundStyle(Theme.secondaryText).lineLimit(1)
-                    }
-                    Spacer()
-                    Button(AppSettings.brandAccount(brand) == nil ? "Entrar" : "Entrar de novo") {
-                        guard let signIn = brand.signIn else { return }
-                        SignInWindow.showBrand(signIn) { account in
-                            if let account { save { AppSettings.setBrandAccount(account, for: brand) } }
-                        }
-                    }
-                    .font(.system(size: 11))
-                    if AppSettings.brandAccount(brand) != nil {
-                        removeButton { AppSettings.setBrandAccount(nil, for: brand) }
-                    }
-                }
+        section("Robôs e fechaduras") {
+            hint("Robôs aspiradores e fechaduras das marcas com app próprio. Os do Smart Life, do SmartThings e da LG já vêm por essas contas. Integrações não oficiais: a marca pode mudá-las.")
+            ForEach(Provider.brands.filter { $0.signIn != nil && $0 != .playstation }, id: \.self) { brand in
+                brandRow(brand)
             }
             DisclosureGroup("Intelbras") {
                 VStack(alignment: .leading, spacing: 4) {

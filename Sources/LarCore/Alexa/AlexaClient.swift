@@ -238,6 +238,29 @@ public struct AlexaDevice: Sendable, Equatable {
     public var members: [String]
 }
 
+/// An alarm, timer or reminder on an Echo.
+public struct AlexaNotification: Sendable, Equatable, Identifiable {
+    public enum Kind: Sendable { case alarm, timer, reminder }
+    public var id: String
+    public var kind: Kind
+    public var serial: String
+    public var label: String?
+    /// A timer's seconds left, when read.
+    public var secondsLeft: Double?
+    /// An alarm's or reminder's time ("07:00").
+    public var time: String?
+
+    public var text: String {
+        switch kind {
+        case .timer:
+            let minutes = Int(((secondsLeft ?? 0) / 60).rounded(.up))
+            return tr("Timer") + " · " + (minutes >= 60 ? "\(minutes / 60) h \(minutes % 60) min" : "\(minutes) min") + (label.map { " · \($0)" } ?? "")
+        case .alarm: return tr("Alarme") + " · " + (time ?? "") + (label.map { " · \($0)" } ?? "")
+        case .reminder: return tr("Lembrete") + " · " + (time ?? "") + (label.map { " · \($0)" } ?? "")
+        }
+    }
+}
+
 public struct AlexaRoutine: Sendable, Equatable {
     /// The routine's automation id (stays the same when it's renamed).
     public var id: String
@@ -427,6 +450,25 @@ public actor AlexaClient {
             if let serial = item["deviceSerialNumber"]?.string { out[serial] = item["enabled"]?.bool ?? false }
         }
         return out
+    }
+
+    /// The alarms, timers and reminders on the account's Echos that are still on.
+    public func notifications() async throws -> [AlexaNotification] {
+        Self.notifications(from: try await call("GET", "api/notifications"))
+    }
+
+    static func notifications(from json: JSONValue?) -> [AlexaNotification] {
+        (json?["notifications"]?.array ?? []).compactMap { item in
+            guard let type = item["type"]?.string, let serial = item["deviceSerialNumber"]?.string,
+                  ["ON", "SNOOZED"].contains(item["status"]?.string ?? "") else { return nil }
+            let kind: AlexaNotification.Kind = type == "Timer" ? .timer : type == "Alarm" || type == "MusicAlarm" ? .alarm : .reminder
+            let label = item["timerLabel"]?.string ?? item["reminderLabel"]?.string
+            // Timers count down from when they were read; alarms and reminders ring at a time of day.
+            let remaining = item["remainingTime"]?.double.map { $0 / 1000 }
+            let time = item["originalTime"]?.string.map { String($0.prefix(5)) }
+            return AlexaNotification(id: item["id"]?.string ?? UUID().uuidString, kind: kind, serial: serial,
+                                     label: label?.isEmpty == false ? label : nil, secondsLeft: remaining, time: time)
+        }
     }
 
     public func setDoNotDisturb(_ on: Bool, on device: AlexaDevice) async throws {

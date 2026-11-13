@@ -14,6 +14,7 @@ struct HomeView: View {
         case airConditioner(rawID: String)
         case light(id: String)
         case tv(id: String)
+        case gamepad(id: String)
         case echo(id: String)
         /// A scene's editor; nil makes a new one.
         case scene(id: UUID?)
@@ -59,6 +60,31 @@ struct HomeView: View {
             case .tv(let id):
                 TVDetailView(home: home, deviceID: id) { go(.list) }
                     .transition(.move(edge: .trailing).combined(with: .opacity))
+            case .gamepad(let id):
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack(spacing: 10) {
+                        BackButton { go(.list) }
+                        Text(home.device(id: id)?.name ?? "PS5").font(.system(size: 13, weight: .semibold))
+                        Spacer()
+                        // As on the Xbox's screen: power first (off is rest mode).
+                        let isOn = home.device(id: id)?.isOn == true
+                        Button {
+                            if isOn { PlayStationGamepad.shared.disconnect() }
+                            home.perform(.power(!isOn), on: id)
+                        } label: {
+                            Label(isOn ? "Desligar" : "Ligar", systemImage: "power")
+                        }
+                        .tint(isOn ? .red : .accentColor)
+                        .buttonStyle(.bordered)
+                        .disabled(home.device(id: id)?.canSwitch != true)
+                    }
+                    if let device = home.device(id: id) {
+                        Text(Labels.subtitle(device)).font(.system(size: 11)).foregroundStyle(Theme.secondaryText)
+                        if PlayStationInfoView.shows(device) { PlayStationInfoView(device: device) }
+                    }
+                    PlayStationGamepadView(name: home.device(id: id)?.name ?? "PS5")
+                }
+                .transition(.move(edge: .trailing).combined(with: .opacity))
             case .dialer:
                 VStack(alignment: .leading, spacing: 10) {
                     HStack(spacing: 10) {
@@ -262,6 +288,9 @@ struct HomeView: View {
     @ViewBuilder
     private func deviceMenu(_ device: HomeDevice) -> some View {
         let custom = home.customization(of: device.id)
+        if device.canPause, device.isOn == true {
+            Button("Pausar") { home.perform(.pause, on: device.id) }
+        }
         Button(custom.isFavorite ? "Tirar dos favoritos" : "Adicionar aos favoritos") {
             home.customize(device.id) { $0.isFavorite.toggle() }
         }
@@ -288,20 +317,22 @@ struct HomeView: View {
         // An offline device has nothing to show: its screen would only be placeholders.
         guard device.isOnline else { return false }
         // The full remote is ADB's (Android TV); a Samsung TV from SmartThings only switches.
-        return device.provider == .alexa || device.hasRemote || device.hasLGPanel || device.acceptsTemperature || device.canDim || device.hasColor || device.hasLiveVideo
+        return device.provider == .alexa || device.hasRemote || device.hasGamepad || device.canLinkLocalTV || !device.options.isEmpty || device.canPause || device.hasLGPanel || device.acceptsTemperature || device.canDim || device.hasColor || device.hasLiveVideo
     }
 
     private func open(_ device: HomeDevice) {
         guard device.isOnline else { return }
         if device.provider == .alexa {
             go(.echo(id: device.id))
-        } else if device.hasRemote {
+        } else if device.hasGamepad {
+            go(.gamepad(id: device.id))
+        } else if device.hasRemote || device.canLinkLocalTV {
             go(.tv(id: device.id))
         } else if device.hasLGPanel {
             go(.airConditioner(rawID: device.rawID))
         } else if device.hasLiveVideo {
             CameraWindow.show(device: device, home: home)
-        } else if device.canDim || device.hasColor || device.acceptsTemperature {
+        } else if device.canDim || device.hasColor || device.acceptsTemperature || !device.options.isEmpty || device.canPause {
             // Lights, and the air conditioners of SmartThings and Smart Life (power and temperature).
             go(.light(id: device.id))
         } else if device.canSwitch {

@@ -20,9 +20,26 @@ struct TVDetailView: View {
     private var isOn: Bool { device?.isOn == true }
 
     var body: some View {
+        if let device, device.canLinkLocalTV, !device.hasRemote {
+            // An LG or Samsung TV with only its cloud's power: the remote comes once linked.
+            VStack(alignment: .leading, spacing: 14) {
+                header
+                Divider()
+                LocalTVLinkView(device: device) { home.reloadAccounts(); Task { await home.refresh() } }
+                Spacer(minLength: 0)
+            }
+        } else {
+            remoteBody
+        }
+    }
+
+    private var remoteBody: some View {
         VStack(alignment: .leading, spacing: 14) {
             header
             Divider()
+            if let device, device.canLinkLocalTV {
+                LocalTVLinkView(device: device) { home.reloadAccounts(); Task { await home.refresh() } }
+            }
             if device?.controls["pairable"] == "1", device?.controls["link"] != "remote" {
                 TVPairingRow(home: home, deviceID: deviceID, required: device?.isOn == nil)
                 Divider()

@@ -25,6 +25,14 @@ public actor PlayStationClient {
         /// The console it's online on ("PS5", "PS4", "PSPC", "MOBILE_APP").
         var platform: String?
         var game: String?
+        /// The game's icon.
+        var art: String?
+    }
+
+    /// The account's trophies: its level and how many of each.
+    struct Trophies: Sendable, Equatable {
+        var level: Int
+        var platinum: Int, gold: Int, silver: Int, bronze: Int
     }
 
     private var account: BrandAccount
@@ -42,13 +50,30 @@ public actor PlayStationClient {
 
     public static let signIn = BrandSignIn(
         provider: .playstation,
-        hint: tr("1. Entre na sua conta em playstation.com no navegador. 2. Na mesma janela, abra ca.account.sony.com/api/v1/ssocookie. 3. Copie o valor de \"npsso\" (64 letras e números) e cole aqui. O PS5 e o PS4 aparecem em Jogos, com o jogo do momento."),
+        hint: tr("O PS5 e o PS4 aparecem em Jogos, com o jogo do momento. A senha fica na página da Sony: não passa pelo Lar."),
         needsPassword: true,
         appName: "PlayStation",
-        token: BrandToken(label: tr("Token npsso"), link: tokenPage)
+        token: BrandToken(label: tr("Token npsso"), link: tokenPage,
+                          steps: tr("No navegador, entre na sua conta em playstation.com. Na mesma janela, abra o endereço abaixo e copie o valor de \"npsso\" (64 letras e números)."),
+                          web: .init(url: authorizeURL, redirect: redirect, finish: { try await account(code: $0) }))
     ) { _, npsso in
         let npsso = npsso.trimmingCharacters(in: CharacterSet(charactersIn: " \n\t\""))
-        let code = try await accessCode(npsso: npsso)
+        return .done(try await account(code: try await accessCode(npsso: npsso)))
+    }
+
+    /// Sony's sign-in for the PlayStation app: its sign-in page when there's no session, then a redirect with the code.
+    static var authorizeURL: URL {
+        var components = URLComponents(string: auth + "/authorize")!
+        components.queryItems = [
+            URLQueryItem(name: "access_type", value: "offline"), URLQueryItem(name: "client_id", value: clientID),
+            URLQueryItem(name: "redirect_uri", value: redirect), URLQueryItem(name: "response_type", value: "code"),
+            URLQueryItem(name: "scope", value: scope),
+        ]
+        return components.url!
+    }
+
+    /// The account for a one-time code (from the npsso or the sign-in page).
+    static func account(code: String) async throws -> BrandAccount {
         var account = BrandAccount(email: "PlayStation")
         try await tokens(["code": code, "redirect_uri": redirect, "grant_type": "authorization_code", "token_format": "jwt"],
                          into: &account, http: BrandHTTP(transport: defaultTransport))
@@ -57,19 +82,13 @@ public actor PlayStationClient {
         let me = try await client.me()
         account.email = me.onlineID ?? "PlayStation"
         account["accountID"] = me.accountID
-        return .done(account)
+        return account
     }
 
     /// The npsso token for a one-time code: Sony answers with a redirect to the PlayStation app carrying it.
     static func accessCode(npsso: String) async throws -> String {
         guard npsso.count >= 32 else { throw ProviderError.api(tr("Cole o valor de \"npsso\" inteiro.")) }
-        var components = URLComponents(string: auth + "/authorize")!
-        components.queryItems = [
-            URLQueryItem(name: "access_type", value: "offline"), URLQueryItem(name: "client_id", value: clientID),
-            URLQueryItem(name: "redirect_uri", value: redirect), URLQueryItem(name: "response_type", value: "code"),
-            URLQueryItem(name: "scope", value: scope),
-        ]
-        var request = URLRequest(url: components.url!, timeoutInterval: 20)
+        var request = URLRequest(url: authorizeURL, timeoutInterval: 20)
         request.setValue("npsso=\(npsso)", forHTTPHeaderField: "Cookie")
         let response: URLResponse
         do {
@@ -157,6 +176,36 @@ public actor PlayStationClient {
         }
     }
 
+    private var trophiesRead: (at: Date, value: Trophies)?
+    /// When the current game started (as first seen), by title.
+    private var playing: (game: String, since: Date)?
+
+    /// The trophies, read at most every half hour.
+    func trophies() async -> Trophies? {
+        if let trophiesRead, Date().timeIntervalSince(trophiesRead.at) < 1800 { return trophiesRead.value }
+        guard let answer = try? await get("https://m.np.playstation.com/api/trophy/v1/users/me/trophySummary") else { return nil }
+        let value = Self.trophies(answer)
+        if let value { trophiesRead = (Date(), value) }
+        return value
+    }
+
+    static func trophies(_ answer: [String: Any]) -> Trophies? {
+        guard let level = answer.int("trophyLevel") else { return nil }
+        let earned = answer.dict("earnedTrophies")
+        return Trophies(level: level, platinum: earned?.int("platinum") ?? 0, gold: earned?.int("gold") ?? 0,
+                        silver: earned?.int("silver") ?? 0, bronze: earned?.int("bronze") ?? 0)
+    }
+
+    /// Since when the game being played is on (reset when it changes or stops).
+    func playingSince(_ game: String?) -> Date? {
+        guard let game else {
+            playing = nil
+            return nil
+        }
+        if playing?.game != game { playing = (game, Date()) }
+        return playing?.since
+    }
+
     func presence() async throws -> Presence {
         var id = account["accountID"]
         if id == nil {
@@ -173,13 +222,16 @@ public actor PlayStationClient {
         let basic = answer.dict("basicPresence") ?? answer
         let platform = basic.dict("primaryPlatformInfo")
         let online = platform?.string("onlineStatus") == "online"
-        let game = basic.list("gameTitleInfoList").first?.string("titleName")
-        return Presence(online: online, platform: platform?.string("platform")?.uppercased(), game: online ? game : nil)
+        let title = basic.list("gameTitleInfoList").first
+        return Presence(online: online, platform: platform?.string("platform")?.uppercased(),
+                        game: online ? title?.string("titleName") : nil,
+                        art: online ? (title?.string("npTitleIconUrl") ?? title?.string("conceptIconUrl")) : nil)
     }
 }
 
-/// The consoles in "Jogos": on (the owner online on it) with the game, or off/at rest. No switch: Sony only turns
-/// them on and off through Remote Play.
+/// The consoles in "Jogos": on (the owner online on it) with the game, or off/at rest. Once paired with Remote Play
+/// (Ajustes → Jogos → PlayStation → Parear), the paired PS5 answers on the network whether it's on or resting, turns
+/// on from the list and goes to rest mode (Sony doesn't let it shut down fully from outside the console).
 public struct PlayStationProvider: DeviceProvider {
     public let provider = Provider.playstation
     let client: PlayStationClient
@@ -187,24 +239,110 @@ public struct PlayStationProvider: DeviceProvider {
     public func devices() async throws -> [HomeDevice] {
         let consoles = try await client.consoles()
         let presence = try await client.presence()
-        return Self.devices(consoles, presence: presence)
+        let since = await client.playingSince(presence.game)
+        let trophies = await client.trophies()
+        let pairing = await client.pairing
+        var state: PlayStationRemotePlay.State?
+        #if !os(watchOS)
+        if let pairing { state = await PlayStationRemotePlay.state(host: pairing.host) }
+        #endif
+        #if os(watchOS)
+        let local = false
+        #else
+        let local = true
+        #endif
+        return Self.devices(consoles, presence: presence, pairing: pairing, state: state, local: local).map { device in
+            var device = device
+            // The game's art and time, and the account's trophies, for the console's screen.
+            if device.controls["playing"] == "1" {
+                if let art = presence.art { device.controls["art"] = art }
+                if let since { device.controls["since"] = String(Int(since.timeIntervalSince1970)) }
+            }
+            if let trophies {
+                device.controls["trophies"] = "\(trophies.level)|\(trophies.platinum)|\(trophies.gold)|\(trophies.silver)|\(trophies.bronze)"
+            }
+            return device
+        }
     }
 
-    static func devices(_ consoles: [PlayStationClient.Console], presence: PlayStationClient.Presence) -> [HomeDevice] {
+    /// `local`: this device asks the console on the network (not the watch, whose commands go through the iPhone).
+    static func devices(_ consoles: [PlayStationClient.Console], presence: PlayStationClient.Presence,
+                        pairing: PlayStationRemotePlay.Pairing? = nil, state: PlayStationRemotePlay.State? = nil,
+                        local: Bool = true) -> [HomeDevice] {
         var seen: [String: Int] = [:]
         return consoles.map { console in
             seen[console.type, default: 0] += 1
             let count = seen[console.type] ?? 1
-            let name = count == 1 ? console.type : "\(console.type) (\(count))"
             // The presence names the platform, not which console: the first of that type is the one in use.
             let inUse = presence.online && presence.platform == console.type && count == 1
-            let detail = inUse ? (presence.game ?? tr("Ligado")) : tr("Desligado ou em repouso")
+            // The paired console is the first PS5.
+            let paired = pairing != nil && console.type == "PS5" && count == 1
+            let name = paired ? (pairing?.nickname ?? console.type) : count == 1 ? console.type : "\(console.type) (\(count))"
+            var controls = ["playing": inUse ? "1" : "0"]
+            guard paired else {
+                let detail = inUse ? (presence.game ?? tr("Ligado")) : tr("Desligado ou em repouso")
+                return HomeDevice(provider: .playstation, rawID: console.id, name: name, kind: .gameConsole, detail: detail, controls: controls)
+            }
+            controls["paired"] = "1"
+            let isOn: Bool
+            let detail: String
+            switch state {
+            case .on(_, let app):
+                isOn = true
+                detail = (inUse ? presence.game : nil) ?? app ?? tr("Ligado")
+            case .standby:
+                isOn = false
+                detail = tr("Em repouso")
+            case nil:
+                // No answer on the network (the watch can't ask; or away from home): what the account says.
+                isOn = inUse
+                detail = inUse ? (presence.game ?? tr("Ligado")) : (local ? tr("Fora da rede deste aparelho") : tr("Desligado ou em repouso"))
+            }
             return HomeDevice(provider: .playstation, rawID: console.id, name: name, kind: .gameConsole,
-                              detail: detail, controls: ["playing": inUse ? "1" : "0"])
+                              isOnline: state != nil || inUse || !local, isOn: isOn, detail: detail, controls: controls)
         }
     }
 
     public func send(_ command: HomeCommand, to device: HomeDevice) async throws {
-        throw ProviderError.unsupported
+        guard case .power(let on) = command, device.controls["paired"] == "1", let pairing = await client.pairing else {
+            throw ProviderError.unsupported
+        }
+        #if os(watchOS)
+        throw ProviderError.api(tr("Ligue e desligue o PS5 pelo iPhone, na mesma rede."))
+        #else
+        if on {
+            try await PlayStationRemotePlay.wakeAndSignIn(pairing)
+        } else {
+            // "Off" is rest mode: the only way Sony allows from outside the console.
+            try await PlayStationRemotePlay.send(.rest, to: pairing)
+        }
+        #endif
     }
+}
+
+extension PlayStationClient {
+    /// The Remote Play pairing kept with the account (nil until paired).
+    var pairing: PlayStationRemotePlay.Pairing? { Self.pairing(of: account) }
+
+    static func pairing(of account: BrandAccount) -> PlayStationRemotePlay.Pairing? {
+        guard let host = account["rp.host"], let credential = account["rp.credential"] else { return nil }
+        var pairing = PlayStationRemotePlay.Pairing(host: host, credential: credential, nickname: account["rp.nickname"],
+                                                    mac: account["rp.mac"], registKey: account["rp.registKey"], rpKey: account["rp.rpKey"])
+        pairing.loginPIN = account["rp.loginPIN"]
+        return pairing
+    }
+
+    /// The saved account's pairing, for the settings.
+    public static var savedPairing: PlayStationRemotePlay.Pairing? { AppSettings.brandAccount(.playstation).flatMap(pairing(of:)) }
+
+    /// Keeps (or forgets, with nil) the pairing with the saved account.
+    public static func save(_ pairing: PlayStationRemotePlay.Pairing?) {
+        guard var account = AppSettings.brandAccount(.playstation) else { return }
+        for key in account.values.keys where key.hasPrefix("rp.") { account[key] = nil }
+        for (key, value) in pairing?.values ?? [:] { account[key] = value }
+        AppSettings.setBrandAccount(account, for: .playstation)
+    }
+
+    /// The account's id (a decimal number), which pairing needs.
+    public static var savedAccountID: String? { AppSettings.brandAccount(.playstation)?["accountID"] }
 }

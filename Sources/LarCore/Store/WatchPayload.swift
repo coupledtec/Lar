@@ -53,6 +53,9 @@ public struct WatchPayload: Codable, Sendable, Equatable {
     public var xbox: XboxAccount?
     /// The robot and lock brands' accounts (the watch uses the ones that don't need MQTT).
     public var brands: [String: BrandAccount]?
+    /// The list's devices with an LG or Samsung TV's remote (id → kind): the watch shows the remote and sends it
+    /// through the iPhone. No keys.
+    public var localTVLinks: [String: String]?
     public var sentAt: Date
 
     /// The watch's answer once it took a payload: the payload's `sentAt` (seconds since 1970), so the iPhone can say
@@ -109,6 +112,12 @@ public struct WatchPayload: Codable, Sendable, Equatable {
         if settings.alexa?.refreshToken != alexa?.refreshToken { settings.alexa = alexa }
         // Only a different account replaces the watch's: its own renewals change the token.
         if settings.xbox?.gamertag != xbox?.gamertag { settings.xbox = xbox }
+        if let localTVLinks {
+            let links = localTVLinks.compactMap { id, kind in
+                LocalTV.Kind(rawValue: kind).map { LocalTV(kind: $0, host: "", name: "", linkedDeviceID: id) }
+            }.sorted { ($0.linkedDeviceID ?? "") < ($1.linkedDeviceID ?? "") }
+            if links != AppSettings.localTVs { AppSettings.localTVs = links }
+        }
         if let brands {
             // Only a different account replaces the watch's: its own renewals change the tokens.
             var mine = settings.brands

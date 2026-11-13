@@ -53,6 +53,12 @@ public enum Accounts {
                 rememberPins: { AppSettings.saveTVPins($0) }
             ))
         }
+        if includeTVs {
+            let tvs = AppSettings.localTVs
+            for kind in LocalTV.Kind.allCases where tvs.contains(where: { $0.kind == kind && $0.linkedDeviceID == nil }) {
+                out.append(LocalTVProvider(kind: kind, tvs: tvs))
+            }
+        }
         for (key, account) in settings.brands {
             guard let brand = Provider(rawValue: key), brand.isBrand else { continue }
             // The watch can't open the MQTT connections some brands need.

@@ -32,6 +32,10 @@ public actor TuyaClient: DeviceProvider, LiveVideoProvider {
     private var tokenExpires = Date.distantPast
     /// Each light's brightness and color ranges, read once from its function list.
     private var specs: [String: LightSpec] = [:]
+    /// The infrared remotes' keys, by remote (read once).
+    var infraredKeys: [String: (category: Int, keys: [(key: String, id: Int)])] = [:]
+    /// The enum functions (code → choices) of the devices with options, read once.
+    private var optionSpecs: [String: [(String, [String])]] = [:]
 
     public init(credentials: Credentials, transport: @escaping HTTPTransport = defaultTransport,
                 now: @escaping @Sendable () -> Date = Date.init) {
@@ -53,14 +57,18 @@ public actor TuyaClient: DeviceProvider, LiveVideoProvider {
             out += try await (result["devices"]?.array ?? []).concurrentMap { json in
                 let device = Self.device(from: json)
                 if device.kind == .light, device.isOnline, let spec = try? await self.spec(for: device.rawID) {
-                    return Self.applySpec(spec, to: device, json: json)
+                    return Self.applyOptions(await self.cachedOptions(device.rawID), to: Self.applySpec(spec, to: device, json: json), json: json)
+                }
+                if [.airConditioner, .vacuum, .fan].contains(device.kind), device.isOnline,
+                   let options = try? await self.options(for: device.rawID) {
+                    return Self.applyOptions(options, to: device, json: json)
                 }
                 return device
             }
             lastRow = result["last_row_key"]?.string ?? ""
             if result["has_more"]?.bool != true || lastRow.isEmpty { break }
         }
-        return out
+        return await withInfrared(out)
     }
 
     static let lightCategories: Set = ["dj", "dd", "fwd", "xdd", "dc", "tgq", "tgkg"]
@@ -89,6 +97,8 @@ public actor TuyaClient: DeviceProvider, LiveVideoProvider {
             provider: .tuya, rawID: id, name: json["name"]?.string ?? id, kind: kind,
             isOnline: json["online"]?.bool ?? true
         )
+        // An infrared blaster: its remotes come from the infrared API (TuyaInfrared).
+        if category == "wnykq" { device.controls["tuyaCategory"] = category }
         var temperature: Double?
         var humidity: Double?
         for status in json["status"]?.array ?? [] {
@@ -107,7 +117,13 @@ public actor TuyaClient: DeviceProvider, LiveVideoProvider {
                 }
             }
         }
-        if kind == .camera { device.isOn = nil }
+        if kind == .camera {
+            device.isOn = nil
+            // The last motion's picture reference changes with each movement (the alert compares it).
+            for status in json["status"]?.array ?? [] where status["code"]?.string == "movement_detect_pic" {
+                if let value = status["value"]?.string, !value.isEmpty { device.controls["motion"] = value }
+            }
+        }
         if kind == .airConditioner { return airConditioner(device) }
         if kind == .vacuum || kind == .lock {
             let statuses = (json["status"]?.array ?? []).compactMap { status -> (String, JSONValue)? in
@@ -139,11 +155,18 @@ public actor TuyaClient: DeviceProvider, LiveVideoProvider {
         device.isOn = cleaning
         device.controls["switch"] = "power_go"
         if values["switch_charge"] != nil { device.controls["dock"] = "switch_charge" }
+        // The standard "pause" code, when the model has it.
+        if values["pause"] != nil {
+            device.controls["pause"] = "pause"
+            device.controls["pausable"] = "1"
+        }
         var parts: [String] = []
         if let status { parts.append(vacuumStatus(status)) } else { parts.append(cleaning ? tr("Limpando") : tr("Parado")) }
         if let battery = values["electricity_left"]?.double ?? values["residual_electricity"]?.double {
             parts.append(tr("bateria \(Int(battery))%"))
         }
+        // A fault bitmap other than zero: stuck, a brush, the bin…
+        if let fault = values["fault"]?.double, fault > 0 { device.controls["problem"] = tr("Robô com problema (código \(Int(fault)))") }
         device.detail = parts.joined(separator: " · ")
         return device
     }
@@ -215,6 +238,40 @@ public actor TuyaClient: DeviceProvider, LiveVideoProvider {
         var colorCode: String?
         /// colour_data_v2 counts saturation and value to 1000; the old colour_data to 255.
         var colorScale: Double = 1000
+        /// The white's temperature (temp_value_v2, 0–1000; temp_value, 0–255), warm to cold.
+        var whiteCode: String?
+        var whiteRange: ClosedRange<Double> = 0...1000
+    }
+
+    private func cachedOptions(_ id: String) -> [(String, [String])] { optionSpecs[id] ?? [] }
+
+    private func options(for id: String) async throws -> [(String, [String])] {
+        if let cached = optionSpecs[id] { return cached }
+        let result = try await call("GET", "/v1.0/iot-03/devices/\(id)/functions")
+        let options = Self.options(fromFunctions: result["functions"]?.array ?? [])
+        optionSpecs[id] = options
+        return options
+    }
+
+    /// The enum functions worth offering (mode, fan, swing, suction, water…), with their choices.
+    static func options(fromFunctions functions: [JSONValue]) -> [(String, [String])] {
+        let skip: Set = ["status", "fault", "temp_unit_convert", "c_f", "countdown", "countdown_1", "power_go"]
+        return functions.compactMap { function in
+            guard function["type"]?.string?.lowercased() == "enum", let code = function["code"]?.string, !skip.contains(code),
+                  let values = function["values"]?.string.flatMap({ try? JSONDecoder().decode(JSONValue.self, from: Data($0.utf8)) }),
+                  let range = values["range"]?.array?.compactMap(\.string), range.count > 1 else { return nil }
+            return (code, range)
+        }
+    }
+
+    static func applyOptions(_ options: [(String, [String])], to device: HomeDevice, json: JSONValue) -> HomeDevice {
+        var device = device
+        let current = Dictionary((json["status"]?.array ?? []).compactMap { status -> (String, String)? in
+            guard let code = status["code"]?.string, let value = status["value"]?.string else { return nil }
+            return (code, value)
+        }, uniquingKeysWith: { first, _ in first })
+        for (code, values) in options { device.setOption(code, values: values, current: current[code]) }
+        return device
     }
 
     private func spec(for id: String) async throws -> LightSpec {
@@ -222,6 +279,8 @@ public actor TuyaClient: DeviceProvider, LiveVideoProvider {
         let result = try await call("GET", "/v1.0/iot-03/devices/\(id)/functions")
         let spec = Self.spec(fromFunctions: result["functions"]?.array ?? [])
         specs[id] = spec
+        // A light's effects and modes come with the same answer.
+        optionSpecs[id] = Self.options(fromFunctions: result["functions"]?.array ?? [])
         return spec
     }
 
@@ -239,6 +298,14 @@ public actor TuyaClient: DeviceProvider, LiveVideoProvider {
                     spec.brightnessRange = min...max
                 } else {
                     spec.brightnessRange = code == "bright_value" ? 25...255 : 10...1000
+                }
+            case "temp_value_v2", "temp_value":
+                guard spec.whiteCode != "temp_value_v2" else { continue }
+                spec.whiteCode = code
+                if let min = values?["min"]?.double, let max = values?["max"]?.double, min < max {
+                    spec.whiteRange = min...max
+                } else {
+                    spec.whiteRange = code == "temp_value" ? 0...255 : 0...1000
                 }
             case "colour_data_v2", "colour_data":
                 guard spec.colorCode != "colour_data_v2" else { continue }
@@ -265,6 +332,12 @@ public actor TuyaClient: DeviceProvider, LiveVideoProvider {
             device.controls["brightMax"] = String(spec.brightnessRange.upperBound)
             let raw = values[code]?.double ?? spec.brightnessRange.upperBound
             device.brightness = normalized(raw, in: spec.brightnessRange)
+        }
+        if let code = spec.whiteCode {
+            device.controls["white"] = code
+            device.controls["whiteMin"] = String(spec.whiteRange.lowerBound)
+            device.controls["whiteMax"] = String(spec.whiteRange.upperBound)
+            device.controls["ct"] = HomeText.number(normalized(values[code]?.double ?? spec.whiteRange.upperBound / 2, in: spec.whiteRange))
         }
         if let code = spec.colorCode {
             device.controls["colour"] = code
@@ -293,6 +366,7 @@ public actor TuyaClient: DeviceProvider, LiveVideoProvider {
     // MARK: Commands
 
     public func send(_ command: HomeCommand, to device: HomeDevice) async throws {
+        if device.controls["irHub"] != nil { return try await sendInfrared(command, to: device) }
         let commands = try Self.commands(for: command, device: device)
         let body: JSONValue = ["commands": .array(commands)]
         _ = try await call("POST", "/v1.0/iot-03/devices/\(device.rawID)/commands", body: body)
@@ -323,6 +397,16 @@ public actor TuyaClient: DeviceProvider, LiveVideoProvider {
                 ["code": "work_mode", "value": "colour"],
                 colorCommand(code: code, color: color, value: device.brightness ?? 1, scale: scale(controls)),
             ]
+        case .whiteTemperature(let value):
+            guard let code = controls["white"] else { throw ProviderError.unsupported }
+            let low = Double(controls["whiteMin"] ?? "") ?? 0, high = Double(controls["whiteMax"] ?? "") ?? 1000
+            return [["code": "work_mode", "value": "white"], ["code": .string(code), "value": .number((low + (high - low) * min(max(value, 0), 1)).rounded())]]
+        case .option(let name, let value):
+            guard controls["opt:" + name] != nil else { throw ProviderError.unsupported }
+            return [["code": .string(name), "value": .string(value)]]
+        case .pause:
+            guard let code = controls["pause"] else { throw ProviderError.unsupported }
+            return [["code": .string(code), "value": true]]
         case .temperature(let value):
             guard device.kind == .airConditioner, controls["targetTemperature"] != nil else { throw ProviderError.unsupported }
             let scale = Double(controls["tempScale"] ?? "") ?? 1
@@ -372,7 +456,7 @@ public actor TuyaClient: DeviceProvider, LiveVideoProvider {
     // MARK: Signed calls
 
     /// A signed call with the project's token; a token the cloud dropped is renewed once.
-    private func call(_ method: String, _ path: String, body: JSONValue? = nil) async throws -> JSONValue {
+    func call(_ method: String, _ path: String, body: JSONValue? = nil) async throws -> JSONValue {
         for attempt in 0..<2 {
             if token == nil || now() >= tokenExpires {
                 let result = try await signed("GET", "/v1.0/token?grant_type=1", body: nil, token: nil)

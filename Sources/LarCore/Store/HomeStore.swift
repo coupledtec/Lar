@@ -154,6 +154,7 @@ public final class HomeStore {
         let list = serverDevices.filter { duplicates[$0.id] == nil }.map { device in
             var device = device
             if let name = customizations[device.id]?.name { device.name = name }
+            if let kind = linkedTVs[device.id] { device.controls["localTV"] = kind.rawValue }
             for override in (overrides[device.id] ?? [:]).values where override.expires > date {
                 device = device.applying(override.command)
                 validUntil = min(validUntil, override.expires)
@@ -170,6 +171,11 @@ public final class HomeStore {
         return fresh
     }
 
+    /// The devices in the list with a paired LG or Samsung TV's remote, by id.
+    private var linkedTVs: [String: LocalTV.Kind] = [:] {
+        didSet { revision += 1 }
+    }
+
     public static let kindOrder: [DeviceKind] = [.tv, .gameConsole, .speaker, .airConditioner, .light, .plug, .fan, .camera, .lock, .vacuum, .laundry, .kitchen, .climateSensor, .other]
 
     public func device(id: String) -> HomeDevice? {
@@ -181,12 +187,14 @@ public final class HomeStore {
     public var hasAccounts: Bool { accounts.values.contains { $0 != .notConfigured } }
 
     /// How many lights and plugs are on, for the menu bar.
-    public var switchedOnCount: Int { devices.filter { $0.isOn == true && $0.isOnline && $0.kind != .camera }.count }
+    public var switchedOnCount: Int { devices.filter(\.countsAsOn).count }
 
     // MARK: Lifecycle
 
     /// Rebuilds the clients after a key changes; their tokens start over.
     public func reloadAccounts() {
+        linkedTVs = Dictionary(AppSettings.localTVs.compactMap { tv in tv.linkedDeviceID.map { ($0, tv.kind) } },
+                               uniquingKeysWith: { first, _ in first })
         let list = makeProviders()
         providers = Dictionary(list.map { ($0.provider, $0) }, uniquingKeysWith: { first, _ in first })
         for provider in Provider.allCases {
@@ -385,8 +393,13 @@ public final class HomeStore {
 
     /// - Parameter force: send even when the list already shows that state (a widget or Siri asking for "on" from a
     ///   copy of the list that may be old: what it shows isn't proof).
-    public func perform(_ command: HomeCommand, on deviceID: String, force: Bool = false) {
+    /// - Parameter unlockAllowed: the owner was asked (Face ID, the Home app's own check): only then a lock opens.
+    public func perform(_ command: HomeCommand, on deviceID: String, force: Bool = false, unlockAllowed: Bool = false) {
         guard let current = device(id: deviceID), current.isOnline || current.canSwitch else { return }
+        if current.kind == .lock, command == .power(false), !unlockAllowed {
+            showMessage(tr("\(current.name): destrancar pede Face ID ou Touch ID. Abra o Lar e toque na fechadura."))
+            return
+        }
         let pending = queue.contains { $0.deviceID == deviceID && $0.command.field == command.field }
         if !force, current.applying(command) == current, !pending { return }
         overrides[deviceID, default: [:]][command.field] = Override(
@@ -403,7 +416,18 @@ public final class HomeStore {
 
     public func toggle(_ deviceID: String) {
         guard let device = device(id: deviceID), let on = device.isOn else { return }
+        if device.kind == .lock, on {
+            Task { await unlock(deviceID) }
+            return
+        }
         perform(.power(!on), on: deviceID)
+    }
+
+    /// Unlocks a door after Face ID, Touch ID or the device's passcode.
+    public func unlock(_ deviceID: String) async {
+        guard let device = device(id: deviceID), device.canLock else { return }
+        guard await DeviceAuth.confirm(tr("destrancar \(device.name)")) else { return }
+        perform(.power(false), on: deviceID, unlockAllowed: true)
     }
 
     /// Whether commands are still waiting or going out.
@@ -423,8 +447,12 @@ public final class HomeStore {
 
     private func send(_ pending: Pending) async {
         guard let device = serverDevices.first(where: { $0.id == pending.deviceID }),
-              let provider = providers[device.provider]
+              var provider = providers[device.provider]
         else { return }
+        #if os(watchOS)
+        // The PS5 wakes and rests over the home network: from the watch, the iPhone does it.
+        if device.provider == .playstation, let relay = providers[.androidTV] { provider = relay }
+        #endif
         do {
             try await provider.send(pending.command, to: device)
             overrides[pending.deviceID]?[pending.command.field]?.expires = now().addingTimeInterval(Self.overrideLifetime)
@@ -452,7 +480,12 @@ public final class HomeStore {
 
     /// The remote of the device's own account (Android TVs, or a Samsung TV or soundbar through SmartThings).
     private func remote(for device: HomeDevice) -> (any TVRemoteProvider)? {
-        providers[device.provider] as? any TVRemoteProvider
+        #if os(watchOS)
+        // The watch can't reach the TV: the iPhone's relay takes it.
+        if device.controls["localTV"] != nil { return providers[.androidTV] as? any TVRemoteProvider }
+        #endif
+        if device.controls["localTV"] != nil, let linked = LocalTVProvider.linked(to: device) { return linked }
+        return providers[device.provider] as? any TVRemoteProvider
     }
 
     /// Pairing happens only where the TVs are reached directly (not from the watch).
@@ -521,6 +554,42 @@ public final class HomeStore {
             } catch {
                 showMessage(tr("TV: \((error as? ProviderError)?.message ?? error.localizedDescription)"))
             }
+        }
+    }
+
+    /// The watch's requests for devices that aren't Android TVs (the PS5's power, an LG or Samsung TV's remote): run
+    /// here as the iPhone's own list does them. nil for the Android TVs, which the TV provider answers.
+    public func relay(_ request: TVRelay.Request) async -> TVRelay.Reply? {
+        let id: String
+        switch request {
+        case .devices: return nil
+        case .power(let target, _), .key(let target, _), .apps(let target), .openApp(let target, _), .text(let target, _), .keyboard(let target):
+            id = target
+        }
+        guard let device = device(id: id), device.provider != .androidTV else { return nil }
+        do {
+            switch request {
+            case .power(_, let on):
+                perform(.power(on), on: id, force: true)
+                await waitUntilSent()
+                if let problem = transientMessage { return TVRelay.Reply(error: problem) }
+            case .key(_, let code):
+                guard let key = AndroidTVProvider.Key(rawValue: code) else { throw ProviderError.unsupported }
+                try await pressAndWait(key, on: id)
+            case .apps:
+                return TVRelay.Reply(apps: await tvApps(on: id))
+            case .openApp(_, let package):
+                openApp(package, on: id)
+            case .text(_, let text):
+                typeOnTV(text, on: id)
+            case .keyboard:
+                return TVRelay.Reply(keyboard: await tvKeyboard(on: id))
+            case .devices:
+                break
+            }
+            return TVRelay.Reply()
+        } catch {
+            return TVRelay.Reply(error: (error as? ProviderError)?.message ?? error.localizedDescription)
         }
     }
 

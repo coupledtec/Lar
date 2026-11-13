@@ -24,10 +24,15 @@ public struct XiaomiProvider: DeviceProvider {
     }
 
     public func send(_ command: HomeCommand, to device: HomeDevice) async throws {
-        guard case .power(let on) = command, device.kind == .vacuum,
-              let target = try await client.devices().first(where: { $0.did == device.rawID }),
-              let map = try await client.maps(for: [target.model])[target.model],
-              let action = on ? map.start : map.dock else { throw ProviderError.unsupported }
+        guard device.kind == .vacuum, let target = try await client.devices().first(where: { $0.did == device.rawID }),
+              let map = try await client.maps(for: [target.model])[target.model] else { throw ProviderError.unsupported }
+        let action: MIoTMap.Action?
+        switch command {
+        case .power(let on): action = on ? map.start : map.dock
+        case .pause: action = map.pause
+        default: action = nil
+        }
+        guard let action else { throw ProviderError.unsupported }
         try await client.run(action, on: target)
     }
 }

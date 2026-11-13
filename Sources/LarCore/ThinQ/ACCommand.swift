@@ -2,7 +2,7 @@ import Foundation
 
 /// The piece of state a command changes. Commands for the same field replace each other.
 public enum ACField: Hashable, Sendable, CaseIterable {
-    case power, mode, target, fan, swing, eco, sleep
+    case power, mode, target, fan, swing, eco, sleep, start
 }
 
 /// A control command, encoded as the `{resource: {property: value}}` body of `POST devices/{id}/control`.
@@ -15,6 +15,8 @@ public enum ACCommand: Sendable, Equatable {
     case eco(Bool)
     /// Hours until the unit turns off; 0 cancels the sleep timer.
     case sleep(hours: Int)
+    /// Hours until the unit turns on (off now); 0 cancels it.
+    case start(hours: Int)
 
     public var field: ACField {
         switch self {
@@ -25,6 +27,7 @@ public enum ACCommand: Sendable, Equatable {
         case .swing: .swing
         case .eco: .eco
         case .sleep: .sleep
+        case .start: .start
         }
     }
 
@@ -46,6 +49,10 @@ public enum ACCommand: Sendable, Equatable {
             ["sleepTimer": ["relativeHourToStop": .number(Double(hours)), "relativeMinuteToStop": 0]]
         case .sleep:
             ["sleepTimer": ["relativeStopTimer": "UNSET"]]
+        case .start(let hours) where hours > 0:
+            ["timer": ["relativeHourToStart": .number(Double(hours)), "relativeMinuteToStart": 0]]
+        case .start:
+            ["timer": ["relativeStartTimer": "UNSET"]]
         }
     }
 }

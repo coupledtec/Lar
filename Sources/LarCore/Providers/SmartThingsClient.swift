@@ -100,6 +100,7 @@ public actor SmartThingsClient: TVRemoteProvider {
         )
         if capabilities.contains("switchLevel") { device.controls["level"] = "1" }
         if capabilities.contains("colorControl") { device.controls["color"] = "1" }
+        if capabilities.contains("colorTemperature") { device.controls["st.ct"] = "1" }
         // A Samsung TV's or soundbar's remote: what each one has.
         for (capability, flag) in Self.remoteCapabilities where capabilities.contains(capability) { device.controls[flag] = "1" }
         return device
@@ -117,16 +118,26 @@ public actor SmartThingsClient: TVRemoteProvider {
             // SmartThings counts hue in percent of the circle.
             device.color = LightColor(hue: hue * 3.6, saturation: saturation / 100)
         }
+        // White from 2700 K (warm) to 6500 K (cold).
+        if device.controls["st.ct"] != nil {
+            let kelvin = status["colorTemperature"]?["colorTemperature"]?["value"]?.double ?? 4000
+            device.controls["ct"] = HomeText.number(min(max((kelvin - 2700) / 3800, 0), 1))
+        }
         var parts: [String] = []
         // A Samsung Jet Bot or another robot: cleaning is on, going home is off.
         if let movement = status["robotCleanerMovement"]?["robotCleanerMovement"]?["value"]?.string {
             device.isOn = movement == "cleaning"
+            device.controls["pausable"] = "1"
+            if movement == "alarm" { device.controls["problem"] = tr("Robô preso ou com problema") }
             parts.append(Self.vacuumMovement(movement))
         }
         if device.kind == .lock {
             device.isOn = nil
             if let lock = status["lock"]?["lock"]?["value"]?.string {
                 device.controls["locked"] = lock == "locked" ? "1" : "0"
+                // The lock capability takes lock and unlock: it switches (on is locked).
+                device.controls["lockable"] = "1"
+                device.isOn = lock == "locked"
                 parts.append(lock == "locked" ? tr("Trancada") : lock == "unlocked" ? tr("Destrancada") : lock)
             }
         }
@@ -151,6 +162,13 @@ public actor SmartThingsClient: TVRemoteProvider {
             }
         } else if let temperature = status["temperatureMeasurement"]?["temperature"]?["value"]?.double {
             parts.append("\(Int(temperature.rounded()))°")
+        }
+        // The choices the device lists for its mode, fan, swing (air conditioners) and suction and cleaning (robots).
+        for (capability, attribute, supported) in Self.optionAttributes {
+            let current = status[capability]?[attribute]?["value"]?.string
+            let listed = supported.flatMap { status[capability]?[$0]?["value"]?.array?.compactMap(\.string) }
+            let values = listed ?? Self.fixedChoices[attribute]
+            if let values, current != nil || listed != nil { device.setOption(attribute, values: values, current: current) }
         }
         if device.controls["st.volume"] != nil, let volume = status["audioVolume"]?["volume"]?["value"]?.double {
             let muted = status["audioMute"]?["mute"]?["value"]?.string == "muted"
@@ -205,6 +223,27 @@ public actor SmartThingsClient: TVRemoteProvider {
         _ = try await request("POST", Self.api.appendingPathComponent("devices/\(device.rawID)/commands"), body: body)
     }
 
+    /// Capability, attribute (the option's name) and the attribute listing its choices (nil: a fixed list).
+    static let optionAttributes: [(String, String, String?)] = [
+        ("airConditionerMode", "airConditionerMode", "supportedAcModes"),
+        ("airConditionerFanMode", "fanMode", "supportedAcFanModes"),
+        ("fanOscillationMode", "fanOscillationMode", "supportedFanOscillationModes"),
+        ("robotCleanerTurboMode", "robotCleanerTurboMode", nil),
+        ("robotCleanerCleaningMode", "robotCleanerCleaningMode", nil),
+    ]
+    static let fixedChoices: [String: [String]] = [
+        "robotCleanerTurboMode": ["silence", "off", "on"],
+        "robotCleanerCleaningMode": ["auto", "part", "repeat", "manual"],
+    ]
+    /// The command that sets each option.
+    static let optionCommands: [String: (capability: String, command: String)] = [
+        "airConditionerMode": ("airConditionerMode", "setAirConditionerMode"),
+        "fanMode": ("airConditionerFanMode", "setFanMode"),
+        "fanOscillationMode": ("fanOscillationMode", "setFanOscillationMode"),
+        "robotCleanerTurboMode": ("robotCleanerTurboMode", "setRobotCleanerTurboMode"),
+        "robotCleanerCleaningMode": ("robotCleanerCleaningMode", "setRobotCleanerCleaningMode"),
+    ]
+
     static func command(for command: HomeCommand, device: HomeDevice) throws -> JSONValue {
         switch command {
         case .power(let on):
@@ -212,7 +251,10 @@ public actor SmartThingsClient: TVRemoteProvider {
                 return ["component": "main", "capability": "robotCleanerMovement", "command": "setRobotCleanerMovement",
                         "arguments": [.string(on ? "cleaning" : "homing")]]
             }
-            guard device.kind != .lock else { throw ProviderError.unsupported }
+            if device.kind == .lock {
+                guard device.canLock else { throw ProviderError.unsupported }
+                return ["component": "main", "capability": "lock", "command": .string(on ? "lock" : "unlock")]
+            }
             return ["component": "main", "capability": "switch", "command": .string(on ? "on" : "off")]
         case .brightness(let level):
             guard device.controls["level"] != nil else { throw ProviderError.unsupported }
@@ -222,6 +264,16 @@ public actor SmartThingsClient: TVRemoteProvider {
             guard device.controls["color"] != nil else { throw ProviderError.unsupported }
             let value: JSONValue = ["hue": .number((color.hue / 3.6).rounded()), "saturation": .number((color.saturation * 100).rounded())]
             return ["component": "main", "capability": "colorControl", "command": "setColor", "arguments": [value]]
+        case .whiteTemperature(let value):
+            guard device.controls["st.ct"] != nil else { throw ProviderError.unsupported }
+            return ["component": "main", "capability": "colorTemperature", "command": "setColorTemperature",
+                    "arguments": [.number((2700 + min(max(value, 0), 1) * 3800).rounded())]]
+        case .option(let name, let value):
+            guard let target = optionCommands[name] else { throw ProviderError.unsupported }
+            return ["component": "main", "capability": .string(target.capability), "command": .string(target.command), "arguments": [.string(value)]]
+        case .pause:
+            guard device.kind == .vacuum else { throw ProviderError.unsupported }
+            return ["component": "main", "capability": "robotCleanerMovement", "command": "setRobotCleanerMovement", "arguments": ["pause"]]
         case .temperature(let value):
             guard device.kind == .airConditioner else { throw ProviderError.unsupported }
             return ["component": "main", "capability": "thermostatCoolingSetpoint", "command": "setCoolingSetpoint",

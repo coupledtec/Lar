@@ -229,6 +229,13 @@ import Testing
         #expect(PlayStationClient.code(fromRedirect: "https://my.account.sony.com/central/signin/?error=login_required") == nil)
     }
 
+    @Test func theSignInPageHandsTheCode() {
+        let redirect = PlayStationClient.redirect
+        #expect(BrandWebSignIn.code(in: URL(string: redirect + "/?code=v3.XyZ&cid=9")!, redirect: redirect) == "v3.XyZ")
+        #expect(BrandWebSignIn.code(in: URL(string: "https://my.account.sony.com/central/signin/")!, redirect: redirect) == nil)
+        #expect(PlayStationClient.authorizeURL.absoluteString.contains("client_id=09515159-7237-4370-9b40-3806e67c0891"))
+    }
+
     @Test func consolesAreThePS5AndPS4() {
         let answer: [String: Any] = ["accountId": "1", "accountDevices": [
             ["deviceId": "a", "deviceType": "PS5"], ["deviceId": "b", "deviceType": "PSVita"], ["deviceId": "c", "deviceType": "PS4"],
@@ -254,5 +261,91 @@ import Testing
         #expect(devices[0].detail == "Astro Bot")
         #expect(devices[0].kind == .gameConsole)
         #expect(devices[1].controls["playing"] == "0")
+    }
+}
+
+/// PS Remote Play's pairing, against values computed with Python and OpenSSL from chiaki-ng's description.
+@Suite struct PlayStationRemotePlayTests {
+    let ambassador = Data(0..<16)
+
+    @Test func payloadMatchesTheReference() {
+        let account = PlayStationRemotePlay.accountID("1234567890123456789")
+        #expect(account == "FYHpffQQIhE=")
+        let (body, crypt) = PlayStationRemotePlay.payload(ambassador: ambassador, pin: 12345678, accountID: account ?? "")
+        #expect(BrandCrypto.hex(crypt.bright) == "d860e146bdb0bd94b460070bb1f3866d")
+        #expect(BrandCrypto.hex(PlayStationRemotePlay.aeropause(ambassador, keyOffset: 8)) == "7b0a388cfad1da4345260d8aec78656c")
+        #expect(body.count == 587)
+        #expect(BrandCrypto.hex(BrandCrypto.sha256(body)) == "1de3fe744749973ca7c6cfa30a51c89f3f31a92f117d97cca510b9356d0756f3")
+    }
+
+    @Test func pairingReadsTheConsolesKey() throws {
+        let (_, crypt) = PlayStationRemotePlay.payload(ambassador: ambassador, pin: 12345678, accountID: "FYHpffQQIhE=")
+        let body = Data(hex: "348c3ab58e20bd908fee01d63eb7833afc94693ec137a67055f812752ef30587d2d899b80abe1d89ca245871cbb4c6e23687116791880d5a5d799b3a1e1088715ff65802d545fdc529f64dc1e951deeed129edb60e5b9d0fd7b5031ea5193f2bfb21c262f41811add101944718113b8747bc2eb242f63c2a9b9567330c22aa3e1abf2d37e31a2cc0")!
+        let response = Data("HTTP/1.1 200 OK\r\nContent-Length: \(body.count)\r\n\r\n".utf8) + body
+        let pairing = try PlayStationRemotePlay.pairing(host: "192.0.2.10", response: response, crypt: crypt)
+        #expect(pairing.credential == String(UInt64(0x1a2b3c4d)))
+        #expect(pairing.nickname == "PS5-123")
+        #expect(pairing.registKey == "3161326233633464" && pairing.rpKey == "00112233445566778899aabbccddeeff" && pairing.canSleep)
+        #expect(throws: ProviderError.self) {
+            try PlayStationRemotePlay.pairing(host: "192.0.2.10", response: Data("HTTP/1.1 403 Forbidden\r\nRP-Application-Reason: 0x80108b09\r\n\r\n".utf8), crypt: crypt)
+        }
+    }
+
+    @Test func sessionCipherMatchesTheReference() {
+        let crypt = PlayStationRemotePlay.Crypt(nonce: Data(0x30..<0x40), morning: Data(0xa0..<0xb0))
+        #expect(BrandCrypto.hex(crypt.ambassador) == "51142b5fe613c47400b9528a70692b6b")
+        #expect(BrandCrypto.hex(crypt.bright) == "c1c955dfbf4c2b927f9e6bce3b0ca355")
+        let request = String(decoding: PlayStationRemotePlay.controlRequest(host: "192.0.2.10", registKey: Data("31613262".utf8),
+                                                                            crypt: crypt, deviceID: Data(count: 32)), as: UTF8.self)
+        #expect(request.contains("RP-Auth: 9Dx6Dky8A/8rkwBhwXXXbw==\r\n"))
+        #expect(request.contains("RP-OSType: E8WOsRvqED+C9Q==\r\n"))
+        #expect(BrandCrypto.hex(PlayStationRemotePlay.message(.rest)) == "0000000000500000")
+    }
+
+    @Test func searchAnswersSayOnOrResting() {
+        let on = Data("HTTP/1.1 200 Ok\nhost-id:ABC\nhost-type:PS5\nhost-name:PS5-123\nrunning-app-name:Astro Bot\n".utf8)
+        #expect(PlayStationRemotePlay.state(on) == .on(name: "PS5-123", app: "Astro Bot"))
+        #expect(PlayStationRemotePlay.state(Data("HTTP/1.1 620 Server Standby\nhost-name:PS5-123\n".utf8)) == .standby(name: "PS5-123"))
+        let wake = String(decoding: PlayStationRemotePlay.wakeMessage(credential: "439041101"), as: UTF8.self)
+        #expect(wake.hasPrefix("WAKEUP * HTTP/1.1\n") && wake.contains("user-credential:439041101\n"))
+    }
+}
+
+/// The controller's stream: secp256k1 and the stream cipher, against Python's cryptography package.
+@Suite struct PlayStationStreamTests {
+    @Test func secp256k1MatchesTheReference() {
+        let a = Secp256k1.keyPair(privateKey: Data(repeating: 0x11, count: 32))
+        let b = Secp256k1.keyPair(privateKey: Data(repeating: 0x7e, count: 32))
+        #expect(BrandCrypto.hex(a.publicKey) == "044f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa385b6b1b8ead809ca67454d9683fcf2ba03456d6fe2c4abe2b07f0fbdbb2f1c1")
+        #expect(BrandCrypto.hex(Secp256k1.sharedSecret(a.privateKey, publicKey: b.publicKey) ?? Data()) == "b22edae719195d59cfbad13ba6009f56b522b0e1aaaf1c93aac45fa0525459d5")
+        #expect(Secp256k1.sharedSecret(b.privateKey, publicKey: a.publicKey) == Secp256k1.sharedSecret(a.privateKey, publicKey: b.publicKey))
+    }
+
+    @Test func gkCryptMatchesTheReference() {
+        let crypt = PlayStationRemotePlay.GKCrypt(index: 2, handshakeKey: Data(0x40..<0x50), secret: Data(0..<32))
+        #expect(BrandCrypto.hex(crypt.keyBase) == "58fbc8450bcc45074ac4a1d5ce558d25")
+        #expect(BrandCrypto.hex(crypt.iv) == "caff0b243cb8d729d3fc0d688ce8f1a2")
+        #expect(BrandCrypto.hex(crypt.gmacBase) == "75f4b0a426ed24cae9500ad0f26f91f0")
+        #expect(BrandCrypto.hex(crypt.crypt(Data(0..<28), at: 16)) == "20ef18ee7bbb6841a144ab7c19a51598daa72b478e10a8d8e09bea22")
+        #expect(BrandCrypto.hex(crypt.gmac(Data(50..<90), at: 0x20)) == "c4b36ee6")
+    }
+
+    @Test func protobufRoundTrips() {
+        let message = PlayStationRemotePlay.controllerConnection()
+        #expect(PlayStationRemotePlay.messageType(message) == .controllerConnection)
+        #expect(BrandCrypto.hex(message) == "0815b2010410011806")
+        #expect(PlayStationRemotePlay.feedbackState().count == 28)
+    }
+}
+
+@Suite struct PlayStationAccountTests {
+    @Test func trophiesAndArtComeFromTheAccount() {
+        let trophies = PlayStationClient.trophies(["trophyLevel": 312, "earnedTrophies": ["platinum": 4, "gold": 30, "silver": 90, "bronze": 400]])
+        #expect(trophies == .init(level: 312, platinum: 4, gold: 30, silver: 90, bronze: 400))
+        let presence = PlayStationClient.presence(["basicPresence": [
+            "primaryPlatformInfo": ["onlineStatus": "online", "platform": "PS5"],
+            "gameTitleInfoList": [["titleName": "Astro Bot", "npTitleIconUrl": "https://example.com/a.png"]],
+        ]])
+        #expect(presence.art == "https://example.com/a.png" && presence.game == "Astro Bot")
     }
 }

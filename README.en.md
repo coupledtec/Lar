@@ -63,9 +63,9 @@ To try it without any account: **"Try a sample home"** on the first screen (or S
   (from Sleep) and off, the controller (arrows, A, B, X, Y, Menu, View and the Xbox button), volume, typing,
   opening games and apps and seeing what's playing. Unofficial integration (the same cloud the Xbox app uses):
   Microsoft may change it.
-- **PlayStation:** sign in with your PlayStation account (Settings → PlayStation, robots and locks) and your PS5 and
-  PS4 show up in Games, on or not and with the game being played. Read only for now: turning them on and off takes
-  Remote Play pairing. Unofficial integration (the same cloud the PlayStation app uses): Sony may change it.
+- **PlayStation:** sign in with your PlayStation account (Settings → Games) and your PS5 and
+  PS4 show up in Games, on or not and with the game being played. Pairing the PS5 once with the Remote Play code,
+  Lar turns the console on and puts it in Rest Mode. Unofficial integration (the same cloud the PlayStation app uses): Sony may change it.
 - **Alexa and Echos:** sign in with your Amazon account (Settings → Alexa, on Amazon's own page). The Echos join the
   list with volume, Do Not Disturb, music, speak, announce on all of them, "ask Alexa" (works for anything Alexa
   controls) and routines. The Mac announces the intercom and alerts (washer done) on the Echos. Alexa routines become
@@ -262,11 +262,12 @@ steps are in Settings → Xbox → **How to set up the Xbox**.
 
 ### PlayStation
 
-Sony has no sign-in for other apps, so Lar uses the browser session's token (the same way Home Assistant does):
+In Settings → Games → PlayStation → **Sign in with the PlayStation account**, Sony's page opens inside Lar. On
+the Apple TV (or if you prefer), use the browser session's token (the same way Home Assistant does):
 
 1. In the browser, sign in to your account at [playstation.com](https://www.playstation.com).
 2. In the same window, open [ca.account.sony.com/api/v1/ssocookie](https://ca.account.sony.com/api/v1/ssocookie).
-3. Copy the `npsso` value and paste it in Settings → PlayStation, robots and locks → PlayStation → **Sign in**.
+3. Copy the `npsso` value and paste it in Settings → Games → PlayStation → **Sign in**.
 
 The token isn't kept: Lar trades it for a key that renews itself for about two months. After that, just repeat the
 steps.
@@ -341,7 +342,8 @@ Lar rewrites each protocol from scratch, in Swift.
 The Xbox integration follows the protocol documented by
 [xbox-webapi-python](https://github.com/OpenXbox/xbox-webapi-python) (OpenXbox, MIT), the same one Home Assistant
 The PlayStation integration follows what [psn-api](https://github.com/achievements-app/psn-api) (MIT) and
-[PSNAWP](https://github.com/isFakeAccount/psnawp) (MIT) document.
+[PSNAWP](https://github.com/isFakeAccount/psnawp) (MIT) document; pairing and turning on the PS5 follow the Remote Play
+protocol documented by [chiaki-ng](https://github.com/streetpea/chiaki-ng) (AGPL-3.0), rewritten from scratch in Swift.
 uses. The Alexa integration follows what [aioamazondevices](https://github.com/chemelli74/aioamazondevices) (Simone
 Chemelli and contributors, Apache-2.0) and [alexa-remote](https://github.com/Apollon77/alexa-remote) (Apollon77, MIT)
 do. LG air conditioner control comes from [Celsius](https://github.com/gbvillarinho/celsius), by Gabriel Villarinho

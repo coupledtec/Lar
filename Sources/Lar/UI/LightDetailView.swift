@@ -25,6 +25,11 @@ struct LightDetailView: View {
                 if device.acceptsTemperature, let target = device.targetTemperature { temperature(device, target: target) }
                 if device.brightness != nil { brightness(device) }
                 if device.color != nil { colors(device) }
+                if DeviceOptionsView.shows(device) {
+                    DeviceOptionsView(home: home, device: device)
+                        .pickerStyle(.menu)
+                        .font(.system(size: 12))
+                }
                 Text(device.isOnline ? device.provider.name : "Offline · \(device.provider.name)")
                     .font(.system(size: 11))
                     .foregroundStyle(Theme.secondaryText)

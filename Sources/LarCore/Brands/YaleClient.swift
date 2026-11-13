@@ -102,6 +102,11 @@ public actor YaleClient {
 
     // MARK: Locks
 
+    /// Locks or unlocks through the lock's bridge (it answers once the lock moved, up to about 20 s).
+    func operate(_ id: String, lock: Bool) async throws {
+        _ = try await call("PUT", "/remoteoperate/\(id)/\(lock ? "lock" : "unlock")")
+    }
+
     func locks() async throws -> [Lock] {
         let mine = try await call("GET", "/users/locks/mine")
         var out: [Lock] = []
@@ -140,12 +145,14 @@ public struct YaleProvider: DeviceProvider {
         if let locked = lock.locked { parts.append(locked ? tr("Trancada") : tr("Destrancada")) }
         if let open = lock.doorOpen { parts.append(open ? tr("Porta aberta") : tr("Porta fechada")) }
         if let battery = lock.battery { parts.append(tr("bateria \(battery)%")) }
+        // Yale Access locks and unlocks from the app (through the lock's Wi-Fi bridge): it switches, on is locked.
         return HomeDevice(provider: .yale, rawID: lock.id, name: lock.name, kind: .lock, isOnline: lock.online,
-                          detail: parts.joined(separator: " · "),
-                          controls: lock.locked.map { ["locked": $0 ? "1" : "0"] } ?? [:])
+                          isOn: lock.locked, detail: parts.joined(separator: " · "),
+                          controls: lock.locked.map { ["locked": $0 ? "1" : "0", "lockable": "1"] } ?? [:])
     }
 
     public func send(_ command: HomeCommand, to device: HomeDevice) async throws {
-        throw ProviderError.unsupported
+        guard case .power(let lock) = command, device.canLock else { throw ProviderError.unsupported }
+        try await client.operate(device.rawID, lock: lock)
     }
 }

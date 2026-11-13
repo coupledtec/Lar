@@ -74,7 +74,7 @@ final class AppModel {
                 let custom = home.customization(of: $0.id)
                 return !custom.isHidden && custom.excludedFromHomeApp != true
             }
-        }, perform: { command, id in home.perform(command, on: id) },
+        }, perform: { command, id in home.perform(command, on: id, unlockAllowed: true) },
         liveURL: { id in try await home.liveStreamURL(for: id) })
         bridge.onChange = { [weak self, weak bridge] in self?.homeKitPaired = bridge?.isPaired ?? false }
         bridge.start()
