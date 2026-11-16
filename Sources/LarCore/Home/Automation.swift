@@ -23,6 +23,11 @@ public struct SceneSchedule: Codable, Sendable, Equatable, Hashable {
         return weekdays.sorted().map { names[$0 - 1] }.joined(separator: ", ") + tr(" às \(time)")
     }
 
+    /// The next scheduled moment after `date`, within a week.
+    public func next(after date: Date, calendar: Calendar = .current) -> Date? {
+        occurrences(after: date, through: date.addingTimeInterval(8 * 86_400), calendar: calendar).first
+    }
+
     /// The scheduled moments in (from, to], so a check every half minute never runs a scene twice nor skips one.
     func occurrences(after from: Date, through to: Date, calendar: Calendar) -> [Date] {
         var out: [Date] = []
@@ -51,6 +56,18 @@ public enum ScenePresence: String, Codable, Sendable, CaseIterable {
 }
 
 extension HomeScene {
+    /// The next time it runs by itself, leaving out a skipped one.
+    public func nextRun(after date: Date = Date(), calendar: Calendar = .current) -> Date? {
+        guard let schedule, var next = schedule.next(after: date, calendar: calendar) else { return nil }
+        if next == skippedOccurrence, let after = schedule.next(after: next, calendar: calendar) { next = after }
+        return next
+    }
+
+    /// The next scheduled time, skipped or not (the one "Pular" and "Rodar agora" act on).
+    public func nextOccurrence(after date: Date = Date(), calendar: Calendar = .current) -> Date? {
+        schedule?.next(after: date, calendar: calendar)
+    }
+
     /// Scenes whose time came in (from, to]. A Mac that slept through a time doesn't run it late: at most
     /// `lateness` after it.
     public static func due(_ scenes: [HomeScene], after from: Date, through to: Date,
@@ -58,7 +75,7 @@ extension HomeScene {
         let start = max(from, to.addingTimeInterval(-lateness))
         return scenes.filter { scene in
             guard let schedule = scene.schedule else { return false }
-            return !schedule.occurrences(after: start, through: to, calendar: calendar).isEmpty
+            return schedule.occurrences(after: start, through: to, calendar: calendar).contains { $0 != scene.skippedOccurrence }
         }
     }
 }

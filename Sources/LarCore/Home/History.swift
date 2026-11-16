@@ -63,6 +63,17 @@ public actor HistoryStore {
         return total
     }
 
+    /// How long each device ran today (from midnight), by id: what "Energia de hoje" counts.
+    public func onTimeToday(of deviceIDs: [String], now: Date = Date(), calendar: Calendar = .current) -> [String: TimeInterval] {
+        let start = calendar.startOfDay(for: now)
+        let today = load().filter { $0.date >= start.addingTimeInterval(-Self.longestGap) }
+        var out: [String: TimeInterval] = [:]
+        for id in deviceIDs {
+            out[id] = Self.onTime(today.filter { $0.deviceID == id }, from: start, to: now)
+        }
+        return out
+    }
+
     private func load() -> [HistorySample] {
         if let samples { return samples }
         let read = (try? Data(contentsOf: file)).flatMap { try? JSONDecoder().decode([HistorySample].self, from: $0) } ?? []

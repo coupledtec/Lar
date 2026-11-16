@@ -169,6 +169,31 @@ public final class PhoneStore {
         finish("Encerrada")
     }
 
+    /// Opens the gate without a conversation (a widget's or Live Activity's button): calls the intercom, sends the
+    /// gate's keys once it answers and hangs up. Says whether the keys went.
+    @discardableResult
+    public func openGate() async -> Bool {
+        guard isConfigured, !settings.doorCode.isEmpty else { return false }
+        if registration == .off { await start() }
+        // The intercom ringing: answering is enough; otherwise a call to it.
+        if call?.state == .incoming { await answer() } else if call == nil { await dial() }
+        for _ in 0..<40 {
+            if case .active = call?.state { break }
+            if call == nil { return false }
+            if case .ended = call?.state { return false }
+            try? await Task.sleep(for: .milliseconds(500))
+        }
+        guard case .active = call?.state else {
+            await hangup()
+            return false
+        }
+        try? await Task.sleep(for: .milliseconds(600))
+        await openDoor()
+        try? await Task.sleep(for: .seconds(2))
+        await hangup()
+        return true
+    }
+
     /// Sends the gate's keys during the call.
     public func openDoor() async {
         await sendKeys(settings.doorCode)

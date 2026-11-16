@@ -91,6 +91,8 @@ import Testing
         #expect(LarLink(try #require(URL(string: "lar://porteiro"))) == .call(nil))
         #expect(LarLink(try #require(URL(string: "lar://discar/*43"))) == .call("*43"))
         #expect(LarLink(try #require(URL(string: "lar://encerrar"))) == .hangUp)
+        #expect(LarLink(try #require(URL(string: "lar://portao"))) == .openGate)
+        #expect(LarLink.url(.openGate)?.absoluteString == "lar://portao")
         #expect(LarLink.url(.call("*43"))?.absoluteString == "lar://discar/*43")
         #expect(LarLink(try #require(URL(string: "lar://ligar/TV%20da%20Sala"))) == .power(device: "TV da Sala", on: true))
         #expect(LarLink(try #require(URL(string: "LAR://Desligar/Luz"))) == .power(device: "Luz", on: false))
@@ -168,6 +170,16 @@ import Testing
                 == ["Dormir", "Sábado"])
         // A Mac asleep from 20:00 to 23:30 doesn't run a 23:00 scene half an hour late.
         #expect(HomeScene.due(scenes, after: Self.date(23, 20, 0), through: Self.date(23, 23, 30), calendar: Self.calendar).isEmpty)
+    }
+
+    @Test func skippedTimeDoesntRunAndTheNextOneDoes() {
+        var night = HomeScene(name: "Dormir", actions: [], schedule: SceneSchedule(hour: 23, minute: 0))
+        let tonight = Self.date(23, 23, 0)
+        #expect(night.nextOccurrence(after: Self.date(23, 21, 0), calendar: Self.calendar) == tonight)
+        night.skippedOccurrence = tonight
+        #expect(HomeScene.due([night], after: Self.date(23, 22, 59, 40), through: Self.date(23, 23, 0, 10), calendar: Self.calendar).isEmpty)
+        #expect(night.nextRun(after: Self.date(23, 21, 0), calendar: Self.calendar) == Self.date(24, 23, 0))
+        #expect(HomeScene.due([night], after: Self.date(24, 22, 59, 40), through: Self.date(24, 23, 0, 10), calendar: Self.calendar).count == 1)
     }
 
     @Test func scheduleText() {

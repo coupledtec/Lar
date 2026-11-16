@@ -86,3 +86,16 @@ import Testing
         #expect(own.build(with: []).alexaEcho == nil)
     }
 }
+
+@Suite struct AlexaPlayerTests {
+    private func json(_ text: String) throws -> JSONValue { try JSONDecoder().decode(JSONValue.self, from: Data(text.utf8)) }
+
+    @Test func readsWhatAnEchoPlays() throws {
+        let playing = try json(#"{"playerInfo":{"state":"PLAYING","infoText":{"title":"Garota de Ipanema","subText1":"Tom Jobim"},"provider":{"providerName":"Spotify"}}}"#)
+        #expect(AlexaClient.player(from: playing) == AlexaPlayer(title: "Garota de Ipanema", artist: "Tom Jobim", source: "Spotify", isPlaying: true))
+        let paused = try json(#"{"playerInfo":{"state":"PAUSED","infoText":{"title":"Rádio"}}}"#)
+        #expect(AlexaClient.player(from: paused)?.isPlaying == false)
+        #expect(AlexaClient.player(from: try json(#"{"playerInfo":{"state":"IDLE","infoText":null}}"#)) == nil)
+        #expect(AlexaClient.player(from: try json(#"{"playerInfo":null}"#)) == nil)
+    }
+}

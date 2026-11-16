@@ -44,8 +44,11 @@ Casa de exemplo).
 - **Cenas:** um clique liga e desliga vários aparelhos de uma vez ("Dormir", "Cinema"), e pode definir a temperatura
   do ar. Crie no "+" de Cenas, escolhendo para cada aparelho Ligar, Desligar ou não mexer (ou "Usar o estado
   atual"). Botão direito para editar.
-- **Links:** `lar://cena/Dormir`, `lar://ligar/TV da Sala`, `lar://desligar/…`, `lar://alternar/…` e
-  `lar://temperatura/Ar do quarto/23` (no app Atalhos, com "Abrir URL").
+- **Widgets na mesa e na Central de Notificações:** Favoritos, Resumo, Cenas, Ar-condicionado e Porteiro. Um clique
+  liga, desliga, roda a cena ou abre o portão pelo Lar da barra de menus (botão direito na mesa → Editar Widgets).
+- **Links:** `lar://cena/Dormir`, `lar://ligar/TV da Sala`, `lar://desligar/…`, `lar://alternar/…`,
+  `lar://temperatura/Ar do quarto/23` e `lar://portao` (liga para o porteiro, manda as teclas do portão e desliga),
+  no app Atalhos, com "Abrir URL".
 - **Organizar a lista:** favoritos no topo, nome próprio no Lar, cômodos (agrupe por tipo ou por cômodo em
   Ajustes → Lista) e aparelhos ocultos, pelo botão direito.
 - **Avisos:** notificação quando a lavadora ou a secadora LG termina o ciclo. Dá para desligar em Ajustes → Lista.

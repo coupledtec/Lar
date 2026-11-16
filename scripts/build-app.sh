@@ -7,7 +7,9 @@ source scripts/env.sh
 
 APP=build/Lar.app
 swift build "${SWIFT_FLAGS[@]}" -c release --product Lar
+swift build "${SWIFT_FLAGS[@]}" -c release --product LarWidgets
 BIN="$(swift build "${SWIFT_FLAGS[@]}" -c release --show-bin-path)/Lar"
+WIDGETS_BIN="$(dirname "$BIN")/LarWidgets"
 
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
@@ -20,6 +22,15 @@ if [[ -n "$VERSION" ]]; then
   VERSION="${VERSION#v}"
   /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $VERSION" "$APP/Contents/Info.plist"
   /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $VERSION" "$APP/Contents/Info.plist"
+fi
+# The widgets: an extension in PlugIns, with its own Info.plist and the same texts.
+APPEX="$APP/Contents/PlugIns/LarWidgets.appex"
+mkdir -p "$APPEX/Contents/MacOS" "$APPEX/Contents/Resources"
+cp "$WIDGETS_BIN" "$APPEX/Contents/MacOS/LarWidgets"
+cp Resources/Widgets/Info.plist "$APPEX/Contents/Info.plist"
+if [[ -n "$VERSION" ]]; then
+  /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $VERSION" "$APPEX/Contents/Info.plist"
+  /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $VERSION" "$APPEX/Contents/Info.plist"
 fi
 if [[ ! -f Resources/AppIcon.icns ]]; then
   scripts/make-icon.sh
@@ -35,6 +46,8 @@ if xcrun --find xcstringstool >/dev/null 2>&1; then
   xcrun xcstringstool compile Resources/Localizable.xcstrings --output-directory "$APP/Contents/Resources"
   # The permission requests (Info.plist's texts) in the same languages.
   xcrun xcstringstool compile Resources/InfoPlist.xcstrings --output-directory "$APP/Contents/Resources"
+  xcrun xcstringstool compile Resources/Localizable.xcstrings --output-directory "$APPEX/Contents/Resources"
+  mkdir -p "$APPEX/Contents/Resources/pt-BR.lproj"
 else
   echo "xcstringstool not found (needs Xcode): the app will be in Portuguese only"
 fi
@@ -42,11 +55,37 @@ fi
 # asks again). LAR_SIGN_IDENTITY picks one; otherwise the first Apple Development / Developer ID certificate here.
 IDENTITY="${LAR_SIGN_IDENTITY:-$(security find-identity -v -p codesigning 2>/dev/null \
   | awk '/"(Apple Development|Developer ID Application):/ { print $2; exit }')}"
+# The folder the app shares with its widgets (an app group) is named after the certificate's team, read from the
+# certificate itself: TEAMID.com.coupled.lar. Without a certificate the widgets only say to open the Lar.
+TEAM=""
+if [[ -n "$IDENTITY" ]]; then
+  NAME="$(security find-identity -v -p codesigning 2>/dev/null | awk -F'"' -v id="$IDENTITY" 'index($0, id) { print $2; exit }')"
+  TEAM="$(security find-certificate -c "$NAME" -p 2>/dev/null | openssl x509 -noout -subject -nameopt multiline 2>/dev/null \
+    | awk -F' = ' '/organizationalUnitName/ { print $2; exit }')"
+fi
+ENTITLEMENTS="$(mktemp -d)"
+trap 'rm -rf "$ENTITLEMENTS"' EXIT
+cp Resources/Lar.entitlements "$ENTITLEMENTS/app.plist"
+cp Resources/Widgets/LarWidgets.entitlements "$ENTITLEMENTS/widgets.plist"
+if [[ -n "$TEAM" ]]; then
+  GROUP="$TEAM.com.coupled.lar"
+  for plist in "$ENTITLEMENTS/app.plist" "$ENTITLEMENTS/widgets.plist"; do
+    /usr/libexec/PlistBuddy -c "Add :com.apple.security.application-groups array" -c "Add :com.apple.security.application-groups:0 string $GROUP" "$plist"
+  done
+  /usr/libexec/PlistBuddy -c "Add :LarAppGroup string $GROUP" "$APP/Contents/Info.plist"
+  /usr/libexec/PlistBuddy -c "Add :LarAppGroup string $GROUP" "$APPEX/Contents/Info.plist"
+fi
 if [[ "$IDENTITY" == "Developer ID Application:"* ]]; then
-  # For distribution: hardened runtime and a secure timestamp, as notarization requires.
-  codesign --force --sign "$IDENTITY" --options runtime --timestamp --entitlements Resources/Lar.entitlements "$APP"
+  # For distribution: hardened runtime and a secure timestamp, as notarization requires. The extension first.
+  codesign --force --sign "$IDENTITY" --options runtime --timestamp --entitlements "$ENTITLEMENTS/widgets.plist" "$APPEX"
+  codesign --force --sign "$IDENTITY" --options runtime --timestamp --entitlements "$ENTITLEMENTS/app.plist" "$APP"
 else
-  codesign --force --sign "${IDENTITY:--}" --timestamp=none "$APP"
+  codesign --force --sign "${IDENTITY:--}" --timestamp=none --entitlements "$ENTITLEMENTS/widgets.plist" "$APPEX"
+  if [[ -n "$TEAM" ]]; then
+    codesign --force --sign "$IDENTITY" --timestamp=none --entitlements "$ENTITLEMENTS/app.plist" "$APP"
+  else
+    codesign --force --sign "${IDENTITY:--}" --timestamp=none "$APP"
+  fi
 fi
 echo "Built $APP"
 

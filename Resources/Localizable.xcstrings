@@ -373,7 +373,6 @@
       }
     },
     "%lld ligados" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -429,6 +428,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "1 device"
+          }
+        }
+      }
+    },
+    "1 ligado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 on"
           }
         }
       }
@@ -1058,6 +1067,16 @@
         }
       }
     },
+    "Abra o Lar na barra de menus." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Lar in the menu bar."
+          }
+        }
+      }
+    },
     "Abra o Lar no iPhone para conectar a Alexa." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1168,6 +1187,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Open Lar with %@ from any app"
+          }
+        }
+      }
+    },
+    "Abrir o portão" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open the gate"
+          }
+        }
+      }
+    },
+    "Abrir o portão com um clique (o Lar liga para o porteiro, manda as teclas e desliga), ou ligar." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open the gate with one click (Lar calls the intercom, sends the keys and hangs up), or call it."
           }
         }
       }
@@ -2336,7 +2375,6 @@
       }
     },
     "Cenas" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2495,6 +2533,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Client ID of the watch's integration"
+          }
+        }
+      }
+    },
+    "Clique numa cena para executá-la." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Click a scene to run it."
           }
         }
       }
@@ -3005,6 +3053,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Create this Mac's integration: paste a personal token with the apps permission (Apps). Lar creates the integration and opens the sign-in; the token isn't kept."
+          }
+        }
+      }
+    },
+    "Crie cenas no Lar." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create scenes in Lar."
           }
         }
       }
@@ -3774,6 +3832,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Invalid address: %@"
+          }
+        }
+      }
+    },
+    "Entrada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entrance"
           }
         }
       }
@@ -4700,7 +4768,15 @@
       }
     },
     "Google TV" : {
-      "shouldTranslate" : false
+      "shouldTranslate" : false,
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google TV"
+          }
+        }
+      }
     },
     "Graus" : {
       "extractionState" : "stale",
@@ -5792,6 +5868,16 @@
         }
       }
     },
+    "Nenhum ar-condicionado no Lar." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No air conditioner in Lar."
+          }
+        }
+      }
+    },
     "Nenhuma conta" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -6632,6 +6718,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The other side hung up"
+          }
+        }
+      }
+    },
+    "O primeiro ar-condicionado: ambiente, ajustado, − / + e ligar ou desligar." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The first air conditioner: room and set temperature, − / + and on or off."
           }
         }
       }
@@ -7611,6 +7707,16 @@
         }
       }
     },
+    "Quantos aparelhos estão ligados e quais; clique em um para desligar." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How many devices are on and which; click one to turn it off."
+          }
+        }
+      }
+    },
     "Quantos aparelhos estão ligados." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -7618,6 +7724,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "How many devices are on."
+          }
+        }
+      }
+    },
+    "Quarto" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bedroom"
           }
         }
       }
@@ -7885,6 +8001,16 @@
         }
       }
     },
+    "Resumo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Summary"
+          }
+        }
+      }
+    },
     "Robô" : {
       "localizations" : {
         "en" : {
@@ -8074,6 +8200,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Quit Lar (⌘Q)"
+          }
+        }
+      }
+    },
+    "Sala" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Living Room"
           }
         }
       }
@@ -8442,6 +8578,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Arrows, OK, back, home, volume, channels, inputs, apps and typing, straight to the TV. The first time, the TV asks on screen whether to accept Lar."
+          }
+        }
+      }
+    },
+    "Seus favoritos (ou os primeiros aparelhos): clique para ligar ou desligar." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your favorites (or the first devices): click to turn on or off."
           }
         }
       }
@@ -9191,7 +9337,6 @@
       }
     },
     "Tudo desligado" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -9341,6 +9486,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "User or password refused"
+          }
+        }
+      }
+    },
+    "Varanda" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Porch"
           }
         }
       }
@@ -10304,46 +10459,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "•••••• saved"
-          }
-        }
-      }
-    },
-    "Entrada" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entrance"
-          }
-        }
-      }
-    },
-    "Quarto" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bedroom"
-          }
-        }
-      }
-    },
-    "Sala" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Living Room"
-          }
-        }
-      }
-    },
-    "Varanda" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Porch"
           }
         }
       }

@@ -33,6 +33,9 @@ public struct HomeScene: Codable, Sendable, Identifiable, Equatable, Hashable {
     public var alexaSteps: String?
     /// The Echo those steps run on (its device id); none, or one that's offline: the first Echo online.
     public var alexaEcho: String?
+    /// One scheduled time that won't run ("Pular hoje" on its Live Activity, or "Rodar agora" before it): the
+    /// occurrence's date. Older apps don't know it and run it anyway.
+    public var skippedOccurrence: Date?
 
     public init(id: UUID = UUID(), name: String, symbol: String = "sparkles", actions: [Action],
                 schedule: SceneSchedule? = nil, presence: ScenePresence? = nil) {

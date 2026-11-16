@@ -44,8 +44,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         Notifier.start()
         #if LAR_APPSTORE
         TipJar.listen()
-        WidgetBridge.start(model)
         #endif
+        // The widgets' list (both versions: the App Store's widgets and the GitHub one's).
+        WidgetBridge.start(model)
         // iCloud's pushes: the scenes changed on another device (App Store version).
         if CloudSync.isAvailable { NSApp.registerForRemoteNotifications() }
         model.startSync()
@@ -117,9 +118,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 Task { await model.phone.hangup() }
                 continue
             }
+            if link == .openGate {
+                if Features.intercom { Task { await model.phone.openGate() } }
+                continue
+            }
             Task {
                 if model.home.devices.isEmpty { await model.home.refresh() }
                 model.home.open(link, scenes: model.scenes.scenes)
+                // A widget's tap: the widgets show it at once.
+                WidgetBridge.publish(model, urgent: true)
+                await model.home.waitUntilSent()
+                WidgetBridge.publish(model, urgent: true)
             }
         }
     }

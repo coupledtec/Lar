@@ -3,7 +3,7 @@ import Foundation
 /// The app's links, for Shortcuts ("Open URL") and anything else that opens one:
 /// `lar://cena/Dormir`, `lar://ligar/TV da Sala`, `lar://desligar/Luz da sala`, `lar://alternar/Abajur`,
 /// `lar://temperatura/Ar do quarto/23`, `lar://porteiro` (calls the intercom), `lar://discar/*43`,
-/// `lar://encerrar` (ends the call).
+/// `lar://encerrar` (ends the call), `lar://portao` (opens the gate: calls the intercom, sends its keys, hangs up).
 /// Names are matched ignoring case and accents.
 public enum LarLink: Equatable, Sendable {
     case scene(String)
@@ -12,6 +12,8 @@ public enum LarLink: Equatable, Sendable {
     /// A call: to the intercom (nil) or to a number. The app with the phone handles it.
     case call(String?)
     case hangUp
+    /// Opens the gate without a conversation (PhoneStore.openGate). The app with the phone handles it.
+    case openGate
 
     public static let scheme = "lar"
 
@@ -24,6 +26,10 @@ public enum LarLink: Equatable, Sendable {
         }
         if host == "encerrar" || host == "hangup" {
             self = .hangUp
+            return
+        }
+        if host == "portao" || host == "portão" || host == "gate" {
+            self = .openGate
             return
         }
         guard !name.isEmpty else { return nil }
@@ -59,6 +65,8 @@ public enum LarLink: Equatable, Sendable {
             components.path = number.map { "/" + $0 } ?? ""
         case .hangUp:
             components.host = "encerrar"
+        case .openGate:
+            components.host = "portao"
         }
         return components.url
     }
@@ -94,7 +102,7 @@ extension HomeStore {
             if device.isOn != true { perform(.power(true), on: device.id) }
             perform(.temperature(min(max(value, 16), 30)), on: device.id)
             return nil
-        case .call, .hangUp:
+        case .call, .hangUp, .openGate:
             return nil
         }
     }

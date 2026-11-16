@@ -1,10 +1,9 @@
-#if LAR_APPSTORE
 import Foundation
 import LarCore
 import WidgetKit
 
-/// The App Store version's widgets (the GitHub version has none: SwiftPM doesn't build widget extensions). They have
-/// no accounts of their own: this keeps them the list (`WidgetRelay`) and sends what they tap.
+/// The widgets' list: the App Store version's widgets (taps come back as requests) and the GitHub version's (taps come
+/// as `lar://` links). They have no accounts of their own: this keeps them the list (`WidgetRelay`).
 @MainActor
 enum WidgetBridge {
     /// State changes from outside (someone at the switch) redraw the widgets at most this often; their own taps and
@@ -72,4 +71,3 @@ enum WidgetBridge {
         WidgetCenter.shared.reloadAllTimelines()
     }
 }
-#endif

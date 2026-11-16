@@ -261,6 +261,15 @@ public struct AlexaNotification: Sendable, Equatable, Identifiable {
     }
 }
 
+/// What an Echo is playing.
+public struct AlexaPlayer: Sendable, Equatable, Codable, Hashable {
+    public var title: String
+    public var artist: String?
+    /// "Spotify", "Amazon Music", "TuneIn"…
+    public var source: String?
+    public var isPlaying: Bool
+}
+
 public struct AlexaRoutine: Sendable, Equatable {
     /// The routine's automation id (stays the same when it's renamed).
     public var id: String
@@ -483,6 +492,23 @@ public actor AlexaClient {
         _ = try await call("POST", "api/np/command", query: [
             URLQueryItem(name: "deviceSerialNumber", value: device.serial), URLQueryItem(name: "deviceType", value: device.type),
         ], body: ["type": .string(command.rawValue)])
+    }
+
+    /// What an Echo is playing (music, a podcast, the radio); nil when nothing is.
+    public func nowPlaying(on device: AlexaDevice) async throws -> AlexaPlayer? {
+        Self.player(from: try await call("GET", "api/np/player", query: [
+            URLQueryItem(name: "deviceSerialNumber", value: device.serial), URLQueryItem(name: "deviceType", value: device.type),
+            URLQueryItem(name: "screenWidth", value: "392"),
+        ]))
+    }
+
+    static func player(from json: JSONValue?) -> AlexaPlayer? {
+        guard let info = json?["playerInfo"], let state = info["state"]?.string, ["PLAYING", "PAUSED"].contains(state) else { return nil }
+        let text = info["infoText"]
+        let title = text?["title"]?.string ?? ""
+        guard !title.isEmpty else { return nil }
+        return AlexaPlayer(title: title, artist: text?["subText1"]?.string, source: info["provider"]?["providerName"]?.string,
+                           isPlaying: state == "PLAYING")
     }
 
     // MARK: Sequences (what a routine's steps are made of)
