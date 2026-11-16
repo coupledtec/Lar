@@ -10307,6 +10307,46 @@
           }
         }
       }
+    },
+    "Entrada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entrance"
+          }
+        }
+      }
+    },
+    "Quarto" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bedroom"
+          }
+        }
+      }
+    },
+    "Sala" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Living Room"
+          }
+        }
+      }
+    },
+    "Varanda" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Porch"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

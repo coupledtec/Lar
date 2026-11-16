@@ -176,7 +176,7 @@ public final class HomeStore {
         didSet { revision += 1 }
     }
 
-    public static let kindOrder: [DeviceKind] = [.tv, .gameConsole, .speaker, .airConditioner, .light, .plug, .fan, .camera, .lock, .vacuum, .laundry, .kitchen, .climateSensor, .other]
+    nonisolated public static let kindOrder: [DeviceKind] = [.tv, .gameConsole, .speaker, .airConditioner, .light, .plug, .fan, .camera, .lock, .vacuum, .laundry, .kitchen, .climateSensor, .other]
 
     public func device(id: String) -> HomeDevice? {
         let built = build()

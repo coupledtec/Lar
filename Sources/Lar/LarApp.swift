@@ -44,6 +44,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         Notifier.start()
         #if LAR_APPSTORE
         TipJar.listen()
+        WidgetBridge.start(model)
         #endif
         // iCloud's pushes: the scenes changed on another device (App Store version).
         if CloudSync.isAvailable { NSApp.registerForRemoteNotifications() }

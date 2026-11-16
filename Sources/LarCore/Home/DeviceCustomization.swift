@@ -64,9 +64,11 @@ extension HomeStore {
         return out
     }
 
-    /// The rooms already in use, for suggestions.
+    /// The rooms in use (chosen in the Lar or brought by an account, like the Home app's), for suggestions and the
+    /// widgets.
     public var rooms: [String] {
-        Set(customizations.values.compactMap(\.room)).sorted { $0.localizedStandardCompare($1) == .orderedAscending }
+        Set(customizations.values.compactMap(\.room) + devices.compactMap { $0.accountRoom })
+            .sorted { $0.localizedStandardCompare($1) == .orderedAscending }
     }
 
     public var hiddenDevices: [HomeDevice] { devices.filter { customizations[$0.id]?.isHidden == true } }
@@ -82,7 +84,10 @@ extension HomeStore {
         customizations[deviceID] = value.isEmpty ? nil : value
     }
 
-    private func room(of deviceID: String) -> String? { customizations[deviceID]?.room }
+    /// A device's room: the one chosen in the Lar, else the one its account says (the Home app's rooms).
+    public func room(of deviceID: String) -> String? {
+        customizations[deviceID]?.room ?? device(id: deviceID)?.accountRoom
+    }
 }
 
 extension String {

@@ -13,8 +13,10 @@ rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN" "$APP/Contents/MacOS/Lar"
 cp Resources/Info.plist "$APP/Contents/Info.plist"
-# Stamp the latest tag as the version, so a local build doesn't look outdated to the update check.
-if VERSION="$(git describe --tags --abbrev=0 2>/dev/null)"; then
+# Stamp the latest tag as the version, so a local build doesn't look outdated to the update check. The highest one
+# this commit has, not `git describe`'s: with two tags on one commit (a version only for the stores) it gave the older.
+VERSION="$(git tag --merged HEAD --list 'v*' --sort=-v:refname 2>/dev/null | head -1)"
+if [[ -n "$VERSION" ]]; then
   VERSION="${VERSION#v}"
   /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $VERSION" "$APP/Contents/Info.plist"
   /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $VERSION" "$APP/Contents/Info.plist"

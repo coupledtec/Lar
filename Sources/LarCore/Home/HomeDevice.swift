@@ -137,6 +137,8 @@ public struct HomeDevice: Sendable, Equatable, Identifiable, Codable {
     public var acceptsTemperature: Bool { kind == .airConditioner && controls["targetTemperature"] != nil }
     public var targetTemperature: Double? { controls["targetTemperature"].flatMap(Double.init) }
     public var roomTemperature: Double? { controls["roomTemperatureValue"].flatMap(Double.init) }
+    /// The room the device's account puts it in (the Home app's), when it says one.
+    public var accountRoom: String? { controls["room"].flatMap { $0.isEmpty ? nil : $0 } }
 
     /// Smart Life cameras, and locks with one (a video doorbell lock).
     public var hasLiveVideo: Bool { (kind == .camera || controls["tuyaVideo"] == "1") && provider == .tuya && isOnline }
