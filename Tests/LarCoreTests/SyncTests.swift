@@ -105,3 +105,26 @@ import Testing
         #expect(!SyncClient.isPaired)
     }
 }
+
+#if canImport(CloudKit)
+struct CloudEnvironmentTests {
+    @Test func notesFromTheDevelopmentDatabaseAreForgotten() {
+        for (key, value) in [("cloudZoneReady", true as Any), ("cloudSubscribedPrivate", true), ("cloudJoinedOwner", "x"),
+                             ("cloudAlerts", false)] {
+            Preferences.set(value, forKey: key)
+        }
+        Preferences.set(nil, forKey: "cloudEnvironment")
+        CloudSync.forgetOtherEnvironment()
+        #expect(Preferences.bool(forKey: "cloudZoneReady") == nil)
+        #expect(Preferences.bool(forKey: "cloudSubscribedPrivate") == nil)
+        #expect(Preferences.string(forKey: "cloudJoinedOwner") == nil)
+        // The owner's choices stay.
+        #expect(Preferences.bool(forKey: "cloudAlerts") == false)
+        // Once noted, nothing more is forgotten.
+        Preferences.set(true, forKey: "cloudZoneReady")
+        CloudSync.forgetOtherEnvironment()
+        #expect(Preferences.bool(forKey: "cloudZoneReady") == true)
+        for key in ["cloudZoneReady", "cloudAlerts", "cloudEnvironment"] { Preferences.set(nil, forKey: key) }
+    }
+}
+#endif

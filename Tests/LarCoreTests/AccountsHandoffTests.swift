@@ -29,4 +29,14 @@ import Testing
         #expect(box.accounts?.lgToken == "thinqpat_teste")
         #expect(AccountsHandoff.summary(box.accounts!) == "LG ThinQ")
     }
+
+    /// SmartThings never goes to another device: the same token on two devices logs the other out.
+    @Test func smartThingsNeverGoes() {
+        let settings = InMemorySettings()
+        settings.token = "thinqpat_teste"
+        settings.smartThings = .oauth(clientID: "c", secret: "s", refreshToken: "r")
+        let accounts = AccountsHandoff.accounts(of: settings)
+        #expect(accounts.smartThings == nil)
+        #expect(accounts.lgToken == "thinqpat_teste")
+    }
 }

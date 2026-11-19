@@ -4592,6 +4592,26 @@
         }
       }
     },
+    "Esta casa já está compartilhada. Abra Compartilhar a casa para ver quem está nela." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This home is already shared. Open Share the home to see who's in it."
+          }
+        }
+      }
+    },
+    "Esta conta Apple precisa confirmar o convite. Abra o link de novo e toque em Abrir." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This Apple Account needs to confirm the invitation. Open the link again and tap Open."
+          }
+        }
+      }
+    },
     "Esta cópia não é assinada; baixe a nova versão na página do Lar." : {
       "localizations" : {
         "en" : {
@@ -6953,6 +6973,16 @@
         }
       }
     },
+    "O convite não está mais disponível: peça um convite novo para quem compartilhou a casa." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The invitation is no longer available: ask whoever shared the home for a new one."
+          }
+        }
+      }
+    },
     "O código do Lar está no GitHub. Faça um fork, crie um branch com a mudança e mande um pull request; o guia de contribuição explica como." : {
       "localizations" : {
         "en" : {
@@ -7050,6 +7080,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "This account's iCloud storage is full. Free up space in Settings → [your name] → iCloud to sync and share the house."
+          }
+        }
+      }
+    },
+    "O iCloud não devolveu o link do convite. Tente de novo em alguns segundos." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud didn't return the invitation link. Try again in a few seconds."
           }
         }
       }
@@ -7780,6 +7820,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Allow in System Settings → Login Items"
+          }
+        }
+      }
+    },
+    "Pessoa sem nome" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unnamed person"
           }
         }
       }

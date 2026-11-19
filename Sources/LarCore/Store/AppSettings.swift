@@ -1,4 +1,5 @@
 import Foundation
+import Synchronization
 import Security
 
 /// Generic-password storage: the login keychain on the Mac; on the iPhone and the watch, the keychain group the app
@@ -40,6 +41,7 @@ public enum Keychain {
     }
 
     static func deleteItem(_ account: String, service: String = service) {
+        if isTesting { testItems.withLock { $0["\(service)/\(account)"] = nil }; return }
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
@@ -56,13 +58,25 @@ public enum Keychain {
             kSecReturnData as String: true,
             kSecMatchLimit as String: kSecMatchLimitOne,
         ]
+        // The tests never touch the real Keychain: a rebuilt test binary made macOS show a window for it and the
+        // tests waited there. They get one in memory.
+        if isTesting { return testItems.withLock { $0["\(service)/\(account)"] } }
         var result: AnyObject?
         guard SecItemCopyMatching(query as CFDictionary, &result) == errSecSuccess else { return nil }
         return result as? Data
     }
 
+    static let testItems = Mutex<[String: Data]>([:])
+
+    /// Running under `swift test` (not in an app).
+    static let isTesting: Bool = {
+        let name = ProcessInfo.processInfo.processName
+        return name.contains("swiftpm-testing-helper") || name.contains("xctest") || NSClassFromString("XCTestCase") != nil
+    }()
+
     @discardableResult
     static func writeData(_ data: Data, account: String, service: String = service, label: String) -> Bool {
+        if isTesting { testItems.withLock { $0["\(service)/\(account)"] = data }; return true }
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,

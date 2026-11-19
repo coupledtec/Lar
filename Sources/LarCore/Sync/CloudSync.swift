@@ -87,8 +87,23 @@ public enum CloudSync {
     }
 
     static func requireAccount() async throws {
+        forgetOtherEnvironment()
         let status = try await container.accountStatus()
         guard status == .available else { throw CloudSyncError.noAccount }
+    }
+
+    /// Which iCloud database the notes below were made in. Builds from Xcode used the development one until
+    /// 1.5.4 (now every build uses production): what was made there (the zone, the pushes, a joined house) isn't
+    /// in production, so it's made again.
+    static let environment = "production"
+
+    static func forgetOtherEnvironment() {
+        guard Preferences.string(forKey: "cloudEnvironment") != environment else { return }
+        for key in ["cloudZoneReady", "cloudSubscribedPrivate", "cloudSubscribedShared", "cloudAlertsSubscribed",
+                    "cloudJoinedOwner", "cloudJoinedZone", "cloudJoinedName", "cloudPublishedAlerts", "cloudPublisherSeen"] {
+            Preferences.set(nil, forKey: key)
+        }
+        Preferences.set(environment, forKey: "cloudEnvironment")
     }
 
     /// This account's zone, made once.
@@ -160,8 +175,42 @@ public enum CloudSync {
     public static func houseShare() async throws -> CKShare {
         try await requireAccount()
         try await prepareZone()
+        do {
+            return try await fetchOrMakeShare()
+        } catch let error as CKError where [.zoneNotFound, .userDeletedZone].contains(error.code) {
+            // The zone noted as made isn't there (deleted, or made in another environment): made again.
+            Preferences.set(nil, forKey: "cloudZoneReady")
+            try await prepareZone()
+            return try await fetchOrMakeShare()
+        }
+    }
+
+    /// The invitation's link, which lets anyone who has it into the house (scenes, names and rooms, never the
+    /// accounts' keys): the share opens to "anyone with the link" and is saved before the link is handed out, so a
+    /// link that isn't there never gets copied (Apple's "Copiar link" failed quietly and left the clipboard as it was).
+    public static func houseLink() async throws -> URL {
+        let share = try await houseShare()
+        var saved = share
+        if share.publicPermission != .readWrite {
+            share.publicPermission = .readWrite
+            let (results, _) = try await container.privateCloudDatabase.modifyRecords(saving: [share], deleting: [])
+            switch results[share.recordID] {
+            case .success(let record)?: saved = record as? CKShare ?? share
+            case .failure(let error)?: throw error
+            case nil: break
+            }
+        }
+        guard let url = saved.url else { throw CloudSyncError.noLink }
+        return url
+    }
+
+    private static func fetchOrMakeShare() async throws -> CKShare {
         let id = CKRecord.ID(recordName: CKRecordNameZoneWideShare, zoneID: ownZone)
-        if let existing = try? await container.privateCloudDatabase.record(for: id) as? CKShare { return existing }
+        do {
+            if let existing = try await container.privateCloudDatabase.record(for: id) as? CKShare { return existing }
+        } catch let error as CKError where error.code == .unknownItem {
+            // Not shared yet: made below.
+        }
         let share = CKShare(recordZoneID: ownZone)
         share[CKShare.SystemFieldKey.title] = tr("Casa no Lar") as NSString
         share.publicPermission = .none
@@ -175,6 +224,55 @@ public enum CloudSync {
         let id = CKRecord.ID(recordName: CKRecordNameZoneWideShare, zoneID: ownZone)
         guard let share = try? await container.privateCloudDatabase.record(for: id) as? CKShare else { return false }
         return share.participants.contains { $0.role != .owner }
+    }
+
+    /// Someone in this account's house (who it was shared with).
+    public struct HousePerson: Identifiable, Sendable, Hashable {
+        public var id: String
+        public var name: String
+        /// Invited, hasn't opened the invitation yet.
+        public var isPending: Bool
+    }
+
+    /// The people this account's house is shared with (empty when it isn't shared).
+    public static func housePeople() async throws -> [HousePerson] {
+        try await requireAccount()
+        let id = CKRecord.ID(recordName: CKRecordNameZoneWideShare, zoneID: ownZone)
+        let share: CKShare
+        do {
+            guard let found = try await container.privateCloudDatabase.record(for: id) as? CKShare else { return [] }
+            share = found
+        } catch let error as CKError where [.unknownItem, .zoneNotFound, .userDeletedZone].contains(error.code) {
+            return []
+        }
+        return share.participants.filter { $0.role != .owner && $0.acceptanceStatus != .removed }.map { participant in
+            HousePerson(id: participant.participantID, name: name(of: participant), isPending: participant.acceptanceStatus == .pending)
+        }
+    }
+
+    static func name(of participant: CKShare.Participant) -> String {
+        let identity = participant.userIdentity
+        if let components = identity.nameComponents {
+            let name = PersonNameComponentsFormatter().string(from: components)
+            if !name.isEmpty { return name }
+        }
+        if let email = identity.lookupInfo?.emailAddress { return email }
+        if let phone = identity.lookupInfo?.phoneNumber { return phone }
+        return tr("Pessoa sem nome")
+    }
+
+    /// Takes someone out of the house: their device goes back to its own scenes. The invitation's link closes too
+    /// (whoever was removed could open it again); "Copiar link do convite" opens it when someone else is invited.
+    public static func removeFromHouse(_ personID: String) async throws {
+        try await requireAccount()
+        let id = CKRecord.ID(recordName: CKRecordNameZoneWideShare, zoneID: ownZone)
+        guard let share = try await container.privateCloudDatabase.record(for: id) as? CKShare else { return }
+        for participant in share.participants where participant.participantID == personID {
+            share.removeParticipant(participant)
+        }
+        share.publicPermission = .none
+        let (results, _) = try await container.privateCloudDatabase.modifyRecords(saving: [share], deleting: [])
+        if case .failure(let error)? = results[share.recordID] { throw error }
     }
 
     /// Joins the house of the invitation this device was opened with. What's in that house replaces this device's
@@ -303,9 +401,12 @@ public enum CloudSyncError: Error, Equatable, Sendable {
     case houseGone
     /// The account's iCloud storage is full: iCloud refuses any save, the shared house's invitation included.
     case storageFull
+    /// iCloud saved the invitation but gave no link back.
+    case noLink
 
     public var message: String {
         switch self {
+        case .noLink: tr("O iCloud não devolveu o link do convite. Tente de novo em alguns segundos.")
         case .noAccount: tr("Entre no iCloud nos Ajustes do aparelho para sincronizar.")
         case .houseGone: tr("A casa compartilhada não está mais disponível. Voltando para a sua.")
         case .storageFull: tr("O iCloud desta conta está cheio. Libere espaço em Ajustes → [seu nome] → iCloud para sincronizar e compartilhar a casa.")
@@ -322,6 +423,15 @@ public enum CloudSyncError: Error, Equatable, Sendable {
             if reasons.contains(where: { $0.code == .notAuthenticated }) { return noAccount.message }
             if reasons.contains(where: { [.networkUnavailable, .networkFailure].contains($0.code) }) {
                 return tr("Sem conexão com o iCloud. Tente de novo quando estiver na internet.")
+            }
+            if reasons.contains(where: { $0.code == .participantMayNeedVerification }) {
+                return tr("Esta conta Apple precisa confirmar o convite. Abra o link de novo e toque em Abrir.")
+            }
+            if reasons.contains(where: { [.unknownItem, .zoneNotFound].contains($0.code) }) {
+                return tr("O convite não está mais disponível: peça um convite novo para quem compartilhou a casa.")
+            }
+            if reasons.contains(where: { $0.code == .alreadyShared }) {
+                return tr("Esta casa já está compartilhada. Abra Compartilhar a casa para ver quem está nela.")
             }
         }
         return error.localizedDescription
