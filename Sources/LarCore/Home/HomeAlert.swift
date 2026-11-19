@@ -6,12 +6,30 @@ public struct HomeAlert: Equatable, Sendable, Identifiable {
     public var title: String
     public var body: String
     public var urgency: Urgency
+    /// A button on the notification ("Desligar tudo", "Trancar", "Subir 1 °C").
+    public var action: Action?
 
-    public init(id: String, title: String, body: String, urgency: Urgency = .normal) {
+    public init(id: String, title: String, body: String, urgency: Urgency = .normal, action: Action? = nil) {
         self.id = id
         self.title = title
         self.body = body
         self.urgency = urgency
+        self.action = action
+    }
+
+    /// What a notification's button does, on the devices listed.
+    public enum Action: Codable, Sendable, Equatable {
+        case turnOff([String])
+        case lock([String])
+        case warmer([String])
+
+        public var title: String {
+            switch self {
+            case .turnOff: tr("Desligar tudo")
+            case .lock: tr("Trancar")
+            case .warmer: tr("Subir 1 °C")
+            }
+        }
     }
 
     /// How hard the notification tries to be seen.

@@ -207,6 +207,8 @@ final class AppModel {
                 let now = Date()
                 for scene in HomeScene.due(scenes.scenes, after: last, through: now) {
                     if home.devices.isEmpty { await home.refresh() }
+                    // "Só à noite", "só acima de 26 °C".
+                    guard scene.shouldRun(devices: home.devices) else { continue }
                     let problem = home.run(scene)
                     Notifier.post([HomeAlert(id: "scene:\(scene.id)", title: scene.name,
                                              body: problem ?? String(localized: "Cena executada no horário."))], force: true)

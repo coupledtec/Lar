@@ -55,7 +55,14 @@ Casa de exemplo).
 - **Atalhos do Mac:** ⌃⌥L abre o Lar de qualquer app, e a temperatura do ar pode aparecer ao lado da casinha
   (Ajustes → Lista).
 - **Ajustes protegidos:** Touch ID ou senha para abrir os Ajustes, onde ficam as chaves.
-- **Automações:** cenas no horário (com dias da semana) e "Desligar em…" no menu de cada aparelho.
+- **Automações:** cenas no horário (com dias da semana) e "Desligar em…" no menu de cada aparelho. Uma cena pode
+  rodar só se a casa estiver acima de uma temperatura ou só à noite (depois do pôr do sol).
+- **Rotinas sugeridas:** abaixo das cenas, o Lar sugere rotinas prontas para os aparelhos da casa ("Ar ao chegar e ao
+  sair", "Sair de casa", "Robô com a casa vazia", "Chegar à noite", "Bom dia", "Dormir", "Cinema") e as que nascem do
+  seu uso ("TV às 19:00?"). "Criar" faz as cenas; "Agora não" esconde. No iPhone, o ar pode ligar **chegando** (a
+  1,5 km de casa) para gelar antes de você entrar.
+- **Avisos opcionais:** o que ficou ligado ao sair (com "Desligar tudo"), porta destrancada à noite (com "Trancar"),
+  roupa pronta ao chegar, movimento com a casa vazia e a energia do ar no dia (com "Subir 1 °C"). Ligue em Ajustes.
 - **Mac e iPhone iguais:** cenas, nomes, favoritos e cômodos sincronizam pela rede de casa, com criptografia
   (Ajustes → iPhone → Parear um iPhone). As chaves das contas não passam.
 - **Histórico do ar:** temperatura das últimas 24 h, tempo ligado hoje e estimativa de kWh e R$ (potência e tarifa
@@ -117,7 +124,8 @@ Lar.
 - **Para parear um aparelho novo**, atualizar firmware ou usar um recurso muito específico, use o app da marca: o
   Lar só enxerga o que já está na conta.
 - **Para automações complexas** (sensores, condições, centenas de integrações, tudo na rede local), use o Home
-  Assistant. O Lar faz cenas no horário e "desligar em…", não regras do tipo "se isso, então aquilo".
+  Assistant. O Lar faz cenas no horário, ao chegar e ao sair com condições simples e "desligar em…", não regras
+  livres do tipo "se isso, então aquilo".
 - **Para comandos de voz**, use a Siri (pelo app Casa, com a ponte do Lar), a Alexa ou o Google Assistente.
 
 **Limites do Lar:** ele depende da nuvem de cada marca (só as TVs são controladas direto pela rede de casa), e

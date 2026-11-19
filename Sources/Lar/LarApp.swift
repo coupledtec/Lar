@@ -60,6 +60,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         #if LAR_PRIVATE
         PrivateExtensions.start(model)
         #endif
+        store.activeWatches = { [weak model] in model?.scenes.watches ?? [] }
+        // A notification's button ("Desligar tudo", "Trancar", "Subir 1 °C").
+        Notifier.onAction = { [weak store] action in
+            store?.perform(action)
+            await store?.waitUntilSent()
+        }
         store.onAlerts = { [weak model] alerts in
             model?.post(alerts)
             for alert in alerts {

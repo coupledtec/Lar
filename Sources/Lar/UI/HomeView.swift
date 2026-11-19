@@ -35,6 +35,9 @@ struct HomeView: View {
             switch current {
             case .list:
                 list.transition(.move(edge: .leading).combined(with: .opacity))
+                    #if LAR_APPSTORE
+                    .reviewPromptWhenDue()
+                    #endif
             case .settings:
                 SettingsView(model: model, canGoBack: home.hasAccounts, onDiagnostics: { go(.diagnostics) }) { go(.list) }
                     .transition(.move(edge: .trailing).combined(with: .opacity))
@@ -265,6 +268,9 @@ struct HomeView: View {
 
     private var sections: some View {
         VStack(alignment: .leading, spacing: 12) {
+            #if !LAR_APPSTORE
+            ReviewAskCard()
+            #endif
             SceneStrip(home: home, scenes: model.scenes) { go(.scene(id: $0)) }
             ForEach(home.sections(grouping: home.grouping)) { section in
                 VStack(alignment: .leading, spacing: 2) {

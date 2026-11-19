@@ -22,3 +22,10 @@ extension Array where Element: Sendable {
         }
     }
 }
+
+/// A value handed across to the main actor that the system gives without Sendable (a notification's completion
+/// handler, called once).
+struct UncheckedBox<Value>: @unchecked Sendable {
+    let value: Value
+    init(_ value: Value) { self.value = value }
+}

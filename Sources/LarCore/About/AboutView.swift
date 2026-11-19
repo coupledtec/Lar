@@ -5,6 +5,8 @@ import SwiftUI
 public enum LarAbout {
     public static let site = URL(string: "https://www.coupled.com.br")!
     public static let repository = URL(string: "https://github.com/coupledtec/Lar")!
+    /// The App Store's page, straight to writing a review.
+    public static let writeReview = URL(string: "https://apps.apple.com/app/id6827164324?action=write-review")!
     public static let newIssue = URL(string: "https://github.com/coupledtec/Lar/issues/new")!
     public static let contributing = URL(string: "https://github.com/coupledtec/Lar/blob/main/CONTRIBUTING.md")!
     public static let sponsors = URL(string: "https://github.com/sponsors/coupledtec")!

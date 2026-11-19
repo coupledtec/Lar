@@ -55,6 +55,11 @@ public final class HomeStore {
     /// Saves the two above when they change.
     /// Notifications to post after a refresh (a washer that finished). Only the Mac and the iPhone set it.
     @ObservationIgnored public var onAlerts: (([HomeAlert]) -> Void)?
+    /// The alerts the owner turned on among the suggested routines (the apps hand their scenes' list).
+    @ObservationIgnored public var activeWatches: () -> Set<HomeWatch> = { [] }
+    /// Doors seen unlocked, since when; and the watch alerts already sent (once each).
+    @ObservationIgnored var unlockedSince: [String: Date] = [:]
+    @ObservationIgnored var watchFired: Set<String> = []
     /// After every read of the accounts (the iPhone saves the widgets' copy and updates the Live Activities).
     @ObservationIgnored public var onRefreshed: (() -> Void)?
     /// An account just refused its keys (it was fine before): the app may sign in again by itself.
@@ -284,8 +289,8 @@ public final class HomeStore {
             }
             for await read in group { apply(read) }
         }
-        if !previous.isEmpty, let onAlerts {
-            let alerts = alerts(after: previous)
+        if let onAlerts {
+            let alerts = await watchAlerts(previous.isEmpty ? [] : alerts(after: previous))
             if !alerts.isEmpty { onAlerts(alerts) }
         }
         onRefreshed?()
@@ -457,7 +462,10 @@ public final class HomeStore {
             try await provider.send(pending.command, to: device)
             overrides[pending.deviceID]?[pending.command.field]?.expires = now().addingTimeInterval(Self.overrideLifetime)
             scheduleRefresh(after: Self.refreshAfterSend)
+            // A good moment for the App Store's rating prompt (counted; it asks only after several days of use).
+            if !isPreview { ReviewPrompt.shared.noteSuccess() }
         } catch {
+            if !isPreview { ReviewPrompt.shared.noteFailure() }
             if overrides[pending.deviceID]?[pending.command.field]?.command == pending.command {
                 overrides[pending.deviceID]?[pending.command.field] = nil
             }

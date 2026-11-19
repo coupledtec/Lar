@@ -632,6 +632,17 @@ struct SettingsView: View {
             .toggleStyle(.switch)
             .controlSize(.small)
             .font(.system(size: 12))
+            // The alerts among the suggested routines (also offered under the scenes).
+            ForEach(HomeWatch.allCases) { watch in
+                Toggle(watch.title, isOn: Binding(
+                    get: { model.scenes.watches.contains(watch) },
+                    set: { model.scenes.setWatch(watch, on: $0) }
+                ))
+                .toggleStyle(.switch)
+                .controlSize(.small)
+                .font(.system(size: 12))
+                .help(watch.detail)
+            }
             ForEach(model.home.hiddenDevices) { device in
                 HStack {
                     Text(device.name).font(.system(size: 12))

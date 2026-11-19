@@ -46,6 +46,8 @@ public actor HistoryStore {
         save(all)
     }
 
+    func allSamples() -> [HistorySample] { load() }
+
     public func samples(of deviceID: String, since: Date) -> [HistorySample] {
         load().filter { $0.deviceID == deviceID && $0.date >= since }
     }

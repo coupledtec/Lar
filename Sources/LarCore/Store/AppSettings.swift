@@ -216,6 +216,8 @@ public final class InMemorySettings: SettingsStorage {
     public var customizations: [String: DeviceCustomization] = [:]
     public var grouping: DeviceGrouping = .kind
     public var syncUpdatedAt = Date.distantPast
+    public var watches: [String] = []
+    public var dismissedSuggestions: [String] = []
     public var token: String?
     public var clientID = "lar-test"
     public var deviceID: String?
@@ -257,6 +259,10 @@ public protocol AccountSettings: AnyObject {
     var grouping: DeviceGrouping { get set }
     /// When the scenes or the list's organization last changed here (or came from the other side).
     var syncUpdatedAt: Date { get set }
+    /// The alerts turned on among the suggested routines (`HomeWatch` raw values), and the suggestions already
+    /// accepted or dismissed: with the scenes.
+    var watches: [String] { get set }
+    var dismissedSuggestions: [String] { get set }
 }
 
 extension AccountSettings {
@@ -361,6 +367,16 @@ extension AppSettings: AccountSettings {
     public var scenes: [HomeScene] {
         get { Preferences.decoded([HomeScene].self, forKey: "scenes") ?? [] }
         set { Preferences.setEncoded(newValue, forKey: "scenes") }
+    }
+
+    public var watches: [String] {
+        get { Preferences.object(forKey: "watches") as? [String] ?? [] }
+        set { Preferences.set(newValue, forKey: "watches") }
+    }
+
+    public var dismissedSuggestions: [String] {
+        get { Preferences.object(forKey: "dismissedSuggestions") as? [String] ?? [] }
+        set { Preferences.set(newValue, forKey: "dismissedSuggestions") }
     }
 
     public var tvPins: [String: String] {

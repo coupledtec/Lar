@@ -106,6 +106,7 @@ final class StatusItemController: NSObject, NSPopoverDelegate {
 
     func popoverDidShow(_ notification: Notification) {
         store.isPopoverVisible = true
+        ReviewPrompt.shared.noteOpen()
     }
 
     func popoverDidClose(_ notification: Notification) {

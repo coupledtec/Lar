@@ -52,7 +52,15 @@ To try it without any account: **"Try a sample home"** on the first screen (or S
 - **Mac shortcuts:** ⌃⌥L opens Lar from any app, and the air conditioner's temperature can show next to the house
   (Settings → List).
 - **Protected Settings:** Touch ID or your password to open Settings, where the keys are.
-- **Automations:** scenes on schedule (with weekdays) and "Turn off in…" in each device's menu.
+- **Automations:** scenes on schedule (with weekdays) and "Turn off in…" in each device's menu. A scene can run
+  only when the house is above a temperature, or only at night (after sunset).
+- **Suggested routines:** under the scenes, Lar suggests ready-made routines for your home's devices ("AC when
+  arriving and leaving", "Leaving home", "Robot while nobody is home", "Arriving at night", "Good morning", "Bedtime",
+  "Movie") and ones that come from your use ("TV at 19:00?"). "Create" makes the scenes; "Not now" hides it. On the
+  iPhone, the AC can turn on while you're **arriving** (1.5 km from home) to cool before you walk in.
+- **Optional alerts:** what was left on when you leave (with "Turn everything off"), a door unlocked at night (with
+  "Lock"), laundry done when you arrive, motion while nobody is home and the AC's energy for the day (with "Raise
+  1 °C"). Turn them on in Settings.
 - **Mac and iPhone alike:** scenes, names, favorites and rooms sync over your home network, encrypted (Settings →
   iPhone → Pair an iPhone). The accounts' keys don't go along.
 - **Air conditioner history:** temperature over the last 24 h, time on today and an estimate in kWh and money
@@ -114,7 +122,8 @@ LG, Smart Life and SmartThings devices to Home and Siri. **Alexa** routines beco
 - **To pair a new device**, update firmware or use a very specific feature, use the brand's app: Lar only sees what's
   already in the account.
 - **For complex automations** (sensors, conditions, hundreds of integrations, all on the local network), use Home
-  Assistant. Lar does scenes on schedule and "turn off in…", not "if this, then that" rules.
+  Assistant. Lar does scenes on schedule, arriving and leaving with simple conditions, and "turn off in…", not
+  free "if this, then that" rules.
 - **For voice commands**, use Siri (through the Home app, with Lar's bridge), Alexa or Google Assistant.
 
 **Lar's limits:** it depends on each brand's cloud (only TVs are controlled directly over your home network), and

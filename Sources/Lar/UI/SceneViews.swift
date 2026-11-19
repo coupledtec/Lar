@@ -62,7 +62,86 @@ struct SceneStrip: View {
                 }
                 PageControl(paged: paged, page: $page)
             }
+            SuggestionStrip(home: home, scenes: scenes)
         }
+    }
+}
+
+/// The GitHub version's own rating ask (Apple's prompt shows only in apps from the App Store), at the same good
+/// moment: "Avaliar na App Store", a star on GitHub, or not now.
+struct ReviewAskCard: View {
+    private var prompt = ReviewPrompt.shared
+    @Environment(\.openURL) private var openURL
+
+    var body: some View {
+        if prompt.isDue {
+            VStack(alignment: .leading, spacing: 5) {
+                HStack(spacing: 6) {
+                    Image(systemName: "star.fill").foregroundStyle(.yellow)
+                    Text("Está gostando do Lar?").font(.system(size: 12, weight: .semibold))
+                }
+                Text("Uma avaliação na App Store ou uma estrela no GitHub ajuda outras pessoas a encontrar o Lar.")
+                    .font(.system(size: 11)).foregroundStyle(Theme.secondaryText)
+                    .fixedSize(horizontal: false, vertical: true)
+                HStack {
+                    Button("Avaliar na App Store") { prompt.rated(); openURL(LarAbout.writeReview) }
+                    Button("Estrela no GitHub") { prompt.rated(); openURL(LarAbout.repository) }
+                    Button("Agora não") { prompt.asked() }
+                }
+                .controlSize(.small)
+            }
+            .padding(10)
+            .card(cornerRadius: 9)
+        }
+    }
+}
+
+/// The suggested routines under the scenes, one at a time: "Criar" makes it, "Agora não" hides it for good.
+private struct SuggestionStrip: View {
+    var home: HomeStore
+    var scenes: SceneStore
+    @State private var habits: [Habit] = []
+    @State private var index = 0
+
+    var body: some View {
+        let list = RoutineSuggestions.make(devices: home.devices, scenes: scenes.scenes, watches: scenes.watches,
+                                           dismissed: scenes.dismissedSuggestions,
+                                           names: home.customizations.compactMapValues(\.name),
+                                           rooms: home.customizations.compactMapValues(\.room), habits: habits)
+        Group {
+            if !list.isEmpty {
+                let suggestion = list[min(index, list.count - 1)]
+                VStack(alignment: .leading, spacing: 5) {
+                    HStack(spacing: 6) {
+                        Image(systemName: suggestion.symbol).foregroundStyle(Theme.accent)
+                        Text("Sugestão: \(suggestion.title)").font(.system(size: 12, weight: .semibold))
+                        Spacer(minLength: 0)
+                        if list.count > 1 {
+                            Button { index = (index + 1) % list.count } label: {
+                                Text("\(min(index, list.count - 1) + 1) de \(list.count) ›").font(.system(size: 10))
+                            }
+                            .buttonStyle(.plain)
+                            .foregroundStyle(Theme.secondaryText)
+                            .help("Próxima sugestão")
+                        }
+                    }
+                    Text(suggestion.detail).font(.system(size: 11)).foregroundStyle(Theme.secondaryText)
+                        .fixedSize(horizontal: false, vertical: true)
+                    if suggestion.needsHome {
+                        Text("Chegar e sair usam a localização do iPhone (Ajustes → Casa no Lar do iPhone).")
+                            .font(.system(size: 10)).foregroundStyle(Theme.secondaryText)
+                    }
+                    HStack {
+                        Button("Criar") { scenes.accept(suggestion) }
+                        Button("Agora não") { scenes.dismiss(suggestion) }
+                    }
+                    .controlSize(.small)
+                }
+                .padding(10)
+                .card(cornerRadius: 9)
+            }
+        }
+        .task { habits = await HistoryStore.shared.habits() }
     }
 }
 
@@ -113,6 +192,45 @@ private struct SceneAutomationEditor: View {
                         .background(Circle().fill(Color.white.opacity(on ? 0.22 : 0.05)))
                     }
                     Text(schedule.text).font(.system(size: 10)).foregroundStyle(Theme.secondaryText).padding(.leading, 4)
+                }
+            }
+            HStack(spacing: 10) {
+                if draft.presence == .arrive {
+                    Picker("", selection: $draft.approachDistance) {
+                        Text("Na porta").tag(Double?.none)
+                        ForEach([500.0, 1000, 1500, 2000, 3000], id: \.self) { meters in
+                            Text("Chegando (a \(Coordinate.distanceText(meters)))").tag(Double?.some(meters))
+                        }
+                    }
+                    .labelsHidden()
+                    .fixedSize()
+                }
+                if draft.schedule != nil || draft.presence != nil {
+                    Toggle("Só acima de", isOn: Binding(
+                        get: { draft.condition?.warmerThan != nil },
+                        set: { on in
+                            var condition = draft.condition ?? SceneCondition()
+                            condition.warmerThan = on ? 26 : nil
+                            draft.condition = condition
+                        }
+                    ))
+                    .toggleStyle(.checkbox)
+                    if let warmer = draft.condition?.warmerThan {
+                        Stepper("\(Int(warmer)) °C", value: Binding(
+                            get: { warmer },
+                            set: { draft.condition?.warmerThan = $0 }
+                        ), in: 18...35)
+                        .fixedSize()
+                    }
+                    Toggle("Só à noite", isOn: Binding(
+                        get: { draft.condition?.atNight == true },
+                        set: { on in
+                            var condition = draft.condition ?? SceneCondition()
+                            condition.atNight = on ? true : nil
+                            draft.condition = condition
+                        }
+                    ))
+                    .toggleStyle(.checkbox)
                 }
             }
             Text("O horário roda no Mac (com o Lar aberto); chegar e sair, no iPhone.")

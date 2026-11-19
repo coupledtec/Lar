@@ -10,10 +10,24 @@ public enum Notifier {
         set { Preferences.set(newValue, forKey: "notifyLaundry") }
     }
 
+    /// A notification's button tapped ("Desligar tudo"): the app carries it out (`HomeStore.perform(_:)`) and waits
+    /// for the commands to go out.
+    @MainActor public static var onAction: ((HomeAlert.Action) async -> Void)?
+    static let actionKey = "larAction"
+    static let actionID = "lar.do"
+
     /// Asks once; later calls change nothing. Also shows the notifications while the app is in front.
     public static func start() {
         let center = UNUserNotificationCenter.current()
         center.delegate = Presenter.shared
+        #if !os(tvOS)
+        // One category per button, so each notification shows its own.
+        center.setNotificationCategories(Set([HomeAlert.Action.turnOff([]), .lock([]), .warmer([])].map { action in
+            UNNotificationCategory(identifier: category(of: action),
+                                   actions: [UNNotificationAction(identifier: actionID, title: action.title, options: [])],
+                                   intentIdentifiers: [])
+        }))
+        #endif
         // (`-LarScreenshots YES`: the store's screenshots, with no permission prompt in front.)
         guard laundryEnabled, !UserDefaults.standard.bool(forKey: "LarScreenshots") else { return }
         var options: UNAuthorizationOptions = [.alert, .sound]
@@ -39,6 +53,10 @@ public enum Notifier {
             content.title = alert.title
             content.body = alert.body
             content.sound = .default
+            if let action = alert.action, let data = try? JSONEncoder().encode(action) {
+                content.categoryIdentifier = category(of: action)
+                content.userInfo = [actionKey: data]
+            }
             switch alert.urgency {
             case .normal:
                 break
@@ -57,6 +75,14 @@ public enum Notifier {
             center.add(UNNotificationRequest(identifier: "\(alert.id):\(Date().timeIntervalSince1970)", content: content, trigger: nil))
         }
         #endif
+    }
+
+    static func category(of action: HomeAlert.Action) -> String {
+        switch action {
+        case .turnOff: "lar.turnOff"
+        case .lock: "lar.lock"
+        case .warmer: "lar.warmer"
+        }
     }
 
     // MARK: Opening a device
@@ -92,7 +118,17 @@ public enum Notifier {
         #if !os(tvOS)
         func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse,
                                     withCompletionHandler completionHandler: @escaping () -> Void) {
-            let id = response.notification.request.content.userInfo[Notifier.deviceKey] as? String
+            let info = response.notification.request.content.userInfo
+            if response.actionIdentifier == Notifier.actionID, let data = info[Notifier.actionKey] as? Data,
+               let action = try? JSONDecoder().decode(HomeAlert.Action.self, from: data) {
+                let done = UncheckedBox(completionHandler)
+                Task { @MainActor in
+                    await Notifier.onAction?(action)
+                    done.value()
+                }
+                return
+            }
+            let id = info[Notifier.deviceKey] as? String
             completionHandler()
             guard let id else { return }
             Task { @MainActor in

@@ -133,6 +133,16 @@
         }
       }
     },
+    "%@ terminou e está esperando." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ is done and waiting."
+          }
+        }
+      }
+    },
     "%@ · %@" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -156,6 +166,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ · unreachable"
+          }
+        }
+      }
+    },
+    "%@ às %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ at %2$@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ às %2$@"
           }
         }
       }
@@ -346,6 +372,22 @@
         }
       }
     },
+    "%lld de %lld ›" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld of %2$lld ›"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld de %2$lld ›"
+          }
+        }
+      }
+    },
     "%lld h" : {
       "localizations" : {
         "en" : {
@@ -388,6 +430,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld min"
+          }
+        }
+      }
+    },
+    "%lld °C" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld °C"
           }
         }
       }
@@ -1324,6 +1376,16 @@
         }
       }
     },
+    "Acende as luzes da entrada e da sala ao chegar, só depois do pôr do sol." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turns on the entrance and living room lights when you arrive, only after sunset."
+          }
+        }
+      }
+    },
     "Adicionado ao app Casa" : {
       "localizations" : {
         "en" : {
@@ -1350,6 +1412,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Scheduled"
+          }
+        }
+      }
+    },
+    "Agora não" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not now"
           }
         }
       }
@@ -1602,6 +1674,16 @@
         }
       }
     },
+    "Ao chegar, lembra da lavadora ou da secadora que terminou e está esperando." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When you arrive, reminds you of the washer or dryer that finished and is waiting."
+          }
+        }
+      }
+    },
     "Ao ligar pelo Lar, o PS5 já entra com a conta PlayStation do Lar. Se ela tiver senha de acesso no console, o Lar a digita (fica só no Porta-chaves)." : {
       "localizations" : {
         "en" : {
@@ -1618,6 +1700,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "When leaving home"
+          }
+        }
+      }
+    },
+    "Ao sair de casa, avisa o que ficou ligado, com o botão Desligar tudo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When you leave home, tells you what was left on, with a Turn everything off button."
+          }
+        }
+      }
+    },
+    "Ao sair: desliga luzes, TV, videogame e ar, tranca a porta e põe o robô para limpar." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When you leave: turns off the lights, TV, console and AC, locks the door and starts the robot vacuum."
           }
         }
       }
@@ -1730,6 +1832,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Heating to %@"
+          }
+        }
+      }
+    },
+    "Ar ao chegar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AC on arrival"
+          }
+        }
+      }
+    },
+    "Ar ao chegar e ao sair" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AC when arriving and leaving"
+          }
+        }
+      }
+    },
+    "Ar ao sair" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AC off when leaving"
           }
         }
       }
@@ -1996,6 +2128,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Auto"
+          }
+        }
+      }
+    },
+    "Avaliar na App Store" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rate on the App Store"
           }
         }
       }
@@ -2496,6 +2638,36 @@
         }
       }
     },
+    "Chegando (a %@)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arriving (%@ away)"
+          }
+        }
+      }
+    },
+    "Chegar e sair usam a localização do iPhone (Ajustes → Casa no Lar do iPhone)." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arriving and leaving use the iPhone's location (Settings → Home in Lar on the iPhone)."
+          }
+        }
+      }
+    },
+    "Chegar à noite" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arriving at night"
+          }
+        }
+      }
+    },
     "Ciclo" : {
       "localizations" : {
         "en" : {
@@ -2984,6 +3156,16 @@
         }
       }
     },
+    "Criar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create"
+          }
+        }
+      }
+    },
     "Criar a integração deste %@ e entrar" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -3395,6 +3577,16 @@
         }
       }
     },
+    "Desligar tudo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn everything off"
+          }
+        }
+      }
+    },
     "Deslize para navegar · toque para OK" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -3412,6 +3604,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unlocked"
+          }
+        }
+      }
+    },
+    "Destrancada há %lld min." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlocked for %lld min."
           }
         }
       }
@@ -3832,6 +4034,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Invalid address: %@"
+          }
+        }
+      }
+    },
+    "Energia do ar hoje" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today's AC energy"
+          }
+        }
+      }
+    },
+    "Energia do ar no dia" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AC energy for the day"
           }
         }
       }
@@ -4329,6 +4551,16 @@
         }
       }
     },
+    "Esqueci ligado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Left on"
+          }
+        }
+      }
+    },
     "Essa cena não existe mais." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -4445,6 +4677,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "I'm home: mark it here"
+          }
+        }
+      }
+    },
+    "Estrela no GitHub" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Star on GitHub"
+          }
+        }
+      }
+    },
+    "Está gostando do Lar?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enjoying Lar?"
           }
         }
       }
@@ -4677,6 +4929,16 @@
         }
       }
     },
+    "Ficou ligado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Left on"
+          }
+        }
+      }
+    },
     "Filme" : {
       "localizations" : {
         "en" : {
@@ -4768,7 +5030,6 @@
       }
     },
     "Google TV" : {
-      "shouldTranslate" : false,
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -4776,7 +5037,8 @@
             "value" : "Google TV"
           }
         }
-      }
+      },
+      "shouldTranslate" : false
     },
     "Graus" : {
       "extractionState" : "stale",
@@ -5174,6 +5436,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Turns a device on and off."
+          }
+        }
+      }
+    },
+    "Liga o ar a 23 °C quando você estiver a 1,5 km de casa (se estiver acima de 26 °C) e desliga ao sair." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turns the AC on at 23 °C when you're 1.5 km from home (if it's above 26 °C) and off when you leave."
           }
         }
       }
@@ -5692,12 +5964,42 @@
         }
       }
     },
+    "Movimento com a casa vazia" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Motion while nobody is home"
+          }
+        }
+      }
+    },
+    "Movimento com a casa vazia. Toque para ver ao vivo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Motion while nobody is home. Tap to watch live."
+          }
+        }
+      }
+    },
     "Movimento detectado. Toque para ver ao vivo." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Motion detected. Tap to watch live."
+          }
+        }
+      }
+    },
+    "Movimento numa câmera depois de sair de casa vira um aviso mais forte." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Motion on a camera after you leave home becomes a stronger alert."
           }
         }
       }
@@ -5792,6 +6094,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Music"
+          }
+        }
+      }
+    },
+    "Na porta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "At the door"
           }
         }
       }
@@ -6007,6 +6319,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Name in Lar"
+          }
+        }
+      }
+    },
+    "Nos dias úteis às 7:00: desliga o ar e acende as luzes a 60 %." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weekdays at 7:00: turns off the AC and turns the lights on at 60%."
           }
         }
       }
@@ -6764,6 +7086,16 @@
         }
       }
     },
+    "O robô começa a limpar quando você sai e volta à base quando você chega." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The robot starts cleaning when you leave and goes back to its dock when you arrive."
+          }
+        }
+      }
+    },
     "O robô não respondeu" : {
       "localizations" : {
         "en" : {
@@ -7494,6 +7826,26 @@
         }
       }
     },
+    "Porta destrancada há mais de 10 minutos entre 22h e 6h: aviso com o botão Trancar." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A door unlocked for more than 10 minutes between 10 PM and 6 AM: an alert with a Lock button."
+          }
+        }
+      }
+    },
+    "Porta destrancada à noite" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Door unlocked at night"
+          }
+        }
+      }
+    },
     "Porta fechada" : {
       "localizations" : {
         "en" : {
@@ -7667,6 +8019,16 @@
         }
       }
     },
+    "Próxima sugestão" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next suggestion"
+          }
+        }
+      }
+    },
     "Próximo canal" : {
       "localizations" : {
         "en" : {
@@ -7703,6 +8065,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Previous page"
+          }
+        }
+      }
+    },
+    "Quando o ar passa do limite de kWh do dia, avisa e oferece subir 1 °C." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When the AC goes past the day's kWh limit, alerts you and offers to raise it 1 °C."
           }
         }
       }
@@ -8021,12 +8393,42 @@
         }
       }
     },
+    "Robô ao chegar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Robot on arrival"
+          }
+        }
+      }
+    },
+    "Robô ao sair" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Robot when leaving"
+          }
+        }
+      }
+    },
     "Robô aspirador" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Robot vacuum"
+          }
+        }
+      }
+    },
+    "Robô com a casa vazia" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Robot while nobody is home"
           }
         }
       }
@@ -8148,6 +8550,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alexa routines (%lld)"
+          }
+        }
+      }
+    },
+    "Roupa pronta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laundry done"
+          }
+        }
+      }
+    },
+    "Roupa pronta ao chegar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laundry done when arriving"
           }
         }
       }
@@ -8754,12 +9176,52 @@
         }
       }
     },
+    "Subir 1 °C" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Raise 1 °C"
+          }
+        }
+      }
+    },
+    "Sugestão: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suggestion: %@"
+          }
+        }
+      }
+    },
+    "Só acima de" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only above"
+          }
+        }
+      }
+    },
     "Só ventilação" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fan only"
+          }
+        }
+      }
+    },
+    "Só à noite" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only at night"
           }
         }
       }
@@ -9170,6 +9632,16 @@
         }
       }
     },
+    "Todo dia às 23:00: desliga TV, videogame e luzes e tranca a porta." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every day at 23:00: turns off the TV, console and lights and locks the door."
+          }
+        }
+      }
+    },
     "Token da LG recusado" : {
       "localizations" : {
         "en" : {
@@ -9336,6 +9808,16 @@
         }
       }
     },
+    "Trancar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lock"
+          }
+        }
+      }
+    },
     "Tudo desligado" : {
       "localizations" : {
         "en" : {
@@ -9382,6 +9864,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "A snack"
+          }
+        }
+      }
+    },
+    "Um toque: liga a TV e deixa as luzes a 20 %." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "One tap: turns on the TV and sets the lights to 20%."
+          }
+        }
+      }
+    },
+    "Uma avaliação na App Store ou uma estrela no GitHub ajuda outras pessoas a encontrar o Lar." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A rating on the App Store or a star on GitHub helps other people find Lar."
           }
         }
       }
@@ -9567,6 +10069,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vertical"
+          }
+        }
+      }
+    },
+    "Você costuma ligar %@ por volta das %@. Criar uma rotina?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You usually turn on %1$@ around %2$@. Create a routine?"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Você costuma ligar %1$@ por volta das %2$@. Criar uma rotina?"
           }
         }
       }
@@ -10294,12 +10812,32 @@
         }
       }
     },
+    "só acima de %lld °C" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "only above %lld °C"
+          }
+        }
+      }
+    },
     "só o estado (modelo sem controle no Lar)" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "state only (model without control in Lar)"
+          }
+        }
+      }
+    },
+    "só à noite" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "only at night"
           }
         }
       }
@@ -10330,6 +10868,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "set a timer for %@"
+          }
+        }
+      }
+    },
+    "~%@ kWh até agora, acima do limite de %lld kWh." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "~%1$@ kWh so far, above the %2$lld kWh limit."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "~%1$@ kWh até agora, acima do limite de %2$lld kWh."
           }
         }
       }

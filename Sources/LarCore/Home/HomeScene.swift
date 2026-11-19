@@ -36,6 +36,11 @@ public struct HomeScene: Codable, Sendable, Identifiable, Equatable, Hashable {
     /// One scheduled time that won't run ("Pular hoje" on its Live Activity, or "Rodar agora" before it): the
     /// occurrence's date. Older apps don't know it and run it anyway.
     public var skippedOccurrence: Date?
+    /// Arriving, run this far from home (meters) instead of at the door ("Chegando"): the air conditioner has time
+    /// to cool the house. Older apps run it on arriving.
+    public var approachDistance: Double?
+    /// Runs by itself only when this holds (older apps run it anyway).
+    public var condition: SceneCondition?
 
     public init(id: UUID = UUID(), name: String, symbol: String = "sparkles", actions: [Action],
                 schedule: SceneSchedule? = nil, presence: ScenePresence? = nil) {
@@ -87,11 +92,36 @@ public struct HomeScene: Codable, Sendable, Identifiable, Equatable, Hashable {
 @Observable
 public final class SceneStore {
     public private(set) var scenes: [HomeScene]
+    /// The alerts turned on among the suggested routines, and the suggestions accepted or dismissed.
+    public private(set) var watches: Set<HomeWatch>
+    public private(set) var dismissedSuggestions: Set<String>
     @ObservationIgnored private let settings: AccountSettings
 
     public init(settings: AccountSettings) {
         self.settings = settings
         self.scenes = settings.scenes.isEmpty && DemoHome.isOn ? DemoHome.scenes : settings.scenes
+        self.watches = Set(settings.watches.compactMap(HomeWatch.init(rawValue:)))
+        self.dismissedSuggestions = Set(settings.dismissedSuggestions)
+    }
+
+    /// Takes a suggestion: its scenes saved, its alert on; it isn't offered again.
+    public func accept(_ suggestion: RoutineSuggestion) {
+        for scene in suggestion.scenes { save(scene) }
+        if let watch = suggestion.watch { setWatch(watch, on: true) }
+        dismiss(suggestion)
+    }
+
+    /// "Agora não": not offered again.
+    public func dismiss(_ suggestion: RoutineSuggestion) {
+        dismissedSuggestions.insert(suggestion.id)
+        settings.dismissedSuggestions = dismissedSuggestions.sorted()
+        settings.markSyncChange()
+    }
+
+    public func setWatch(_ watch: HomeWatch, on: Bool) {
+        if on { watches.insert(watch) } else { watches.remove(watch) }
+        settings.watches = watches.map(\.rawValue).sorted()
+        settings.markSyncChange()
     }
 
     public func scene(id: UUID) -> HomeScene? { scenes.first { $0.id == id } }
@@ -115,6 +145,8 @@ public final class SceneStore {
     /// After the scenes changed elsewhere (the watch receiving the iPhone's). The sample home keeps its sample
     /// scenes while nothing real replaced them.
     public func reload() {
+        watches = Set(settings.watches.compactMap(HomeWatch.init(rawValue:)))
+        dismissedSuggestions = Set(settings.dismissedSuggestions)
         guard !(DemoHome.isOn && settings.scenes.isEmpty) else { return }
         scenes = settings.scenes
     }
@@ -151,6 +183,9 @@ public struct SceneDraft: Equatable, Sendable {
     public var temperatures: [String: Double]
     public var schedule: SceneSchedule?
     public var presence: ScenePresence?
+    /// Arriving: this far from home (meters); nil at the door.
+    public var approachDistance: Double?
+    public var condition: SceneCondition?
     /// The Echo that runs the steps of an imported routine (nil: the first one online).
     public var alexaEcho: String?
     public let original: HomeScene?
@@ -171,6 +206,8 @@ public struct SceneDraft: Equatable, Sendable {
         self.temperatures = temperatures
         schedule = scene?.schedule
         presence = scene?.presence
+        approachDistance = scene?.approachDistance
+        condition = scene?.condition
         alexaEcho = scene?.alexaEcho
     }
 
@@ -220,6 +257,8 @@ public struct SceneDraft: Equatable, Sendable {
         }
         var scene = HomeScene(id: original?.id ?? UUID(), name: name.trimmingCharacters(in: .whitespaces), symbol: symbol,
                               actions: actions, schedule: schedule, presence: presence)
+        scene.approachDistance = presence == .arrive ? approachDistance : nil
+        scene.condition = condition?.isEmpty == false ? condition : nil
         // An imported routine keeps its Alexa steps through an edit.
         scene.alexaRoutineID = original?.alexaRoutineID
         scene.alexaSteps = original?.alexaSteps

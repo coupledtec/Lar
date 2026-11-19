@@ -7,17 +7,23 @@ public struct SyncState: Codable, Sendable, Equatable {
     public var customizations: [String: DeviceCustomization]
     public var grouping: DeviceGrouping
     public var updatedAt: Date
+    /// The alerts turned on and the suggestions dealt with (nil from older versions: left as they are).
+    public var watches: [String]?
+    public var dismissedSuggestions: [String]?
 
-    public init(scenes: [HomeScene], customizations: [String: DeviceCustomization], grouping: DeviceGrouping, updatedAt: Date) {
+    public init(scenes: [HomeScene], customizations: [String: DeviceCustomization], grouping: DeviceGrouping, updatedAt: Date,
+                watches: [String]? = nil, dismissedSuggestions: [String]? = nil) {
         self.scenes = scenes
         self.customizations = customizations
         self.grouping = grouping
         self.updatedAt = updatedAt
+        self.watches = watches
+        self.dismissedSuggestions = dismissedSuggestions
     }
 
     public static func capture(_ settings: AccountSettings) -> SyncState {
         SyncState(scenes: settings.scenes, customizations: settings.customizations, grouping: settings.grouping,
-                  updatedAt: settings.syncUpdatedAt)
+                  updatedAt: settings.syncUpdatedAt, watches: settings.watches, dismissedSuggestions: settings.dismissedSuggestions)
     }
 
     /// Writes the state over the local one, keeping its date (so the two sides agree they're in step).
@@ -25,12 +31,16 @@ public struct SyncState: Codable, Sendable, Equatable {
         settings.scenes = scenes
         settings.customizations = customizations
         settings.grouping = grouping
+        if let watches { settings.watches = watches }
+        if let dismissedSuggestions { settings.dismissedSuggestions = dismissedSuggestions }
         settings.syncUpdatedAt = updatedAt
     }
 
     /// Which way to copy: nil when both sides have the same state.
     public static func direction(local: SyncState, remote: SyncState) -> Direction? {
-        if local.scenes == remote.scenes, local.customizations == remote.customizations, local.grouping == remote.grouping {
+        if local.scenes == remote.scenes, local.customizations == remote.customizations, local.grouping == remote.grouping,
+           remote.watches == nil || Set(local.watches ?? []) == Set(remote.watches ?? []),
+           remote.dismissedSuggestions == nil || Set(local.dismissedSuggestions ?? []) == Set(remote.dismissedSuggestions ?? []) {
             return nil
         }
         return remote.updatedAt > local.updatedAt ? .pull : .push
