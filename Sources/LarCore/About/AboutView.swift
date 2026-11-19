@@ -31,6 +31,7 @@ public struct AboutView: View {
     @State private var tips = TipJar()
     @State private var copied = false
     @Environment(\.purchase) private var purchase
+    @Environment(\.openURL) private var openURL
 
     public init(contributions: ContributionOptions) {
         self.contributions = contributions
@@ -45,6 +46,13 @@ public struct AboutView: View {
             }
             Text("O Lar é gratuito e de código aberto (licença MIT): sem servidor, sem conta e sem coleta de dados.")
                 .fixedSize(horizontal: false, vertical: true)
+
+            section("Está gostando do Lar?") {
+                Text("Uma avaliação na App Store ou uma estrela no GitHub ajuda outras pessoas a encontrar o Lar.")
+                    .fixedSize(horizontal: false, vertical: true)
+                rateLink("Avaliar na App Store", LarAbout.writeReview)
+                rateLink("Estrela no GitHub", LarAbout.repository)
+            }
 
             section("Ajude o Lar a continuar gratuito") {
                 Text("Manter o Lar custa a anuidade de desenvolvedor da Apple (US$ 99 por ano) e muitas horas de trabalho. Qualquer contribuição ajuda.")
@@ -169,6 +177,24 @@ public struct AboutView: View {
         }
         #else
         Link(destination: url) { Label(title, systemImage: "arrow.up.right.square") }
+        #endif
+    }
+
+    /// A rating link: once used, the rating prompt doesn't ask again.
+    @ViewBuilder
+    private func rateLink(_ title: LocalizedStringKey, _ url: URL) -> some View {
+        #if os(tvOS)
+        link(title, url)
+        #else
+        Button {
+            ReviewPrompt.shared.rated()
+            openURL(url)
+        } label: {
+            Label(title, systemImage: "star")
+        }
+        #if os(macOS)
+        .buttonStyle(.link)
+        #endif
         #endif
     }
 

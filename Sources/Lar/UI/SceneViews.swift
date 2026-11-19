@@ -67,6 +67,17 @@ struct SceneStrip: View {
     }
 }
 
+/// A small ✕ for the cards under the scenes.
+private func closeButton(_ help: LocalizedStringKey, action: @escaping () -> Void) -> some View {
+    Button(action: action) {
+        Image(systemName: "xmark").font(.system(size: 9, weight: .bold))
+    }
+    .buttonStyle(.plain)
+    .foregroundStyle(Theme.secondaryText)
+    .help(help)
+    .accessibilityLabel(help)
+}
+
 /// The GitHub version's own rating ask (Apple's prompt shows only in apps from the App Store), at the same good
 /// moment: "Avaliar na App Store", a star on GitHub, or not now.
 struct ReviewAskCard: View {
@@ -79,6 +90,8 @@ struct ReviewAskCard: View {
                 HStack(spacing: 6) {
                     Image(systemName: "star.fill").foregroundStyle(.yellow)
                     Text("Está gostando do Lar?").font(.system(size: 12, weight: .semibold))
+                    Spacer(minLength: 0)
+                    closeButton("Fechar") { prompt.asked() }
                 }
                 Text("Uma avaliação na App Store ou uma estrela no GitHub ajuda outras pessoas a encontrar o Lar.")
                     .font(.system(size: 11)).foregroundStyle(Theme.secondaryText)
@@ -109,7 +122,7 @@ private struct SuggestionStrip: View {
                                            names: home.customizations.compactMapValues(\.name),
                                            rooms: home.customizations.compactMapValues(\.room), habits: habits)
         Group {
-            if !list.isEmpty {
+            if !list.isEmpty, !scenes.suggestionsHidden {
                 let suggestion = list[min(index, list.count - 1)]
                 VStack(alignment: .leading, spacing: 5) {
                     HStack(spacing: 6) {
@@ -124,6 +137,7 @@ private struct SuggestionStrip: View {
                             .foregroundStyle(Theme.secondaryText)
                             .help("Próxima sugestão")
                         }
+                        closeButton("Fechar as sugestões (voltam nos Ajustes)") { scenes.suggestionsHidden = true }
                     }
                     Text(suggestion.detail).font(.system(size: 11)).foregroundStyle(Theme.secondaryText)
                         .fixedSize(horizontal: false, vertical: true)

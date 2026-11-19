@@ -4919,6 +4919,16 @@
         }
       }
     },
+    "Fechar as sugestões (voltam nos Ajustes)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close suggestions (they come back in Settings)"
+          }
+        }
+      }
+    },
     "Feito pela Coupled" : {
       "localizations" : {
         "en" : {
@@ -5960,6 +5970,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Show another code"
+          }
+        }
+      }
+    },
+    "Mostrar sugestões de rotinas" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show suggested routines"
           }
         }
       }

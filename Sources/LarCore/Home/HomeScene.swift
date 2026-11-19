@@ -95,6 +95,10 @@ public final class SceneStore {
     /// The alerts turned on among the suggested routines, and the suggestions accepted or dismissed.
     public private(set) var watches: Set<HomeWatch>
     public private(set) var dismissedSuggestions: Set<String>
+    /// The person closed the suggestions (✕): none shown on this device until turned back on in Settings.
+    public var suggestionsHidden: Bool = Preferences.bool(forKey: "suggestionsHidden") ?? false {
+        didSet { Preferences.set(suggestionsHidden, forKey: "suggestionsHidden") }
+    }
     @ObservationIgnored private let settings: AccountSettings
 
     public init(settings: AccountSettings) {

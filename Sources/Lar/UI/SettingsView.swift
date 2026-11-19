@@ -632,6 +632,13 @@ struct SettingsView: View {
             .toggleStyle(.switch)
             .controlSize(.small)
             .font(.system(size: 12))
+            Toggle("Mostrar sugestões de rotinas", isOn: Binding(
+                get: { !model.scenes.suggestionsHidden },
+                set: { model.scenes.suggestionsHidden = !$0 }
+            ))
+            .toggleStyle(.switch)
+            .controlSize(.small)
+            .font(.system(size: 12))
             // The alerts among the suggested routines (also offered under the scenes).
             ForEach(HomeWatch.allCases) { watch in
                 Toggle(watch.title, isOn: Binding(
