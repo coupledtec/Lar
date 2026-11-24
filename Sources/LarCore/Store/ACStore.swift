@@ -476,7 +476,7 @@ public final class ACStore {
                 isReconnecting = false
                 connection = .offline(error.message)
             }
-        case .rateLimited, .rejected, .api, .invalidResponse:
+        case .rateLimited, .quotaExceeded, .rejected, .api, .invalidResponse:
             if serverStatus == nil { connection = .offline(error.message) }
             showMessage(error.message)
         }

@@ -44,6 +44,10 @@ final class AppModel {
             home.setOffTimer(id, after: seconds)
             return true
         }, claim: { SmartThingsClaims.own(settings, device: "Mac") })
+        // An Apple TV (or an iPhone) with no SmartThings integration of its own borrows the Mac's access for a while.
+        server.smartThingsAccess = { [home] in
+            try? await (home.provider(.smartThings) as? SmartThingsClient)?.currentAccessToken()
+        }
         try? server.start()
         sync = server
         startCloudSync()
@@ -125,7 +129,7 @@ final class AppModel {
     func syncWithCloud() async {
         guard CloudSync.isAvailable else { return }
         do {
-            if try await CloudSync.sync(settings) == .pull {
+            if try await CloudSync.sync(settings, devices: home.devices) == .pull {
                 scenes.reload()
                 home.customizations = settings.customizations
                 home.grouping = settings.grouping

@@ -386,6 +386,36 @@ public actor SmartThingsClient: TVRemoteProvider {
 
     /// A valid access token (about 24 h), for a device that may use it but must never renew it (the watch): only
     /// the owner of the refresh token renews, so two devices don't invalidate each other's token.
+    /// SmartThings without an integration of its own (creating one needs Samsung's paid plan since November 2026):
+    /// an access token lent by the Mac or the iPhone, good for about a day; asked for again before it runs out.
+    public enum Borrowed {
+        /// How long a lent token is used (SmartThings' last 24 h; a margin is left).
+        public static let lifetime: TimeInterval = 20 * 3600
+
+        public static var until: Date? {
+            get { (Preferences.object(forKey: "smartThingsBorrowedUntil") as? Double).map(Date.init(timeIntervalSince1970:)) }
+            set { Preferences.set(newValue?.timeIntervalSince1970, forKey: "smartThingsBorrowedUntil") }
+        }
+
+        /// Uses a lent token (nothing changes for a device with its own integration).
+        @discardableResult
+        public static func take(_ token: String, into settings: AccountSettings) -> Bool {
+            if case .oauth? = settings.smartThings { return false }
+            settings.smartThings = .personalToken(token)
+            until = Date().addingTimeInterval(lifetime)
+            return true
+        }
+
+        /// A lent token that runs out within the next hours (or none yet, on a device with no integration).
+        public static func needsNew(_ settings: AccountSettings) -> Bool {
+            switch settings.smartThings {
+            case .oauth?: return false
+            case .personalToken?: return until.map { $0 < Date().addingTimeInterval(4 * 3600) } ?? false
+            case nil: return true
+            }
+        }
+    }
+
     public func currentAccessToken() async throws -> String {
         try await token()
     }

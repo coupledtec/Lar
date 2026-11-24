@@ -48,8 +48,11 @@ enum WidgetBridge {
     /// Saves the list for the widgets and asks them to redraw when it changed.
     static func publish(_ model: AppModel, urgent: Bool = false) {
         let home = model.home
-        let devices = home.sections(grouping: .kind).flatMap(\.devices)
-        guard !devices.isEmpty else { return }
+        let listed = home.sections(grouping: .kind).flatMap(\.devices)
+        guard !listed.isEmpty else { return }
+        // The house this Mac is in first: the widgets' first air conditioner is that house's.
+        let here = Set(HomePlaces.here(listed, customizations: home.customizations).map(\.id))
+        let devices = listed.filter { here.contains($0.id) } + listed.filter { !here.contains($0.id) }
         let rooms = Dictionary(uniqueKeysWithValues: devices.compactMap { device in home.room(of: device.id).map { (device.id, $0) } })
         let feed = WidgetRelay.Feed(date: Date(), devices: devices,
                                     favorites: home.customizations.filter { $0.value.isFavorite }.keys.sorted(),

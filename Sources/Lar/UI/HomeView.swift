@@ -144,6 +144,8 @@ struct HomeView: View {
     private var list: some View {
         VStack(alignment: .leading, spacing: 10) {
             header
+            CurrentHouseLine(home: home)
+            HouseViewPicker(home: home)
             if let problem = problemLine {
                 Label(problem, systemImage: "exclamationmark.triangle")
                     .font(.system(size: 11))
@@ -164,13 +166,13 @@ struct HomeView: View {
 
     private var header: some View {
         HStack(spacing: 8) {
-            Image(systemName: home.switchedOnCount > 0 ? "house.fill" : "house")
+            Image(systemName: home.viewedOnCount > 0 ? "house.fill" : "house")
                 .font(.system(size: 14))
                 .foregroundStyle(Theme.accent)
             Text("Lar")
                 .font(.system(size: 15, weight: .semibold))
-            if home.switchedOnCount > 0 {
-                Text(home.switchedOnCount == 1 ? "· 1 ligado" : "· \(home.switchedOnCount) ligados")
+            if home.viewedOnCount > 0 {
+                Text(home.viewedOnCount == 1 ? "· 1 ligado" : "· \(home.viewedOnCount) ligados")
                     .font(.system(size: 12))
                     .foregroundStyle(Theme.secondaryText)
                     .contentTransition(.numericText())
@@ -272,7 +274,7 @@ struct HomeView: View {
             ReviewAskCard()
             #endif
             SceneStrip(home: home, scenes: model.scenes) { go(.scene(id: $0)) }
-            ForEach(home.sections(grouping: home.grouping)) { section in
+            ForEach(home.visibleSections(grouping: home.grouping)) { section in
                 VStack(alignment: .leading, spacing: 2) {
                     Text(section.title.uppercased())
                         .font(.system(size: 10, weight: .semibold))

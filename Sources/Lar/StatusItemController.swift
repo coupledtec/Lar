@@ -47,6 +47,10 @@ final class StatusItemController: NSObject, NSPopoverDelegate {
             button.imagePosition = .imageLeading
         }
         observeStore()
+        // The house this Mac is in changed: its temperature and what's on there.
+        observers.append(NotificationCenter.default.addObserver(forName: HomePlaces.changed, object: nil, queue: .main) { [weak self] _ in
+            MainActor.assumeIsolated { self?.updateButton() }
+        })
         closePopoverWhenFocusMovesAway()
         PopoverHold.changed = { [weak self] holding in self?.hold(holding) }
     }
@@ -110,6 +114,8 @@ final class StatusItemController: NSObject, NSPopoverDelegate {
     }
 
     func popoverDidClose(_ notification: Notification) {
+        // The next opening starts in Geral (every house's devices).
+        store.viewingPlace = nil
         store.isPopoverVisible = false
     }
 
@@ -125,13 +131,15 @@ final class StatusItemController: NSObject, NSPopoverDelegate {
 
     private func updateButton() {
         guard let button = statusItem.button else { return }
-        let count = store.switchedOnCount
+        let count = store.switchedOnHere.count
         let image = NSImage(systemSymbolName: count > 0 ? "house.fill" : "house", accessibilityDescription: "Lar")
         image?.isTemplate = true
         button.image = image?.withSymbolConfiguration(.init(pointSize: 14, weight: .regular))
-        // The first air conditioner's room temperature, when asked for in Settings.
+        // The room temperature of the house this Mac is in (its air conditioner), when asked for in Settings.
+        let here = HomePlaces.here(store.devices, customizations: store.customizations)
         let temperature = model.showsTemperatureInMenuBar
-            ? store.devices.first(where: { $0.kind == .airConditioner && $0.isOnline })?.controls["roomTemperature"]
+            ? (here.first(where: { $0.kind == .airConditioner && $0.isOnline })?.controls["roomTemperature"]
+               ?? HomePlaces.roomTemperature(here).map(HomeText.degrees))
             : nil
         button.title = temperature.map { " \($0)" } ?? ""
         model.usesHotKey ? hotKey.register() : hotKey.unregister()

@@ -90,6 +90,16 @@
         }
       }
     },
+    "%@ no Lar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ on Lar"
+          }
+        }
+      }
+    },
     "%@ não aceita temperatura." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -725,6 +735,16 @@
         }
       }
     },
+    "A LG limitou as chamadas da sua conta por agora; o Lar tenta de novo sozinho mais tarde (a chave está certa)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LG has limited your account's calls for now; Lar tries again by itself later (the key is right)"
+          }
+        }
+      }
+    },
     "A Microsoft não confirmou o login." : {
       "localizations" : {
         "en" : {
@@ -1063,6 +1083,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The password stays in the Keychain. The Mac stays registered with the server and rings even with the popover closed."
+          }
+        }
+      }
+    },
+    "A temperatura e os aparelhos mostrados são os da casa onde você está, ou da mais próxima. O que você muda aqui fica valendo e vai para o iPhone e o relógio." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The temperature and devices shown are those of the home you're at, or the nearest one. What you change here is kept and goes to the iPhone and the watch."
           }
         }
       }
@@ -1815,6 +1845,16 @@
         }
       }
     },
+    "Aparelhos nesta casa" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Devices in this home"
+          }
+        }
+      }
+    },
     "Aponte a câmera do celular para o código e entre na sua conta Samsung. No fim, a página mostra um \"code\" de 6 letras: digite-o aqui." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -2313,6 +2353,26 @@
         }
       }
     },
+    "Buscar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search"
+          }
+        }
+      }
+    },
+    "Buscar nos ajustes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search settings"
+          }
+        }
+      }
+    },
     "Buscar rotina" : {
       "localizations" : {
         "en" : {
@@ -2520,6 +2580,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Home in Lar"
+          }
+        }
+      }
+    },
+    "Casa principal (os aparelhos sem casa ficam nela)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Main home (devices without a home go here)"
+          }
+        }
+      }
+    },
+    "Casas" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Homes"
+          }
+        }
+      }
+    },
+    "Casas e lista" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Homes and list"
           }
         }
       }
@@ -3020,6 +3110,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Accounts"
+          }
+        }
+      }
+    },
+    "Contas e aparelhos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accounts and devices"
           }
         }
       }
@@ -3946,7 +4046,6 @@
       }
     },
     "Editar" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -4046,6 +4145,16 @@
         }
       }
     },
+    "Endereço" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Address"
+          }
+        }
+      }
+    },
     "Endereço (ex.: 192.168.0.30)" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -4084,6 +4193,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Invalid address: %@"
+          }
+        }
+      }
+    },
+    "Endereço não encontrado." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Address not found."
           }
         }
       }
@@ -4730,6 +4849,16 @@
         }
       }
     },
+    "Este Mac está aqui" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This Mac is here"
+          }
+        }
+      }
+    },
     "Este aparelho não aceita esse comando" : {
       "localizations" : {
         "en" : {
@@ -5015,6 +5144,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Left on"
+          }
+        }
+      }
+    },
+    "Ficou ligado: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Left on: %@"
           }
         }
       }
@@ -6198,6 +6337,16 @@
         }
       }
     },
+    "Nada encontrado para “%@”." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing found for “%@”."
+          }
+        }
+      }
+    },
     "Nenhum Mac com o Lar aberto na rede" : {
       "localizations" : {
         "en" : {
@@ -6276,6 +6425,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No air conditioner in Lar."
+          }
+        }
+      }
+    },
+    "Nenhuma casa ainda. O Lar encontra as casas pelo endereço que a conta do aparelho informa (SmartThings, Smart Life) e pelo iPhone; ou crie uma." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No homes yet. Lar finds homes from the address the device's account gives (SmartThings, Smart Life) and through the iPhone; or create one."
           }
         }
       }
@@ -6393,6 +6552,16 @@
         }
       }
     },
+    "Nome (ex.: Praia)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name (e.g. Beach)"
+          }
+        }
+      }
+    },
     "Nome e cômodo…" : {
       "localizations" : {
         "en" : {
@@ -6419,6 +6588,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Weekdays at 7:00: turns off the AC and turns the lights on at 60%."
+          }
+        }
+      }
+    },
+    "Nova casa" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New home"
           }
         }
       }
@@ -6545,6 +6724,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Couldn't pair"
+          }
+        }
+      }
+    },
+    "Não deu para saber onde o Mac está. Permita a localização em Ajustes do Sistema → Privacidade." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't tell where the Mac is. Allow location in System Settings → Privacy."
           }
         }
       }
@@ -6928,6 +7117,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The Roomba didn't answer"
+          }
+        }
+      }
+    },
+    "O SmartThings gerou o token, mas o Lar não conseguiu lê-lo. Copie o token da página e cole em “Token pessoal”, abaixo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SmartThings made the token, but Lar couldn't read it. Copy the token from the page and paste it in “Personal token”, below."
+          }
+        }
+      }
+    },
+    "O SmartThings não permite mais criar integrações novas. Use “Entrar de novo no SmartThings”: o Lar entra com a integração que já tem." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SmartThings no longer lets anyone create new integrations. Use “Sign in to SmartThings again”: Lar signs in with the integration it already has."
           }
         }
       }
@@ -8352,6 +8561,16 @@
         }
       }
     },
+    "Remover esta casa" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove this home"
+          }
+        }
+      }
+    },
     "Repetir" : {
       "localizations" : {
         "en" : {
@@ -9174,6 +9393,16 @@
         }
       }
     },
+    "SmartThings (por um dia)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SmartThings (for a day)"
+          }
+        }
+      }
+    },
     "SmartThings desconectado" : {
       "localizations" : {
         "en" : {
@@ -9845,7 +10074,18 @@
         }
       }
     },
+    "Token recusado: ao gerar o token, desça a lista e marque também todas as permissões de “Apps” (Aplicações). Sem elas o Lar não consegue criar a integração." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Token refused: when making the token, scroll down and also tick every “Apps” permission. Without them Lar can't create the integration."
+          }
+        }
+      }
+    },
     "Token recusado: crie um com a permissão de apps (Apps)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -10067,6 +10307,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Use OAuth (doesn't expire)"
+          }
+        }
+      }
+    },
+    "Usar a localização deste Mac" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use this Mac's location"
           }
         }
       }
@@ -11028,12 +11278,32 @@
         }
       }
     },
+    "· %lld ligados em outras casas" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "· %lld on at other homes"
+          }
+        }
+      }
+    },
     "· 1 ligado" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "· 1 on"
+          }
+        }
+      }
+    },
+    "· 1 ligado em outra casa" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "· 1 on at another home"
           }
         }
       }

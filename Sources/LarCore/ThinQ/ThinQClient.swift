@@ -1,4 +1,5 @@
 import Foundation
+import Synchronization
 import os
 
 public enum ThinQError: Error, Equatable, Sendable {
@@ -7,6 +8,8 @@ public enum ThinQError: Error, Equatable, Sendable {
     /// The unit isn't reachable from LG's cloud.
     case deviceOffline
     case rateLimited
+    /// The account's calls for the day (or the hour) are used up: LG answers again later by itself.
+    case quotaExceeded
     /// The unit rejected the command in its current state (e.g. powered off).
     case rejected(String)
     case api(code: String, message: String)
@@ -20,7 +23,7 @@ public enum ThinQError: Error, Equatable, Sendable {
     public var isTransient: Bool {
         switch self {
         case .network, .rateLimited, .serverError: true
-        case .unauthorized, .deviceOffline, .rejected, .api, .invalidResponse: false
+        case .unauthorized, .deviceOffline, .rejected, .api, .invalidResponse, .quotaExceeded: false
         }
     }
 
@@ -29,6 +32,7 @@ public enum ThinQError: Error, Equatable, Sendable {
         case .unauthorized: tr("Token inválido ou expirado")
         case .deviceOffline: tr("O aparelho está offline")
         case .rateLimited: tr("Muitos pedidos, tente de novo em instantes")
+        case .quotaExceeded: tr("A LG limitou as chamadas da sua conta por agora; o Lar tenta de novo sozinho mais tarde (a chave está certa)")
         case .rejected(let message): message
         case .api(_, let message): message
         case .network(let message): message
@@ -45,6 +49,8 @@ public enum ThinQError: Error, Equatable, Sendable {
             return .deviceOffline
         case "1306":
             return .rateLimited
+        case "1314":
+            return .quotaExceeded
         case "2302", "2303", "2304", "2305":
             return .rejected(message)
         default:
@@ -149,7 +155,12 @@ public struct ThinQClient: Sendable {
         return try await performOnce(method, path, body: body)
     }
 
+    /// After LG says the account's calls are used up: no more calls until then (each one would count too).
+    static let quotaPause = Mutex<Date?>(nil)
+    static let quotaWait: TimeInterval = 30 * 60
+
     private func performOnce(_ method: String, _ path: String, body: JSONValue? = nil) async throws -> JSONValue {
+        if let until = Self.quotaPause.withLock({ $0 }), until > Date() { throw ThinQError.quotaExceeded }
         let request = try makeRequest(method, path, body: body)
         let data: Data
         let response: URLResponse
@@ -165,6 +176,7 @@ public struct ThinQClient: Sendable {
         if let error = envelope?["error"] {
             let code = error["code"]?.string ?? ""
             Self.log.error("\(method, privacy: .public) \(path, privacy: .private) status \(status, privacy: .public) code \(code, privacy: .public)")
+            if code == "1314" { Self.quotaPause.withLock { $0 = Date().addingTimeInterval(Self.quotaWait) } }
             throw ThinQError.from(
                 code: code,
                 message: error["message"]?.string ?? "Request failed",

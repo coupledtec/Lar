@@ -14,6 +14,8 @@ public final class SyncServer {
     private let offTimer: @MainActor (String, Double?) -> Bool
     /// The Mac's own SmartThings claim, told to the iPhones (whose claims it records).
     private let claim: @MainActor () -> SmartThingsClaims.Claim?
+    /// The Mac's current SmartThings access token, lent to an Apple TV that has no integration of its own.
+    public var smartThingsAccess: (@MainActor () async -> String?)?
     private let port: NWEndpoint.Port
     private let advertise: Bool
 
@@ -75,6 +77,8 @@ public final class SyncServer {
                     try await connection.send(.ok)
                 case .offTimer(let id, let seconds):
                     try await connection.send(offTimer(id, seconds) ? .ok : .error("aparelho desconhecido no Mac"))
+                case .smartThingsAccess:
+                    try await connection.send(.smartThingsToken(await smartThingsAccess?()))
                 case .claim(let install, let theirs):
                     SmartThingsClaims.record(theirs, install: install)
                     try await connection.send(.claim(install: SmartThingsClaims.installID, claim: claim()))

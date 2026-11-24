@@ -33,12 +33,21 @@ public final class SmartThingsAutoSetup: NSObject {
     private var results: [Result] = []
     private var state = UUID().uuidString
     private var tookToken = false
+    /// The codes the page showed after "Gerar token", tried in turn against SmartThings.
+    private var candidates: [String] = []
+    private var tried: Set<String> = []
+    private var checking = false
+    private var giveUp: Task<Void, Never>?
     @ObservationIgnored private(set) lazy var webView: WKWebView = makeWebView()
     static let log = Logger(subsystem: "com.coupled.lar", category: "smartthings")
 
+    /// A personal token pasted by hand: no tokens page, straight to the integrations and their sign-ins.
+    private let pastedToken: String?
+
     /// - Parameter devices: the names the integrations are made for, this device's first.
-    public init(devices: [String], onFinish: @escaping ([Result]) -> Void) {
+    public init(devices: [String], personalToken: String? = nil, onFinish: @escaping ([Result]) -> Void) {
         self.devices = devices
+        self.pastedToken = personalToken.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }.flatMap { $0.isEmpty ? nil : $0 }
         self.onFinish = onFinish
     }
 
@@ -53,6 +62,11 @@ public final class SmartThingsAutoSetup: NSObject {
     }
 
     public func start() {
+        if let pastedToken {
+            webView.configuration.userContentController.removeAllUserScripts()
+            took(token: pastedToken)
+            return
+        }
         webView.load(URLRequest(url: SmartThingsSetup.tokensPage))
     }
 
@@ -81,7 +95,7 @@ public final class SmartThingsAutoSetup: NSObject {
                 }
                 authorizeNext()
             } catch {
-                phase = .failed((error as? ProviderError)?.message ?? error.localizedDescription)
+                fail((error as? ProviderError)?.message ?? error.localizedDescription)
             }
         }
     }
@@ -121,8 +135,46 @@ public final class SmartThingsAutoSetup: NSObject {
 
     fileprivate func received(_ body: Any) {
         guard let message = body as? [String: Any] else { return }
-        if let token = message["token"] as? String, phase == .signIn { took(token: token) }
-        if let page = message["page"] as? String { Self.log.notice("auto setup page: \(page, privacy: .public)") }
+        if let token = message["token"] as? String, phase == .signIn, !tried.contains(token.lowercased()) {
+            candidates.append(token.lowercased())
+            checkNext()
+        }
+        if let page = message["page"] as? String {
+            Self.log.notice("auto setup page: \(page, privacy: .public)")
+            // Generated, but nothing that works came out of the page in a while: stop (no new token every reload).
+            if page.hasPrefix("submitted"), giveUp == nil {
+                giveUp = Task { [weak self] in
+                    try? await Task.sleep(for: .seconds(25))
+                    guard let self, !Task.isCancelled, self.phase == .signIn else { return }
+                    self.fail(tr("O SmartThings gerou o token, mas o Lar não conseguiu lê-lo. Copie o token da página e cole em “Token pessoal”, abaixo."))
+                }
+            }
+        }
+    }
+
+    /// Tries the codes one at a time: the first that can make integrations is the token.
+    private func checkNext() {
+        guard !checking, !tookToken, let next = candidates.first else { return }
+        candidates.removeFirst()
+        tried.insert(next)
+        checking = true
+        Task {
+            let works = await SmartThingsSetup.canMakeIntegrations(next)
+            checking = false
+            if works {
+                giveUp?.cancel()
+                took(token: next)
+            } else {
+                checkNext()
+            }
+        }
+    }
+
+    /// Stops the page where it is: no more forms filled, no more tokens generated.
+    private func fail(_ message: String) {
+        phase = .failed(message)
+        webView.stopLoading()
+        webView.configuration.userContentController.removeAllUserScripts()
     }
 
     /// On SmartThings' tokens page: opens the new-token form, names it, ticks every permission, generates it, and
@@ -132,10 +184,14 @@ public final class SmartThingsAutoSetup: NSObject {
       if (window.__lar) return; window.__lar = true;
       const uuid = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi;
       const post = (m) => { try { window.webkit.messageHandlers.lar.postMessage(m); } catch (e) {} };
-      let submitted = false, sent = false, opened = false, filled = false, before = new Set();
+      // One token per setup: after "Gerar token" the page reloads and this runs again; it only reads from then on.
+      const done = sessionStorage.getItem('larSubmitted') === '1';
+      let submitted = done, opened = done, filled = done, before = new Set(JSON.parse(sessionStorage.getItem('larBefore') || '[]'));
+      const reported = new Set();
       const found = (t) => {
-        if (sent || !submitted || before.has(t.toLowerCase())) return;
-        sent = true; post({ token: t });
+        const code = t.toLowerCase();
+        if (!submitted || before.has(code) || reported.has(code)) return;
+        reported.add(code); post({ token: code });
       };
       const scan = (text) => {
         try {
@@ -170,9 +226,13 @@ public final class SmartThingsAutoSetup: NSObject {
         const all = [document.body.innerText, ...[...document.querySelectorAll('input, textarea')].map((i) => i.value)];
         return all.flatMap((t) => t.match(uuid) || []).map((u) => u.toLowerCase());
       };
+      // The page's "copy your new token now" notice: a token was just made (by the Lar or by hand).
+      const fresh = () => /copy your new|copia o seu novo|copie o seu novo|copie seu novo|não poderá vê-lo|won.t be able to see it/i
+        .test(document.body.innerText || '');
       const step = () => {
         if (location.hostname !== 'account.smartthings.com') return;
-        if (submitted) { if (!sent) uuidsNow().forEach(found); return; }
+        if (fresh() && !submitted) { submitted = opened = filled = true; sessionStorage.setItem('larSubmitted', '1'); post({ page: 'submitted-by-hand' }); }
+        if (submitted) { uuidsNow().forEach(found); return; }
         const boxes = [...document.querySelectorAll('input[type=checkbox]')];
         const name = [...document.querySelectorAll('input[type=text], input:not([type])')].filter(visible)[0];
         if (!filled && boxes.length >= 3 && name) {
@@ -184,6 +244,8 @@ public final class SmartThingsAutoSetup: NSObject {
               .find((b) => /generate token|gerar token|create token|criar token/i.test(label(b)))
               || document.querySelector('form button[type=submit]');
             before = new Set(uuidsNow());
+            sessionStorage.setItem('larBefore', JSON.stringify([...before]));
+            sessionStorage.setItem('larSubmitted', '1');
             submitted = true;
             if (submit) submit.click();
             post({ page: 'submitted:' + !!submit });
@@ -198,7 +260,7 @@ public final class SmartThingsAutoSetup: NSObject {
       };
       new MutationObserver(step).observe(document.documentElement, { childList: true, subtree: true });
       setInterval(step, 1000);
-      post({ page: location.hostname + location.pathname });
+      post({ page: (done ? 'submitted-reload:' : '') + location.hostname + location.pathname });
     })();
     """#
 }
@@ -258,8 +320,9 @@ public struct SmartThingsAutoSetupView: View {
     @State private var setup: SmartThingsAutoSetup
     let onCancel: () -> Void
 
-    public init(devices: [String], onFinish: @escaping ([SmartThingsAutoSetup.Result]) -> Void, onCancel: @escaping () -> Void) {
-        _setup = State(initialValue: SmartThingsAutoSetup(devices: devices, onFinish: onFinish))
+    public init(devices: [String], personalToken: String? = nil, onFinish: @escaping ([SmartThingsAutoSetup.Result]) -> Void,
+                onCancel: @escaping () -> Void) {
+        _setup = State(initialValue: SmartThingsAutoSetup(devices: devices, personalToken: personalToken, onFinish: onFinish))
         self.onCancel = onCancel
     }
 

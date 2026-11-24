@@ -36,6 +36,8 @@ public struct AccountsImport: Codable, Sendable, Equatable {
     public var xbox: XboxAccount?
     public var brands: [String: BrandAccount]?
     public var intercom: Intercom?
+    /// SmartThings lent for about a day (the sender's access token), for a device with no integration of its own.
+    public var smartThingsToken: String?
 
     public static let fileName = "lar-import.json"
 
@@ -46,6 +48,7 @@ public struct AccountsImport: Codable, Sendable, Equatable {
         if let smartThings, SmartThingsClaims.problem(with: smartThings.clientID) == nil {
             settings.smartThings = .oauth(clientID: smartThings.clientID, secret: smartThings.secret, refreshToken: smartThings.refreshToken)
         }
+        if let smartThingsToken { SmartThingsClient.Borrowed.take(smartThingsToken, into: settings) }
         if let temperatureLimits { settings.temperatureLimits = temperatureLimits }
         if let alexa { settings.alexa = alexa }
         if let xbox { settings.xbox = xbox }

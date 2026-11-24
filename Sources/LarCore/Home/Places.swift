@@ -93,6 +93,19 @@ public enum HomePlaces {
         here(devices, customizations: customizations, places: all, currentID: currentID, learned: learned)
     }
 
+    /// A guest of one shared house: the devices of that house (the only ones listed). Nil: every device.
+    public static var guestDevices: Set<String>? {
+        get { (Preferences.object(forKey: "placeGuestDevices") as? [String]).map(Set.init) }
+        set { Preferences.set(newValue.map { Array($0).sorted() }, forKey: "placeGuestDevices") }
+    }
+
+    /// What's on at the house being shown, and how many are on at the others.
+    public static func switchedOn(_ devices: [HomeDevice], customizations: [String: DeviceCustomization]) -> (here: [HomeDevice], elsewhere: Int) {
+        let on = devices.filter(\.countsAsOn)
+        let here = Set(here(devices, customizations: customizations).map(\.id))
+        return (on.filter { here.contains($0.id) }, on.filter { !here.contains($0.id) }.count)
+    }
+
     // MARK: Finding the houses by themselves
 
     /// Two spots closer than this are the same house (meters).

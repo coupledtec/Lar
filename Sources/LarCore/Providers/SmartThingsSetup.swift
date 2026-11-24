@@ -29,8 +29,13 @@ public enum SmartThingsSetup {
         let (data, response) = try await transport(request)
         let status = (response as? HTTPURLResponse)?.statusCode ?? 0
         let json = try? JSONDecoder().decode(JSONValue.self, from: data)
+        // A 403 with nothing in it is SmartThings' gateway refusing the apps API altogether (since late 2026 it no
+        // longer lets anyone make integrations), not a missing permission.
+        if status == 403, data.isEmpty || json == nil {
+            throw ProviderError.api(tr("O SmartThings não permite mais criar integrações novas. Use “Entrar de novo no SmartThings”: o Lar entra com a integração que já tem."))
+        }
         if status == 401 || status == 403 {
-            throw ProviderError.api(tr("Token recusado: crie um com a permissão de apps (Apps)"))
+            throw ProviderError.api(tr("Token recusado: ao gerar o token, desça a lista e marque também todas as permissões de “Apps” (Aplicações). Sem elas o Lar não consegue criar a integração."))
         }
         guard (200..<300).contains(status), let json else {
             let reason = json?["error"]?["message"]?.string ?? "HTTP \(status)"
@@ -38,6 +43,17 @@ public enum SmartThingsSetup {
         }
         guard let integration = integration(in: json) else { throw ProviderError.api(tr("SmartThings não mandou o client ID")) }
         return integration
+    }
+
+    /// Whether a personal token works and can make integrations (it lists the account's apps). The page shows other
+    /// codes that look like tokens (the token's own ID among them): only one that answers here is used.
+    public static func canMakeIntegrations(_ token: String,
+                                           transport: HTTPTransport = { try await URLSession.shared.data(for: $0) }) async -> Bool {
+        var request = URLRequest(url: appsURL)
+        request.timeoutInterval = 15
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        guard let (_, response) = try? await transport(request) else { return false }
+        return (response as? HTTPURLResponse)?.statusCode == 200
     }
 
     static func body(deviceName: String) -> JSONValue {

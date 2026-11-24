@@ -44,7 +44,38 @@ struct SettingsView: View {
     #endif
     @State private var loginError: String?
 
+    @State private var query = ""
+
     private var settings: AllSettings { model.settings }
+
+    /// A section shows when the search is empty or every word is among its words (ignoring case and accents).
+    private func shows(_ words: String) -> Bool {
+        let typed = fold(query).split(separator: " ")
+        guard !typed.isEmpty else { return true }
+        let haystack = fold(words)
+        return typed.allSatisfy { haystack.contains($0) }
+    }
+
+    private var anyMatch: Bool {
+        ["LG ThinQ ar-condicionado lavadora geladeira token", "Smart Life Tuya luz tomada", "SmartThings Samsung TV integração",
+         "Alexa Echo Amazon anunciar rotinas", "TVs Google TV Android LG Samsung", "Xbox PlayStation PS5 console jogos",
+         "Robôs aspiradores fechaduras Roborock Xiaomi Dreame Ecovacs Eufy iRobot Yale", "App Casa HomeKit código",
+         "Casas casa nova localização endereço praia aqui", "Lista agrupar ocultos sugestões avisos casa de exemplo Touch ID senha",
+         "Ar-condicionado faixa de temperatura limites", "iPhone parear sincronizar Mac rede", "Porteiro ramal portão interfone",
+         "Geral abrir ao iniciar atalho atualizar versão sobre"].contains(where: shows)
+    }
+
+    private func fold(_ text: String) -> String {
+        text.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)
+    }
+
+    /// A group's title between the sections (hidden while searching).
+    @ViewBuilder
+    private func group(_ title: LocalizedStringKey) -> some View {
+        if query.isEmpty {
+            Text(title).font(.system(size: 13, weight: .semibold)).padding(.top, 4)
+        }
+    }
     private var home: HomeStore { model.home }
 
     var body: some View {
@@ -54,21 +85,46 @@ struct SettingsView: View {
                 Text("Ajustes")
                     .font(.system(size: 15, weight: .semibold))
             }
+            HStack(spacing: 6) {
+                Image(systemName: "magnifyingglass").foregroundStyle(Theme.secondaryText)
+                TextField("Buscar nos ajustes", text: $query).textFieldStyle(.plain)
+                if !query.isEmpty {
+                    Button { query = "" } label: { Image(systemName: "xmark.circle.fill") }
+                        .buttonStyle(.plain).foregroundStyle(Theme.secondaryText)
+                }
+            }
+            .font(.system(size: 12))
+            .padding(.horizontal, 8).padding(.vertical, 5)
+            .background(RoundedRectangle(cornerRadius: 7).fill(Color.primary.opacity(0.06)))
             PagedScroll(maxHeight: 560) {
                 VStack(alignment: .leading, spacing: 14) {
-                    lgSection
-                    tuyaSection
-                    smartThingsSection
-                    alexaSection
-                    tvSection
-                    xboxSection
-                    brandsSection
-                    listSection
-                    phoneSection
-                    homeAppSection
-                    if Features.intercom { PorteiroSection(phone: model.phone) }
-                    if settings.token != nil { temperatureSection }
-                    generalSection
+                    group("Contas e aparelhos")
+                    if shows("LG ThinQ ar-condicionado lavadora geladeira token") { lgSection }
+                    if shows("Smart Life Tuya luz tomada") { tuyaSection }
+                    if shows("SmartThings Samsung TV integração") { smartThingsSection }
+                    if shows("Alexa Echo Amazon anunciar rotinas") { alexaSection }
+                    if shows("TVs Google TV Android LG Samsung") { tvSection }
+                    if shows("Xbox PlayStation PS5 console jogos") { xboxSection }
+                    if shows("Robôs aspiradores fechaduras Roborock Xiaomi Dreame Ecovacs Eufy iRobot Yale") { brandsSection }
+                    if shows("App Casa HomeKit código") { homeAppSection }
+                    group("Casas e lista")
+                    if shows("Casas casa nova localização endereço praia aqui") {
+                        section("Casas") {
+                            PlacesView(home: home) {
+                                settings.markSyncChange()
+                                Task { await model.syncWithCloud() }
+                            }
+                        }
+                    }
+                    if shows("Lista agrupar ocultos sugestões avisos casa de exemplo Touch ID senha") { listSection }
+                    if settings.token != nil, shows("Ar-condicionado faixa de temperatura limites") { temperatureSection }
+                    group("Geral")
+                    if shows("iPhone parear sincronizar Mac rede") { phoneSection }
+                    if Features.intercom, shows("Porteiro ramal portão interfone") { PorteiroSection(phone: model.phone) }
+                    if shows("Geral abrir ao iniciar atalho atualizar versão sobre") { generalSection }
+                    if !query.isEmpty, !anyMatch {
+                        Text("Nada encontrado para “\(query)”.").font(.system(size: 12)).foregroundStyle(Theme.secondaryText)
+                    }
                 }
             }
         }

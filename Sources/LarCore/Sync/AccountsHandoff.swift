@@ -27,6 +27,7 @@ public enum AccountsHandoff {
         if accounts.tuya != nil { names.append(Provider.tuya.name) }
         if accounts.alexa != nil { names.append(Provider.alexa.name) }
         if accounts.xbox != nil { names.append(Provider.xbox.name) }
+        if accounts.smartThingsToken != nil { names.append(tr("SmartThings (por um dia)")) }
         for key in (accounts.brands ?? [:]).keys.sorted() { names.append(Provider(rawValue: key)?.name ?? key) }
         return ListFormatter.localizedString(byJoining: names)
     }

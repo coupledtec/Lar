@@ -193,6 +193,33 @@ public final class HomeStore {
 
     /// How many lights and plugs are on, for the menu bar.
     public var switchedOnCount: Int { devices.filter(\.countsAsOn).count }
+    /// The house the list shows (Geral when nil: every device). Not kept: each opening starts in Geral.
+    public var viewingPlace: String?
+
+    /// The list's sections for the house being viewed (all of them in Geral).
+    public func visibleSections(grouping: DeviceGrouping) -> [DeviceSection] {
+        let sections = sections(grouping: grouping)
+        let places = HomePlaces.all
+        guard let id = viewingPlace, places.count > 1, places.contains(where: { $0.id == id }) else { return sections }
+        let learned = HomePlaces.learned
+        return sections.compactMap { section in
+            let devices = section.devices.filter {
+                HomePlaces.placeID(of: $0, customizations: customizations, places: places, learned: learned) == id
+            }
+            return devices.isEmpty ? nil : DeviceSection(title: section.title, devices: devices)
+        }
+    }
+
+    /// What's on in the view (the house chosen, or every house in Geral).
+    public var viewedOnCount: Int {
+        visibleSections(grouping: .kind).flatMap(\.devices).filter(\.countsAsOn).count
+    }
+
+    /// With several houses: what's on at the house being shown, and how many at the others.
+    public var switchedOnHere: (count: Int, elsewhere: Int) {
+        let split = HomePlaces.switchedOn(devices, customizations: customizations)
+        return (split.here.count, split.elsewhere)
+    }
 
     // MARK: Lifecycle
 

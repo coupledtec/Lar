@@ -132,4 +132,73 @@ import Testing
         let custom = [beach.id: DeviceCustomization(place: HomePlaces.all[0].id)]
         #expect(HomePlaces.placeID(of: beach, customizations: custom, places: HomePlaces.all) == HomePlaces.all[0].id)
     }
+
+    @Test func whatIsOnIsCountedPerHouse() {
+        HomePlaces.all = [casa1, casa2]
+        HomePlaces.currentID = "2"
+        defer { HomePlaces.all = []; HomePlaces.currentID = nil }
+        let devices = [ac("a", room: 29), ac("b", room: 22), ac("c", room: 20, on: false)]
+        let custom = [devices[1].id: DeviceCustomization(place: "2"), devices[2].id: DeviceCustomization(place: "2")]
+        let split = HomePlaces.switchedOn(devices, customizations: custom)
+        #expect(split.here.map(\.rawID) == ["b"])
+        #expect(split.elsewhere == 1)
+        // Leaving the beach: the alert names it.
+        #expect(HomeWatch.forgotOnAlert([devices[1]], house: "Praia")?.title == "Ficou ligado: Praia")
+        #expect(HomeWatch.forgotOnAlert([devices[1]])?.title == "Ficou ligado")
+    }
+
+    @MainActor @Test func theListShowsGeralOrOneHouse() async {
+        HomePlaces.all = [casa1, casa2]
+        defer { HomePlaces.all = [] }
+        let devices = [ac("a", room: 29), ac("b", room: 22)]
+        let store = HomeStore(makeProviders: { [] })
+        store.seed(devices)
+        store.customize(devices[1].id) { $0.place = "2" }
+        #expect(store.visibleSections(grouping: .kind).flatMap(\.devices).count == 2)
+        store.viewingPlace = "2"
+        #expect(store.visibleSections(grouping: .kind).flatMap(\.devices).map(\.rawID) == ["b"])
+        store.viewingPlace = "1"
+        #expect(store.visibleSections(grouping: .kind).flatMap(\.devices).map(\.rawID) == ["a"])
+        #expect(store.viewedOnCount == 1)
+    }
+
+    @Test func oneHouseIsSharedOnItsOwn() {
+        let a = ac("a", room: 29), b = ac("b", room: 22)
+        let devices = [a, b]
+        let sceneA = HomeScene(name: "Casa", symbol: "house", actions: [.init(deviceID: a.id, deviceName: a.name, command: .power(true))])
+        let sceneB = HomeScene(name: "Praia", symbol: "sun.max", actions: [.init(deviceID: b.id, deviceName: b.name, command: .power(true))])
+        let whole = SyncState(scenes: [sceneA, sceneB],
+                              customizations: [a.id: DeviceCustomization(name: "Ar da sala"), b.id: DeviceCustomization(name: "Ar", place: "2")],
+                              grouping: .kind, updatedAt: Date(timeIntervalSince1970: 100), places: [casa1, casa2])
+        let beach = SyncState.house("2", from: whole, devices: devices)
+        #expect(beach.sharedDevices == [b.id])
+        #expect(beach.scenes.map(\.name) == ["Praia"])
+        #expect(beach.customizations.keys.sorted() == [b.id])
+        #expect(beach.places?.map(\.id) == ["2"])
+        // The guest renames the air and deletes the scene: it comes back so, the other house untouched.
+        var guest = beach
+        guest.customizations[b.id]?.name = "Ar da praia"
+        guest.scenes = []
+        guest.updatedAt = Date(timeIntervalSince1970: 200)
+        let merged = whole.merging(house: guest)
+        #expect(merged.customizations[b.id]?.name == "Ar da praia")
+        #expect(merged.customizations[a.id]?.name == "Ar da sala")
+        #expect(merged.scenes.map(\.name) == ["Casa"])
+    }
+
+    @MainActor @Test func aGuestSeesOnlyTheirHouse() {
+        defer { HomePlaces.guestDevices = nil }
+        let devices = [ac("a", room: 29), ac("b", room: 22)]
+        let store = HomeStoreProbe.sections(devices, guest: [devices[1].id])
+        #expect(store == ["b"])
+    }
+}
+
+@MainActor enum HomeStoreProbe {
+    static func sections(_ devices: [HomeDevice], guest: Set<String>) -> [String] {
+        HomePlaces.guestDevices = guest
+        let store = HomeStore(makeProviders: { [] })
+        store.seed(devices)
+        return store.sections(grouping: .kind).flatMap(\.devices).map(\.rawID)
+    }
 }

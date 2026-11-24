@@ -567,11 +567,30 @@ actor FakeProvider: DeviceProvider {
     }
 
     @Test func refusedTokenSaysWhy() async {
-        await #expect(throws: ProviderError.api("Token recusado: crie um com a permissão de apps (Apps)")) {
+        await #expect(throws: ProviderError.api("Token recusado: ao gerar o token, desça a lista e marque também todas as permissões de “Apps” (Aplicações). Sem elas o Lar não consegue criar a integração.")) {
             _ = try await SmartThingsSetup.createIntegration(personalToken: "bad", deviceName: "Mac") { request in
                 (Data("{}".utf8), HTTPURLResponse(url: request.url!, statusCode: 403, httpVersion: nil, headerFields: nil)!)
             }
         }
+        // An empty 403: SmartThings no longer lets anyone make integrations (Samsung's paid plan).
+        await #expect(throws: ProviderError.api("O SmartThings não permite mais criar integrações novas. Use “Entrar de novo no SmartThings”: o Lar entra com a integração que já tem.")) {
+            _ = try await SmartThingsSetup.createIntegration(personalToken: "ok", deviceName: "Mac") { request in
+                (Data(), HTTPURLResponse(url: request.url!, statusCode: 403, httpVersion: nil, headerFields: nil)!)
+            }
+        }
+    }
+
+    @Test func aLentSmartThingsTokenIsUsedForADay() {
+        let settings = InMemorySettings()
+        #expect(SmartThingsClient.Borrowed.needsNew(settings))
+        #expect(SmartThingsClient.Borrowed.take("lent", into: settings))
+        #expect(settings.smartThings == .personalToken("lent"))
+        #expect(!SmartThingsClient.Borrowed.needsNew(settings))
+        // A device with its own integration keeps it.
+        settings.smartThings = .oauth(clientID: "c", secret: "s", refreshToken: "r")
+        #expect(!SmartThingsClient.Borrowed.take("lent", into: settings))
+        #expect(!SmartThingsClient.Borrowed.needsNew(settings))
+        SmartThingsClient.Borrowed.until = nil
     }
 
     @Test func fingerprintHidesTheIDAndMatchesOnlyItself() {

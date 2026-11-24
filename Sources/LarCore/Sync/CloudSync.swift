@@ -54,7 +54,17 @@ public enum CloudSync {
     /// Brings this device and iCloud to the newer state. Returns which way it went (nil: already the same).
     @MainActor
     @discardableResult
-    public static func sync(_ settings: AccountSettings) async throws -> SyncState.Direction? {
+    public static func sync(_ settings: AccountSettings, devices: [HomeDevice] = []) async throws -> SyncState.Direction? {
+        let direction = try await syncWhole(settings)
+        // The houses shared one by one: their guests' changes back in, and each one's part out (owner only).
+        if !hasJoinedHouse, !devices.isEmpty, !houseZones.isEmpty {
+            if await syncHouses(settings, devices: devices) { return .pull }
+        }
+        return direction
+    }
+
+    @MainActor
+    private static func syncWhole(_ settings: AccountSettings) async throws -> SyncState.Direction? {
         guard isAvailable else { return nil }
         try await requireAccount()
         try await prepareZone()
@@ -125,6 +135,7 @@ public enum CloudSync {
                 if hasJoinedHouse {
                     // The owner stopped sharing (or removed this person): back to this account's own.
                     joinedZone = nil
+                    HomePlaces.guestDevices = nil
                     throw CloudSyncError.houseGone
                 }
                 Preferences.set(nil, forKey: "cloudZoneReady")
@@ -169,27 +180,95 @@ public enum CloudSync {
         CKNotification(fromRemoteNotificationDictionary: userInfo)?.subscriptionID == changesSubscription
     }
 
+    // MARK: One house shared on its own
+
+    /// The houses shared one by one (`HomePlace.id`), each in a zone of its own ("Lar-<id>").
+    static var houseZones: [String] {
+        get { Preferences.object(forKey: "cloudHouseZones") as? [String] ?? [] }
+        set { Preferences.set(newValue.isEmpty ? nil : newValue, forKey: "cloudHouseZones") }
+    }
+
+    /// The zone of what's shared: the whole house (nil) or one house.
+    static func zoneID(for place: String?) -> CKRecordZone.ID {
+        place.map { CKRecordZone.ID(zoneName: zoneName + "-" + $0, ownerName: CKCurrentUserDefaultName) } ?? ownZone
+    }
+
+    /// When each house's part was last written here (its guests' changes come after that).
+    private static var housePushed: [String: Double] {
+        get { Preferences.object(forKey: "cloudHousePushed") as? [String: Double] ?? [:] }
+        set { Preferences.set(newValue, forKey: "cloudHousePushed") }
+    }
+
+    /// Makes the house's zone and writes its part (the owner, before sharing it).
+    @MainActor
+    static func pushHouse(_ place: String, settings: AccountSettings, devices: [HomeDevice]) async throws {
+        let zone = zoneID(for: place)
+        let (zones, _) = try await container.privateCloudDatabase.modifyRecordZones(saving: [CKRecordZone(zoneID: zone)], deleting: [])
+        if case .failure(let error)? = zones[zone] { throw error }
+        let part = SyncState.house(place, from: SyncState.capture(settings), devices: devices)
+        let id = CKRecord.ID(recordName: stateRecordName, zoneID: zone)
+        let existing = try? await container.privateCloudDatabase.record(for: id)
+        if let existing, let current = decode(existing), current.sameContent(as: part) { return }
+        let record = existing ?? CKRecord(recordType: stateType, recordID: id)
+        record["state"] = try JSONEncoder().encode(part) as NSData
+        record["updatedAt"] = part.updatedAt as NSDate
+        let (results, _) = try await container.privateCloudDatabase.modifyRecords(saving: [record], deleting: [], savePolicy: .allKeys)
+        if case .failure(let error)? = results[id] { throw error }
+        housePushed[place] = part.updatedAt.timeIntervalSince1970
+        if !houseZones.contains(place) { houseZones.append(place) }
+    }
+
+    /// Each shared house: what its guests changed comes back (true when something did), then its part goes out.
+    @MainActor
+    static func syncHouses(_ settings: AccountSettings, devices: [HomeDevice]) async -> Bool {
+        var pulled = false
+        for place in houseZones {
+            guard HomePlaces.all.contains(where: { $0.id == place }) else { continue }
+            let id = CKRecord.ID(recordName: stateRecordName, zoneID: zoneID(for: place))
+            if let record = try? await container.privateCloudDatabase.record(for: id), let guests = decode(record),
+               guests.updatedAt.timeIntervalSince1970 > (housePushed[place] ?? 0) + 0.5 {
+                SyncState.capture(settings).merging(house: guests).apply(to: settings)
+                HomePlaces.guestDevices = nil
+                settings.markSyncChange()
+                pulled = true
+            }
+            try? await pushHouse(place, settings: settings, devices: devices)
+        }
+        if pulled { _ = try? await syncWhole(settings) }
+        return pulled
+    }
+
     // MARK: Sharing the house
 
     /// The share of this account's house, made the first time: who else is in it, and the invitation to send.
-    public static func houseShare() async throws -> CKShare {
+    /// - Parameters:
+    ///   - place: one house only (its devices, names and scenes); nil: everything.
+    ///   - settings, devices: what that house's part is made from (needed with `place`).
+    @MainActor
+    public static func houseShare(place: String? = nil, settings: AccountSettings? = nil, devices: [HomeDevice] = []) async throws -> CKShare {
         try await requireAccount()
+        if let place {
+            guard let settings else { throw CloudSyncError.noLink }
+            try await pushHouse(place, settings: settings, devices: devices)
+            return try await fetchOrMakeShare(zoneID(for: place), title: HomePlaces.all.first { $0.id == place }?.name)
+        }
         try await prepareZone()
         do {
-            return try await fetchOrMakeShare()
+            return try await fetchOrMakeShare(ownZone)
         } catch let error as CKError where [.zoneNotFound, .userDeletedZone].contains(error.code) {
             // The zone noted as made isn't there (deleted, or made in another environment): made again.
             Preferences.set(nil, forKey: "cloudZoneReady")
             try await prepareZone()
-            return try await fetchOrMakeShare()
+            return try await fetchOrMakeShare(ownZone)
         }
     }
 
     /// The invitation's link, which lets anyone who has it into the house (scenes, names and rooms, never the
     /// accounts' keys): the share opens to "anyone with the link" and is saved before the link is handed out, so a
     /// link that isn't there never gets copied (Apple's "Copiar link" failed quietly and left the clipboard as it was).
-    public static func houseLink() async throws -> URL {
-        let share = try await houseShare()
+    @MainActor
+    public static func houseLink(place: String? = nil, settings: AccountSettings? = nil, devices: [HomeDevice] = []) async throws -> URL {
+        let share = try await houseShare(place: place, settings: settings, devices: devices)
         var saved = share
         if share.publicPermission != .readWrite {
             share.publicPermission = .readWrite
@@ -204,15 +283,15 @@ public enum CloudSync {
         return url
     }
 
-    private static func fetchOrMakeShare() async throws -> CKShare {
-        let id = CKRecord.ID(recordName: CKRecordNameZoneWideShare, zoneID: ownZone)
+    private static func fetchOrMakeShare(_ zone: CKRecordZone.ID, title: String? = nil) async throws -> CKShare {
+        let id = CKRecord.ID(recordName: CKRecordNameZoneWideShare, zoneID: zone)
         do {
             if let existing = try await container.privateCloudDatabase.record(for: id) as? CKShare { return existing }
         } catch let error as CKError where error.code == .unknownItem {
             // Not shared yet: made below.
         }
-        let share = CKShare(recordZoneID: ownZone)
-        share[CKShare.SystemFieldKey.title] = tr("Casa no Lar") as NSString
+        let share = CKShare(recordZoneID: zone)
+        share[CKShare.SystemFieldKey.title] = (title.map { tr("\($0) no Lar") } ?? tr("Casa no Lar")) as NSString
         share.publicPermission = .none
         let (results, _) = try await container.privateCloudDatabase.modifyRecords(saving: [share], deleting: [])
         if case .failure(let error)? = results[share.recordID] { throw error }
@@ -235,9 +314,9 @@ public enum CloudSync {
     }
 
     /// The people this account's house is shared with (empty when it isn't shared).
-    public static func housePeople() async throws -> [HousePerson] {
+    public static func housePeople(place: String? = nil) async throws -> [HousePerson] {
         try await requireAccount()
-        let id = CKRecord.ID(recordName: CKRecordNameZoneWideShare, zoneID: ownZone)
+        let id = CKRecord.ID(recordName: CKRecordNameZoneWideShare, zoneID: zoneID(for: place))
         let share: CKShare
         do {
             guard let found = try await container.privateCloudDatabase.record(for: id) as? CKShare else { return [] }
@@ -263,9 +342,9 @@ public enum CloudSync {
 
     /// Takes someone out of the house: their device goes back to its own scenes. The invitation's link closes too
     /// (whoever was removed could open it again); "Copiar link do convite" opens it when someone else is invited.
-    public static func removeFromHouse(_ personID: String) async throws {
+    public static func removeFromHouse(_ personID: String, place: String? = nil) async throws {
         try await requireAccount()
-        let id = CKRecord.ID(recordName: CKRecordNameZoneWideShare, zoneID: ownZone)
+        let id = CKRecord.ID(recordName: CKRecordNameZoneWideShare, zoneID: zoneID(for: place))
         guard let share = try await container.privateCloudDatabase.record(for: id) as? CKShare else { return }
         for participant in share.participants where participant.participantID == personID {
             share.removeParticipant(participant)
@@ -297,6 +376,7 @@ public enum CloudSync {
         _ = try? await container.sharedCloudDatabase.modifyRecords(saving: [], deleting: [id])
         joinedZone = nil
         Preferences.set(nil, forKey: "cloudJoinedName")
+        HomePlaces.guestDevices = nil
         settings.syncUpdatedAt = .distantPast
         try await sync(settings)
     }

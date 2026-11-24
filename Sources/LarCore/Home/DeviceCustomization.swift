@@ -48,7 +48,11 @@ public struct DeviceSection: Identifiable, Sendable, Equatable {
 extension HomeStore {
     /// The list as every app shows it: favorites first, then by kind or by room; hidden devices left out.
     public func sections(grouping: DeviceGrouping, includeHidden: Bool = false) -> [DeviceSection] {
-        let all = devices.filter { includeHidden || customizations[$0.id]?.isHidden != true }
+        // A guest of one shared house sees that house's devices only.
+        let allowed = HomePlaces.guestDevices
+        let all = devices.filter { device in
+            (includeHidden || customizations[device.id]?.isHidden != true) && allowed?.contains(device.id) != false
+        }
         let favorites = all.filter { customizations[$0.id]?.isFavorite == true }
         let rest = all.filter { customizations[$0.id]?.isFavorite != true }
         var out = favorites.isEmpty ? [] : [DeviceSection(title: tr("Favoritos"), devices: favorites)]

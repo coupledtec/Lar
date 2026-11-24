@@ -55,6 +55,10 @@
 	<true/>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>O Lar procura e controla as TVs com Google TV, os robôs Roomba e o PS5 da sua rede.</string>
+	<key>NSLocationUsageDescription</key>
+	<string>O Lar usa a localização do Mac para saber em qual das suas casas ele está.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>O Lar usa a localização do Mac para saber em qual das suas casas ele está.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>O Lar usa o microfone nas chamadas com o porteiro.</string>
 </dict>

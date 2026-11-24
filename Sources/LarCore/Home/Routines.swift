@@ -212,10 +212,13 @@ public enum HomeWatch: String, Codable, Sendable, CaseIterable, Identifiable {
     }
 
     /// "Ficou ligado: Ar da sala, TV" with "Desligar tudo"; nil with nothing on.
-    public static func forgotOnAlert(_ devices: [HomeDevice]) -> HomeAlert? {
+    /// - Parameter house: with several houses, the one just left ("Ficou ligado na Praia").
+    public static func forgotOnAlert(_ devices: [HomeDevice], house: String? = nil) -> HomeAlert? {
         let on = leftOn(devices)
         guard !on.isEmpty else { return nil }
-        return HomeAlert(id: "watch:forgotOn", title: tr("Ficou ligado"), body: on.map(\.name).joined(separator: ", "),
+        return HomeAlert(id: "watch:forgotOn" + (house.map { ":" + $0 } ?? ""),
+                         title: house.map { tr("Ficou ligado: \($0)") } ?? tr("Ficou ligado"),
+                         body: on.map(\.name).joined(separator: ", "),
                          urgency: .timeSensitive, action: .turnOff(on.map(\.id)))
     }
 

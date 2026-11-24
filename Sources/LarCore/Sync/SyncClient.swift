@@ -84,6 +84,23 @@ public enum SyncClient {
         } catch {}
     }
 
+    /// The Mac's SmartThings access for a while (about a day), for a device with no integration of its own. Nil when
+    /// the Mac can't be reached or has no SmartThings.
+    public static func borrowSmartThings(endpoint: NWEndpoint? = nil) async -> String? {
+        guard let key = key() else { return nil }
+        var target = endpoint
+        if target == nil { target = try? await find(SyncLink.serviceType) }
+        guard let target else { return nil }
+        let link = SyncConnection(NWConnection(to: target, using: SyncLink.parameters(secret: key)))
+        defer { Task { await link.close() } }
+        do {
+            try await link.start()
+            try await link.send(.smartThingsAccess)
+            if case .smartThingsToken(let token) = try await link.receive() { return token }
+        } catch {}
+        return nil
+    }
+
     /// Asks the Mac to turn the device off later (it stays on; the iPhone may be locked). False when it can't.
     public static func handOffTimer(deviceID: String, seconds: Double?, endpoint: NWEndpoint? = nil) async -> Bool {
         guard let key = key() else { return false }

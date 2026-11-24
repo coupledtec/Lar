@@ -76,11 +76,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         store.onUnauthorized = { [weak model] provider in
             if provider == .smartThings { model?.reconnectSmartThings() }
         }
-        store.onRefreshed = { [weak store] in
+        store.onRefreshed = { [weak store, weak model] in
             guard let devices = store?.devices else { return }
             Task { await HistoryStore.shared.record(devices) }
+            // Houses from the devices' own addresses (SmartThings, Smart Life), as on the iPhone.
+            if HomePlaces.discover(from: devices) {
+                model?.settings.markSyncChange()
+                MacLocation.shared.locateHouse()
+            }
         }
         store.start()
+        // Which house this Mac is in: the menu bar shows that one's temperature and devices.
+        MacLocation.shared.locateHouse()
+        observers.append(NotificationCenter.default.addObserver(forName: HomePlaces.changed, object: nil, queue: .main) { _ in
+            MainActor.assumeIsolated { MacLocation.shared.locateHouse() }
+        })
 
         // Don't poll while the Mac sleeps; catch up right after waking.
         let center = NSWorkspace.shared.notificationCenter
