@@ -10,20 +10,24 @@ public struct SyncState: Codable, Sendable, Equatable {
     /// The alerts turned on and the suggestions dealt with (nil from older versions: left as they are).
     public var watches: [String]?
     public var dismissedSuggestions: [String]?
+    /// The houses (nil from older versions: left as they are).
+    public var places: [HomePlace]?
 
     public init(scenes: [HomeScene], customizations: [String: DeviceCustomization], grouping: DeviceGrouping, updatedAt: Date,
-                watches: [String]? = nil, dismissedSuggestions: [String]? = nil) {
+                watches: [String]? = nil, dismissedSuggestions: [String]? = nil, places: [HomePlace]? = nil) {
         self.scenes = scenes
         self.customizations = customizations
         self.grouping = grouping
         self.updatedAt = updatedAt
         self.watches = watches
         self.dismissedSuggestions = dismissedSuggestions
+        self.places = places
     }
 
     public static func capture(_ settings: AccountSettings) -> SyncState {
         SyncState(scenes: settings.scenes, customizations: settings.customizations, grouping: settings.grouping,
-                  updatedAt: settings.syncUpdatedAt, watches: settings.watches, dismissedSuggestions: settings.dismissedSuggestions)
+                  updatedAt: settings.syncUpdatedAt, watches: settings.watches, dismissedSuggestions: settings.dismissedSuggestions,
+                  places: settings.places)
     }
 
     /// Writes the state over the local one, keeping its date (so the two sides agree they're in step).
@@ -33,6 +37,7 @@ public struct SyncState: Codable, Sendable, Equatable {
         settings.grouping = grouping
         if let watches { settings.watches = watches }
         if let dismissedSuggestions { settings.dismissedSuggestions = dismissedSuggestions }
+        if let places { settings.places = places }
         settings.syncUpdatedAt = updatedAt
     }
 
@@ -40,7 +45,8 @@ public struct SyncState: Codable, Sendable, Equatable {
     public static func direction(local: SyncState, remote: SyncState) -> Direction? {
         if local.scenes == remote.scenes, local.customizations == remote.customizations, local.grouping == remote.grouping,
            remote.watches == nil || Set(local.watches ?? []) == Set(remote.watches ?? []),
-           remote.dismissedSuggestions == nil || Set(local.dismissedSuggestions ?? []) == Set(remote.dismissedSuggestions ?? []) {
+           remote.dismissedSuggestions == nil || Set(local.dismissedSuggestions ?? []) == Set(remote.dismissedSuggestions ?? []),
+           remote.places == nil || (local.places ?? []) == (remote.places ?? []) {
             return nil
         }
         return remote.updatedAt > local.updatedAt ? .pull : .push

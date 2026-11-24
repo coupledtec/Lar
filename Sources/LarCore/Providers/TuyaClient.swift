@@ -99,6 +99,10 @@ public actor TuyaClient: DeviceProvider, LiveVideoProvider {
         )
         // An infrared blaster: its remotes come from the infrared API (TuyaInfrared).
         if category == "wnykq" { device.controls["tuyaCategory"] = category }
+        // Where the app paired it (Smart Life notes the phone's spot): which house it's in.
+        if let lat = json["lat"]?.string.flatMap(Double.init), let lon = json["lon"]?.string.flatMap(Double.init), lat != 0 || lon != 0 {
+            device.controls["geo"] = "\(lat),\(lon)"
+        }
         var temperature: Double?
         var humidity: Double?
         for status in json["status"]?.array ?? [] {

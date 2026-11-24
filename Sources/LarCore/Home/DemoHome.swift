@@ -41,6 +41,21 @@ public enum DemoHome {
                    controls: ["locked": "1", "lockable": "1", "room": tr("Entrada")]),
     ]
 
+    /// Testing several houses (launched with `-LarDemoHouses YES`): two more air conditioners, each in a house of
+    /// its own (their accounts say where), besides the sample home's.
+    static var withHouses: Bool { UserDefaults.standard.bool(forKey: "LarDemoHouses") }
+
+    static let houses: [HomeDevice] = [
+        HomeDevice(provider: .smartThings, rawID: "sensor-casa", name: tr("Sensor da sala"), kind: .climateSensor,
+                   controls: ["roomTemperatureValue": "27", "geo": "-23.5614,-46.6559", "placeName": "Casa", "room": tr("Sala")]),
+        HomeDevice(provider: .smartThings, rawID: "ac-praia", name: tr("Ar da praia"), kind: .airConditioner, isOn: true,
+                   detail: tr("Ambiente 24° · ajustado em 21°"),
+                   controls: ["targetTemperature": "21", "roomTemperatureValue": "24", "geo": "-23.9608,-46.3336", "placeName": "Praia"]),
+        HomeDevice(provider: .tuya, rawID: "ac-sitio", name: tr("Ar do sítio"), kind: .airConditioner, isOn: false,
+                   detail: tr("Ambiente 18°"),
+                   controls: ["targetTemperature": "23", "roomTemperatureValue": "18", "geo": "-22.9056,-47.0608", "placeName": "Sítio"]),
+    ]
+
     /// The sample home's LG air conditioner: its full panel, answering in memory.
     @MainActor
     public static func airConditioner() -> ACStore {
@@ -79,7 +94,14 @@ public enum DemoHome {
     }
 
     actor State {
-        var devices = DemoHome.devices
+        var devices = DemoHome.withHouses
+            ? DemoHome.devices.map { device in
+                var device = device
+                // The sample home's devices are at "Casa".
+                if device.geo == nil, device.kind == .airConditioner { device.controls["geo"] = "-23.5614,-46.6559" }
+                return device
+            } + DemoHome.houses
+            : DemoHome.devices
 
         func list(_ provider: Provider) -> [HomeDevice] { devices.filter { $0.provider == provider } }
 

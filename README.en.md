@@ -58,6 +58,10 @@ To try it without any account: **"Try a sample home"** on the first screen (or S
   arriving and leaving", "Leaving home", "Robot while nobody is home", "Arriving at night", "Good morning", "Bedtime",
   "Movie") and ones that come from your use ("TV at 19:00?"). "Create" makes the scenes; "Not now" hides it. On the
   iPhone, the AC can turn on while you're **arriving** (1.5 km from home) to cool before you walk in.
+- **Several homes:** Lar finds your homes by itself (from the address the device's account gives, like SmartThings
+  and Smart Life, the nights the iPhone spends somewhere and the devices you use there) and shows the temperature and
+  devices of the home you're at, or the nearest one, in the widgets and on the watch. You can create, rename and move
+  homes by hand; what you change is kept.
 - **Optional alerts:** what was left on when you leave (with "Turn everything off"), a door unlocked at night (with
   "Lock"), laundry done when you arrive, motion while nobody is home and the AC's energy for the day (with "Raise
   1 °C"). Turn them on in Settings.

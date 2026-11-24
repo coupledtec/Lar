@@ -56,6 +56,10 @@ public struct WatchPayload: Codable, Sendable, Equatable {
     /// The list's devices with an LG or Samsung TV's remote (id → kind): the watch shows the remote and sends it
     /// through the iPhone. No keys.
     public var localTVLinks: [String: String]?
+    /// The houses and the one the iPhone is at (nil from older versions).
+    public var places: [HomePlace]?
+    public var currentPlace: String?
+    public var placeLearned: [String: String]?
     public var sentAt: Date
 
     /// The watch's answer once it took a payload: the payload's `sentAt` (seconds since 1970), so the iPhone can say
@@ -90,6 +94,15 @@ public struct WatchPayload: Codable, Sendable, Equatable {
         .with(customizations: settings.customizations, grouping: settings.grouping)
     }
 
+    /// The houses as saved here (the iPhone adds them when it sends).
+    public func withPlaces() -> WatchPayload {
+        var copy = self
+        copy.places = HomePlaces.all
+        copy.currentPlace = HomePlaces.currentID
+        copy.placeLearned = HomePlaces.learned
+        return copy
+    }
+
     func with(customizations: [String: DeviceCustomization], grouping: DeviceGrouping) -> WatchPayload {
         var copy = self
         copy.customizations = customizations
@@ -109,6 +122,9 @@ public struct WatchPayload: Codable, Sendable, Equatable {
         if let scenes { settings.scenes = scenes }
         if let customizations { settings.customizations = customizations }
         if let grouping { settings.grouping = grouping }
+        if let places, places != HomePlaces.all { HomePlaces.all = places }
+        if let currentPlace, currentPlace != HomePlaces.currentID { HomePlaces.currentID = currentPlace }
+        if let placeLearned, placeLearned != HomePlaces.learned { HomePlaces.learned = placeLearned }
         if settings.alexa?.refreshToken != alexa?.refreshToken { settings.alexa = alexa }
         // Only a different account replaces the watch's: its own renewals change the token.
         if settings.xbox?.gamertag != xbox?.gamertag { settings.xbox = xbox }

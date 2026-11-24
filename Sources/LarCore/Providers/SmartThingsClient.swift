@@ -1,4 +1,5 @@
 import Foundation
+import Synchronization
 
 /// SmartThings through its REST API, with either a personal access token (those made after Dec 2024 last 24 h, so
 /// only good for trying it out) or an OAuth integration whose refresh token turns over at every use.
@@ -51,8 +52,20 @@ public actor SmartThingsClient: TVRemoteProvider {
             items += page["items"]?.array ?? []
             next = page["_links"]?["next"]?["href"]?.string.flatMap(URL.init(string:))
         }
+        // Each location's spot and name (set in the SmartThings app): which house each device is in.
+        let locationIDs = Set(items.compactMap { $0["locationId"]?.string })
+        let pairs = (try? await Array(locationIDs).concurrentMap { id in LocationInfo(id: id, found: await self.location(id)) }) ?? []
+        let locations = Dictionary(uniqueKeysWithValues: pairs.map { ($0.id, $0.found) })
+        let listed = items.compactMap { json -> HomeDevice? in
+            guard var device = Self.device(from: json) else { return nil }
+            if let id = json["locationId"]?.string, let location = locations[id] ?? nil {
+                device.controls["geo"] = location.geo
+                device.controls["placeName"] = location.name
+            }
+            return device
+        }
         // Every device at once, and each one's status and health together.
-        return try await items.compactMap(Self.device(from:)).concurrentMap { device in
+        return try await listed.concurrentMap { device in
             var device = device
             let path = "devices/\(device.rawID)"
             do {
@@ -68,6 +81,26 @@ public actor SmartThingsClient: TVRemoteProvider {
             }
             return device
         }
+    }
+
+    /// A location's spot ("lat,lon") and name, read once per run of the app.
+    private func location(_ id: String) async -> (geo: String?, name: String?)? {
+        if let cached = Self.locationCache.withLock({ $0[id] }) { return cached }
+        guard let json = try? await get(Self.api.appendingPathComponent("locations/\(id)")) else { return nil }
+        let geo: String? = {
+            guard let lat = json["latitude"]?.double, let lon = json["longitude"]?.double, lat != 0 || lon != 0 else { return nil }
+            return "\(lat),\(lon)"
+        }()
+        let found = (geo: geo, name: json["name"]?.string)
+        Self.locationCache.withLock { $0[id] = found }
+        return found
+    }
+
+    private static let locationCache = Mutex<[String: (geo: String?, name: String?)]>([:])
+
+    private struct LocationInfo: Sendable {
+        var id: String
+        var found: (geo: String?, name: String?)?
     }
 
     /// The main component's capabilities decide the kind; devices with nothing to show or change are skipped.

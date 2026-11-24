@@ -10,14 +10,17 @@ public struct DeviceCustomization: Codable, Sendable, Equatable {
     /// Left out of the Mac's bridge to the Home app: true when the device is already there by itself (an iPhone saw
     /// it among the Home app's accessories), so it doesn't show twice. Optional, so older copies still decode.
     public var excludedFromHomeApp: Bool?
+    /// The house it's in (`HomePlace.id`); nil: the main one.
+    public var place: String?
 
     public init(name: String? = nil, isFavorite: Bool = false, room: String? = nil, isHidden: Bool = false,
-                excludedFromHomeApp: Bool? = nil) {
+                excludedFromHomeApp: Bool? = nil, place: String? = nil) {
         self.name = name
         self.isFavorite = isFavorite
         self.room = room
         self.isHidden = isHidden
         self.excludedFromHomeApp = excludedFromHomeApp
+        self.place = place
     }
 
     public var isEmpty: Bool { self == DeviceCustomization() }

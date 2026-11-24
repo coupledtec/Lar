@@ -232,6 +232,7 @@ public final class InMemorySettings: SettingsStorage {
     public var syncUpdatedAt = Date.distantPast
     public var watches: [String] = []
     public var dismissedSuggestions: [String] = []
+    public var places: [HomePlace] = []
     public var token: String?
     public var clientID = "lar-test"
     public var deviceID: String?
@@ -277,6 +278,8 @@ public protocol AccountSettings: AnyObject {
     /// accepted or dismissed: with the scenes.
     var watches: [String] { get set }
     var dismissedSuggestions: [String] { get set }
+    /// The houses (`HomePlaces`), with the scenes.
+    var places: [HomePlace] { get set }
 }
 
 extension AccountSettings {
@@ -391,6 +394,11 @@ extension AppSettings: AccountSettings {
     public var dismissedSuggestions: [String] {
         get { Preferences.object(forKey: "dismissedSuggestions") as? [String] ?? [] }
         set { Preferences.set(newValue, forKey: "dismissedSuggestions") }
+    }
+
+    public var places: [HomePlace] {
+        get { HomePlaces.all }
+        set { HomePlaces.all = newValue }
     }
 
     public var tvPins: [String: String] {

@@ -61,6 +61,10 @@ Casa de exemplo).
   sair", "Sair de casa", "Robô com a casa vazia", "Chegar à noite", "Bom dia", "Dormir", "Cinema") e as que nascem do
   seu uso ("TV às 19:00?"). "Criar" faz as cenas; "Agora não" esconde. No iPhone, o ar pode ligar **chegando** (a
   1,5 km de casa) para gelar antes de você entrar.
+- **Várias casas:** o Lar encontra as casas sozinho (pelo endereço que a conta do aparelho informa, como SmartThings
+  e Smart Life, pelas noites que o iPhone passa num lugar e pelos aparelhos que você usa de lá) e mostra a
+  temperatura e os aparelhos da casa onde você está, ou da mais próxima, nos widgets e no relógio. Dá para criar,
+  renomear e mover casas à mão; o que você muda fica valendo.
 - **Avisos opcionais:** o que ficou ligado ao sair (com "Desligar tudo"), porta destrancada à noite (com "Trancar"),
   roupa pronta ao chegar, movimento com a casa vazia e a energia do ar no dia (com "Subir 1 °C"). Ligue em Ajustes.
 - **Mac e iPhone iguais:** cenas, nomes, favoritos e cômodos sincronizam pela rede de casa, com criptografia

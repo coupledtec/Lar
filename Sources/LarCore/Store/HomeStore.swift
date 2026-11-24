@@ -464,6 +464,8 @@ public final class HomeStore {
             scheduleRefresh(after: Self.refreshAfterSend)
             // A good moment for the App Store's rating prompt (counted; it asks only after several days of use).
             if !isPreview { ReviewPrompt.shared.noteSuccess() }
+            // Used from a house: the device is probably in it (the widgets show each house's own).
+            if !isPreview, let spot = HomePlaces.recentSpot { HomePlaces.noteUse(of: device, at: spot) }
         } catch {
             if !isPreview { ReviewPrompt.shared.noteFailure() }
             if overrides[pending.deviceID]?[pending.command.field]?.command == pending.command {

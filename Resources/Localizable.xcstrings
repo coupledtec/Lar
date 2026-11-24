@@ -1582,6 +1582,26 @@
         }
       }
     },
+    "Ambiente 18°" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Room 18°"
+          }
+        }
+      }
+    },
+    "Ambiente 24° · ajustado em 21°" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Room 24° · set to 21°"
+          }
+        }
+      }
+    },
     "Ambiente 26° · ajustado em %lld°" : {
       "localizations" : {
         "en" : {
@@ -1866,6 +1886,16 @@
         }
       }
     },
+    "Ar da praia" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beach AC"
+          }
+        }
+      }
+    },
     "Ar da sala" : {
       "localizations" : {
         "en" : {
@@ -1892,6 +1922,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bedroom AC"
+          }
+        }
+      }
+    },
+    "Ar do sítio" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Country house AC"
           }
         }
       }
@@ -2440,6 +2480,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Home"
+          }
+        }
+      }
+    },
+    "Casa %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home %lld"
           }
         }
       }

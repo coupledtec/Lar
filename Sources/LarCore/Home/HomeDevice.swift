@@ -137,6 +137,13 @@ public struct HomeDevice: Sendable, Equatable, Identifiable, Codable {
     public var acceptsTemperature: Bool { kind == .airConditioner && controls["targetTemperature"] != nil }
     public var targetTemperature: Double? { controls["targetTemperature"].flatMap(Double.init) }
     public var roomTemperature: Double? { controls["roomTemperatureValue"].flatMap(Double.init) }
+    /// Where the device is, when its account says it (SmartThings' location, where Smart Life paired it).
+    public var geo: Coordinate? {
+        guard let parts = controls["geo"]?.split(separator: ",").compactMap({ Double($0) }), parts.count == 2 else { return nil }
+        return Coordinate(latitude: parts[0], longitude: parts[1])
+    }
+    /// The name of the house its account puts it in (SmartThings' location name).
+    public var accountPlace: String? { controls["placeName"].flatMap { $0.isEmpty ? nil : $0 } }
     /// The room the device's account puts it in (the Home app's), when it says one.
     public var accountRoom: String? { controls["room"].flatMap { $0.isEmpty ? nil : $0 } }
 
