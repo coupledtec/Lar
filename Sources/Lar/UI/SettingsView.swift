@@ -45,8 +45,62 @@ struct SettingsView: View {
     @State private var loginError: String?
 
     @State private var query = ""
+    /// The group open (nil: the list of groups).
+    @State private var topic: MacSettingsTopic?
 
     private var settings: AllSettings { model.settings }
+
+    private func topicRow(_ topic: MacSettingsTopic) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: topic.symbol)
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(.white)
+                .frame(width: 26, height: 26)
+                .background(RoundedRectangle(cornerRadius: 6).fill(topic.tint))
+            VStack(alignment: .leading, spacing: 1) {
+                Text(topic.title).font(.system(size: 13, weight: .medium))
+                Text(topic.subtitle).font(.system(size: 11)).foregroundStyle(Theme.secondaryText).lineLimit(1)
+            }
+            Spacer()
+            Image(systemName: "chevron.right").font(.system(size: 11, weight: .semibold)).foregroundStyle(Theme.secondaryText)
+        }
+        .padding(.horizontal, 10).padding(.vertical, 8)
+        .contentShape(Rectangle())
+    }
+
+    /// One group's sections (only the ones that match, while searching).
+    @ViewBuilder
+    private func sections(of topic: MacSettingsTopic) -> some View {
+        switch topic {
+        case .accounts:
+            if shows("LG ThinQ ar-condicionado lavadora geladeira token") { lgSection }
+            if shows("Smart Life Tuya luz tomada") { tuyaSection }
+            if shows("SmartThings Samsung TV integração") { smartThingsSection }
+            if shows("Alexa Echo Amazon anunciar rotinas") { alexaSection }
+            if shows("TVs Google TV Android LG Samsung") { tvSection }
+            if shows("Xbox PlayStation PS5 console jogos") { xboxSection }
+            if shows("Robôs aspiradores fechaduras Roborock Xiaomi Dreame Ecovacs Eufy iRobot Yale") { brandsSection }
+            if shows("App Casa HomeKit código") { homeAppSection }
+        case .homes:
+            if shows("Casas casa nova localização endereço praia aqui principal") {
+                section("Casas") {
+                    PlacesView(home: home) {
+                        settings.markSyncChange()
+                        Task { await model.syncWithCloud() }
+                    }
+                }
+            }
+        case .list:
+            if shows("Lista agrupar ocultos sugestões avisos casa de exemplo Touch ID senha") { listSection }
+            if settings.token != nil, shows("Ar-condicionado faixa de temperatura limites") { temperatureSection }
+        case .sync:
+            if shows("iPhone parear sincronizar Mac rede") { phoneSection }
+        case .intercom:
+            if Features.intercom, shows("Porteiro ramal portão interfone") { PorteiroSection(phone: model.phone) }
+        case .general:
+            if shows("Geral abrir ao iniciar atalho atualizar versão sobre diagnóstico") { generalSection }
+        }
+    }
 
     /// A section shows when the search is empty or every word is among its words (ignoring case and accents).
     private func shows(_ words: String) -> Bool {
@@ -60,30 +114,28 @@ struct SettingsView: View {
         ["LG ThinQ ar-condicionado lavadora geladeira token", "Smart Life Tuya luz tomada", "SmartThings Samsung TV integração",
          "Alexa Echo Amazon anunciar rotinas", "TVs Google TV Android LG Samsung", "Xbox PlayStation PS5 console jogos",
          "Robôs aspiradores fechaduras Roborock Xiaomi Dreame Ecovacs Eufy iRobot Yale", "App Casa HomeKit código",
-         "Casas casa nova localização endereço praia aqui", "Lista agrupar ocultos sugestões avisos casa de exemplo Touch ID senha",
+         "Casas casa nova localização endereço praia aqui principal", "Lista agrupar ocultos sugestões avisos casa de exemplo Touch ID senha",
          "Ar-condicionado faixa de temperatura limites", "iPhone parear sincronizar Mac rede", "Porteiro ramal portão interfone",
-         "Geral abrir ao iniciar atalho atualizar versão sobre"].contains(where: shows)
+         "Geral abrir ao iniciar atalho atualizar versão sobre diagnóstico"].contains(where: shows)
     }
 
     private func fold(_ text: String) -> String {
         text.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)
     }
 
-    /// A group's title between the sections (hidden while searching).
-    @ViewBuilder
-    private func group(_ title: LocalizedStringKey) -> some View {
-        if query.isEmpty {
-            Text(title).font(.system(size: 13, weight: .semibold)).padding(.top, 4)
-        }
-    }
+
     private var home: HomeStore { model.home }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(spacing: 8) {
-                if canGoBack { BackButton(action: onBack) }
-                Text("Ajustes")
-                    .font(.system(size: 15, weight: .semibold))
+                if let topic, query.isEmpty {
+                    BackButton { self.topic = nil }
+                    Text(topic.title).font(.system(size: 15, weight: .semibold))
+                } else {
+                    if canGoBack { BackButton(action: onBack) }
+                    Text("Ajustes").font(.system(size: 15, weight: .semibold))
+                }
             }
             HStack(spacing: 6) {
                 Image(systemName: "magnifyingglass").foregroundStyle(Theme.secondaryText)
@@ -98,32 +150,25 @@ struct SettingsView: View {
             .background(RoundedRectangle(cornerRadius: 7).fill(Color.primary.opacity(0.06)))
             PagedScroll(maxHeight: 560) {
                 VStack(alignment: .leading, spacing: 14) {
-                    group("Contas e aparelhos")
-                    if shows("LG ThinQ ar-condicionado lavadora geladeira token") { lgSection }
-                    if shows("Smart Life Tuya luz tomada") { tuyaSection }
-                    if shows("SmartThings Samsung TV integração") { smartThingsSection }
-                    if shows("Alexa Echo Amazon anunciar rotinas") { alexaSection }
-                    if shows("TVs Google TV Android LG Samsung") { tvSection }
-                    if shows("Xbox PlayStation PS5 console jogos") { xboxSection }
-                    if shows("Robôs aspiradores fechaduras Roborock Xiaomi Dreame Ecovacs Eufy iRobot Yale") { brandsSection }
-                    if shows("App Casa HomeKit código") { homeAppSection }
-                    group("Casas e lista")
-                    if shows("Casas casa nova localização endereço praia aqui") {
-                        section("Casas") {
-                            PlacesView(home: home) {
-                                settings.markSyncChange()
-                                Task { await model.syncWithCloud() }
+                    if !query.isEmpty {
+                        // Searching: every section that matches, from every group.
+                        ForEach(MacSettingsTopic.allCases) { topic in sections(of: topic) }
+                        if !anyMatch {
+                            Text("Nada encontrado para “\(query)”.").font(.system(size: 12)).foregroundStyle(Theme.secondaryText)
+                        }
+                    } else if let topic {
+                        sections(of: topic)
+                    } else {
+                        // The groups, as on the iPhone: one click opens one.
+                        VStack(spacing: 0) {
+                            ForEach(MacSettingsTopic.visible) { topic in
+                                Button { self.topic = topic } label: { topicRow(topic) }
+                                    .buttonStyle(.plain)
+                                if topic != MacSettingsTopic.visible.last { Divider().padding(.leading, 40) }
                             }
                         }
-                    }
-                    if shows("Lista agrupar ocultos sugestões avisos casa de exemplo Touch ID senha") { listSection }
-                    if settings.token != nil, shows("Ar-condicionado faixa de temperatura limites") { temperatureSection }
-                    group("Geral")
-                    if shows("iPhone parear sincronizar Mac rede") { phoneSection }
-                    if Features.intercom, shows("Porteiro ramal portão interfone") { PorteiroSection(phone: model.phone) }
-                    if shows("Geral abrir ao iniciar atalho atualizar versão sobre") { generalSection }
-                    if !query.isEmpty, !anyMatch {
-                        Text("Nada encontrado para “\(query)”.").font(.system(size: 12)).foregroundStyle(Theme.secondaryText)
+                        .card()
+                        hint("As chaves ficam no Porta-chaves deste Mac. O Lar não tem servidor nem coleta dados.")
                     }
                 }
             }
@@ -930,4 +975,59 @@ struct SettingsView: View {
 
 private extension String {
     var trimmed: String { trimmingCharacters(in: .whitespacesAndNewlines) }
+}
+
+/// The Mac's settings, grouped as on the iPhone: one page each.
+enum MacSettingsTopic: String, CaseIterable, Identifiable {
+    case accounts, homes, list, sync, intercom, general
+
+    var id: String { rawValue }
+
+    @MainActor static var visible: [MacSettingsTopic] {
+        allCases.filter { $0 != .intercom || Features.intercom }
+    }
+
+    var title: String {
+        switch self {
+        case .accounts: String(localized: "Contas e aparelhos")
+        case .homes: String(localized: "Casas")
+        case .list: String(localized: "Lista, avisos e ar-condicionado")
+        case .sync: String(localized: "iPhone e sincronizar")
+        case .intercom: String(localized: "Porteiro")
+        case .general: String(localized: "Geral e sobre")
+        }
+    }
+
+    var subtitle: String {
+        switch self {
+        case .accounts: String(localized: "LG, Smart Life, SmartThings, Alexa, TVs, Xbox, robôs, fechaduras, app Casa")
+        case .homes: String(localized: "Suas casas e onde este Mac está")
+        case .list: String(localized: "Agrupar, ocultos, sugestões, avisos, faixa de temperatura")
+        case .sync: String(localized: "Parear com o iPhone, cenas e nomes iguais")
+        case .intercom: String(localized: "Ramal, portão")
+        case .general: String(localized: "Abrir ao iniciar, atalho, atualizações, versão")
+        }
+    }
+
+    var symbol: String {
+        switch self {
+        case .accounts: "person.crop.circle.badge.checkmark"
+        case .homes: "house.and.flag.fill"
+        case .list: "list.bullet"
+        case .sync: "iphone"
+        case .intercom: "phone.fill"
+        case .general: "gearshape.fill"
+        }
+    }
+
+    var tint: Color {
+        switch self {
+        case .accounts: .blue
+        case .homes: .green
+        case .list: .orange
+        case .sync: .cyan
+        case .intercom: .teal
+        case .general: .gray
+        }
+    }
 }

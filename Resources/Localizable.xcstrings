@@ -1253,6 +1253,16 @@
         }
       }
     },
+    "Abrir ao iniciar, atalho, atualizações, versão" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open at login, shortcut, updates, version"
+          }
+        }
+      }
+    },
     "Abrir iot.tuya.com" : {
       "localizations" : {
         "en" : {
@@ -1462,6 +1472,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Group by"
+          }
+        }
+      }
+    },
+    "Agrupar, ocultos, sugestões, avisos, faixa de temperatura" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grouping, hidden, suggestions, alerts, temperature range"
           }
         }
       }
@@ -2012,6 +2032,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Air conditioner “%@” not found"
+          }
+        }
+      }
+    },
+    "As chaves ficam no Porta-chaves deste Mac. O Lar não tem servidor nem coleta dados." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The keys stay in this Mac's Keychain. Lar has no server and collects no data."
           }
         }
       }
@@ -2605,6 +2635,7 @@
       }
     },
     "Casas e lista" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -5238,6 +5269,16 @@
         }
       }
     },
+    "Geral e sobre" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "General and about"
+          }
+        }
+      }
+    },
     "GitHub Sponsors" : {
       "localizations" : {
         "en" : {
@@ -5480,6 +5521,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "LG ThinQ"
+          }
+        }
+      }
+    },
+    "LG, Smart Life, SmartThings, Alexa, TVs, Xbox, robôs, fechaduras, app Casa" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LG, Smart Life, SmartThings, Alexa, TVs, Xbox, robots, locks, Home app"
           }
         }
       }
@@ -5915,6 +5966,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "To-do list"
+          }
+        }
+      }
+    },
+    "Lista, avisos e ar-condicionado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "List, alerts and air conditioning"
           }
         }
       }
@@ -7850,6 +7911,16 @@
         }
       }
     },
+    "Parear com o iPhone, cenas e nomes iguais" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pair with the iPhone, same scenes and names"
+          }
+        }
+      }
+    },
     "Parear de novo" : {
       "localizations" : {
         "en" : {
@@ -8445,6 +8516,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Heat"
+          }
+        }
+      }
+    },
+    "Ramal, portão" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extension, gate"
           }
         }
       }
@@ -9510,6 +9591,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Audio"
+          }
+        }
+      }
+    },
+    "Suas casas e onde este Mac está" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your homes and where this Mac is"
           }
         }
       }
@@ -10918,6 +11009,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "iPhone"
+          }
+        }
+      }
+    },
+    "iPhone e sincronizar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iPhone and sync"
           }
         }
       }
