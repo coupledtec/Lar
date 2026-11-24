@@ -11507,6 +11507,26 @@
           }
         }
       }
+    },
+    "Praia" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beach"
+          }
+        }
+      }
+    },
+    "Sítio" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Country house"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

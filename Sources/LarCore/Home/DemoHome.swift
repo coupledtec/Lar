@@ -14,6 +14,11 @@ public enum DemoHome {
 
     /// One provider per account kind, sharing the same home.
     public static func providers() -> [any DeviceProvider] {
+        // Several houses (screenshots): "Casa" first and current, so the sample home's devices are in it.
+        if withHouses, HomePlaces.all != demoPlaces {
+            HomePlaces.all = demoPlaces
+            HomePlaces.currentID = demoPlaces.first?.id
+        }
         let state = State()
         return Provider.allCases.map { DemoProvider(provider: $0, state: state) }
     }
@@ -45,15 +50,21 @@ public enum DemoHome {
     /// its own (their accounts say where), besides the sample home's.
     static var withHouses: Bool { UserDefaults.standard.bool(forKey: "LarDemoHouses") }
 
+    static var demoPlaces: [HomePlace] { [
+        HomePlace(id: "demo-casa", name: tr("Casa"), coordinate: Coordinate(latitude: -23.5614, longitude: -46.6559)),
+        HomePlace(id: "demo-praia", name: tr("Praia"), coordinate: Coordinate(latitude: -23.9608, longitude: -46.3336)),
+        HomePlace(id: "demo-sitio", name: tr("Sítio"), coordinate: Coordinate(latitude: -22.9056, longitude: -47.0608)),
+    ] }
+
     static let houses: [HomeDevice] = [
         HomeDevice(provider: .smartThings, rawID: "sensor-casa", name: tr("Sensor da sala"), kind: .climateSensor,
-                   controls: ["roomTemperatureValue": "27", "geo": "-23.5614,-46.6559", "placeName": "Casa", "room": tr("Sala")]),
+                   controls: ["roomTemperatureValue": "27", "geo": "-23.5614,-46.6559", "placeName": tr("Casa"), "room": tr("Sala")]),
         HomeDevice(provider: .smartThings, rawID: "ac-praia", name: tr("Ar da praia"), kind: .airConditioner, isOn: true,
                    detail: tr("Ambiente 24° · ajustado em 21°"),
-                   controls: ["targetTemperature": "21", "roomTemperatureValue": "24", "geo": "-23.9608,-46.3336", "placeName": "Praia"]),
+                   controls: ["targetTemperature": "21", "roomTemperatureValue": "24", "geo": "-23.9608,-46.3336", "placeName": tr("Praia")]),
         HomeDevice(provider: .tuya, rawID: "ac-sitio", name: tr("Ar do sítio"), kind: .airConditioner, isOn: false,
                    detail: tr("Ambiente 18°"),
-                   controls: ["targetTemperature": "23", "roomTemperatureValue": "18", "geo": "-22.9056,-47.0608", "placeName": "Sítio"]),
+                   controls: ["targetTemperature": "23", "roomTemperatureValue": "18", "geo": "-22.9056,-47.0608", "placeName": tr("Sítio")]),
     ]
 
     /// The sample home's LG air conditioner: its full panel, answering in memory.

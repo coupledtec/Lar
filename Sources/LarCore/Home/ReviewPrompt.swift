@@ -64,6 +64,8 @@ public final class ReviewPrompt {
     }
 
     private func check() {
+        // Never on the store's screenshots.
+        if UserDefaults.standard.bool(forKey: "LarScreenshots") { isDue = false; return }
         guard !rated, !lastFailed, asks < Self.steps.count else { isDue = false; return }
         let step = Self.steps[asks]
         isDue = opens >= step.opens && commands >= step.commands
